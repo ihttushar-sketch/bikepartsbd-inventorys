@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5" />
+<meta name="description" content="BikePartsBD.net | Kayi Corporation — Inventory OS for Bangladesh motorcycle parts. Live stock, courier tracking, vendor contacts, bilingual Bangla/English." />
+<meta name="theme-color" content="#e10600" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>BikePartsBD.net | Kayi Corporation — Inventory OS</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%23e10600'/><text x='32' y='44' text-anchor='middle' font-family='Inter,sans-serif' font-weight='900' font-size='28' fill='white'>BP</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     BikePartsBD.net — Brand: Deep Jet Black + Blood Red + White
+     Premium, monochrome with a single authoritative accent.
+     Dark (default) + Light theme via [data-theme="light"] on <html>
+     ============================================================ */
+  :root {
+    /* DARK THEME (default) */
+    --bg: #0a0a0a;
+    --bg-2: #111111;
+    --bg-3: #161616;
+    --surface: #1a1a1a;
+    --surface-2: #202020;
+    --line: #262626;
+    --line-2: #2e2e2e;
+    --text: #f5f5f5;
+    --text-2: #a3a3a3;
+    --text-3: #6b6b6b;
+    --accent: #e10600;            /* BikePartsBD authoritative red (same both modes) */
+    --accent-2: #ff2a1f;
+    --accent-soft: rgba(225, 6, 0, 0.12);
+    --green: #00d68f;
+    --green-soft: rgba(0, 214, 143, 0.12);
+    --amber: #ffb020;
+    --amber-soft: rgba(255, 176, 32, 0.12);
+    --shadow: 0 10px 40px rgba(0,0,0,.6);
+    --radius: 14px;
+    --topbar-bg: rgba(10,10,10,0.72);
+    --modal-backdrop: rgba(0,0,0,.7);
+    --how-to-bg: linear-gradient(135deg, rgba(225,6,0,.08), rgba(0,214,143,.04));
+    --how-to-border: rgba(225,6,0,.22);
+    --how-to-step-bg: #f8fafc;     /* overridden in light theme */
+    --how-to-step-border: #e5e7eb; /* overridden in light theme */
+    --bn-step-bg: rgba(255,255,255,.02);
+  }
+
+  html[data-theme="light"] {
+    /* LIGHT THEME — neutral off-white, same accent red */
+    --bg: #f5f6f8;
+    --bg-2: #ffffff;
+    --bg-3: #f0f2f5;
+    --surface: #ffffff;
+    --surface-2: #f7f8fa;
+    --line: #e5e7eb;
+    --line-2: #d1d5db;
+    --text: #0f172a;
+    --text-2: #4b5563;
+    --text-3: #6b7280;
+    --accent: #e10600;            /* keep red brand */
+    --accent-2: #c00500;
+    --accent-soft: rgba(225, 6, 0, 0.10);
+    --green: #059669;
+    --green-soft: rgba(5, 150, 105, 0.10);
+    --amber: #d97706;
+    --amber-soft: rgba(217, 119, 6, 0.10);
+    --shadow: 0 4px 20px rgba(15, 23, 42, .08);
+    --topbar-bg: rgba(255,255,255,0.85);
+    --modal-backdrop: rgba(15, 23, 42, .45);
+    --how-to-bg: linear-gradient(135deg, rgba(225,6,0,.06), rgba(5,150,105,.04));
+    --how-to-border: rgba(225,6,0,.20);
+    --how-to-step-bg: #ffffff;
+    --how-to-step-border: #e5e7eb;
+    --bn-step-bg: rgba(0,0,0,.03);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+  body { min-height: 100vh; overflow-x: hidden; }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(14px);
+    background: var(--topbar-bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar-inner {
+    max-width: 1440px; margin: 0 auto;
+    display: flex; align-items: center; gap: 18px;
+    padding: 14px 28px;
+    flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-mark {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--accent);
+    display: grid; place-items: center;
+    box-shadow: 0 0 0 4px rgba(225,6,0,0.12);
+    font-weight: 900; color: #fff; font-size: 18px;
+    letter-spacing: -.5px;
+  }
+  .brand-text { line-height: 1.1; }
+  .brand-text .a { font-weight: 800; font-size: 16px; letter-spacing: -.2px; }
+  .brand-text .b { font-size: 11px; color: var(--text-3); font-weight: 500; letter-spacing: .3px; text-transform: uppercase; }
+  .topbar-nav { display: flex; gap: 4px; margin-left: 16px; }
+  .topbar-nav button {
+    background: transparent; color: var(--text-2); border: none;
+    padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 13px;
+    cursor: pointer; transition: all .15s;
+  }
+  .topbar-nav button:hover { color: var(--text); background: var(--surface); }
+  .topbar-nav button.active { color: var(--text); background: var(--surface); }
+  .topbar-spacer { flex: 1; }
+  .topbar-search {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--line);
+    padding: 8px 12px; border-radius: 10px; min-width: 220px; flex: 1; max-width: 360px;
+  }
+  .topbar-search input {
+    background: transparent; border: none; outline: none; color: var(--text);
+    font-size: 13px; width: 100%; font-family: inherit;
+  }
+  .topbar-search input::placeholder { color: var(--text-3); }
+  .topbar-user { display: flex; align-items: center; gap: 10px; padding: 6px 12px 6px 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+  .topbar-user .avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #e10600, #ff2a1f); display: grid; place-items: center; font-weight: 800; font-size: 11px; color: #fff; }
+  .topbar-user .meta { line-height: 1.1; }
+  .topbar-user .meta .n { font-size: 12px; font-weight: 700; }
+  .topbar-user .meta .r { font-size: 10px; color: var(--text-3); }
+  .topbar-bell {
+    width: 36px; height: 36px; border-radius: 10px; background: var(--surface);
+    border: 1px solid var(--line); display: grid; place-items: center; cursor: pointer;
+    position: relative;
+  }
+  .topbar-bell .dot { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--bg); }
+
+  /* ---------- Theme toggle ---------- */
+  .theme-toggle {
+    width: 36px; height: 36px; border-radius: 10px; background: var(--surface);
+    border: 1px solid var(--line); display: grid; place-items: center; cursor: pointer;
+    color: var(--text); transition: all .15s; padding: 0; position: relative; overflow: hidden;
+  }
+  .theme-toggle:hover { background: var(--surface-2); border-color: var(--line-2); }
+  .theme-toggle .theme-icon-dark, .theme-toggle .theme-icon-light {
+    position: absolute; font-size: 16px; transition: opacity .25s, transform .35s;
+  }
+  /* Dark mode active → show moon; Light mode active → show sun */
+  .theme-toggle .theme-icon-light { opacity: 0; transform: rotate(-90deg) scale(.5); }
+  html[data-theme="light"] .theme-toggle .theme-icon-dark { opacity: 0; transform: rotate(90deg) scale(.5); }
+  html[data-theme="light"] .theme-toggle .theme-icon-light { opacity: 1; transform: rotate(0) scale(1); }
+
+  /* ---------- Page ---------- */
+  .page { max-width: 1440px; margin: 0 auto; padding: 28px; }
+  @media (max-width: 600px) { .page { padding: 16px; } }
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
+  .page-head h1 { margin: 0 0 6px; font-size: 28px; font-weight: 800; letter-spacing: -.5px; }
+  @media (max-width: 600px) { .page-head h1 { font-size: 22px; } }
+  .page-head p { margin: 0; color: var(--text-2); font-size: 14px; }
+  .page-head .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  @media (max-width: 600px) {
+    .page-head .actions { width: 100%; }
+    .page-head .actions .btn { flex: 1; justify-content: center; }
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 16px; border-radius: 10px; font-weight: 700; font-size: 13px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--text);
+    cursor: pointer; transition: all .15s; font-family: inherit;
+  }
+  .btn:hover { background: var(--surface-2); border-color: var(--line-2); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 6px 20px rgba(225,6,0,.35); }
+  .btn-primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+  .btn-ghost { background: transparent; }
+  .btn-success { background: var(--green); border-color: var(--green); color: #001a10; }
+  .btn-sm { padding: 6px 10px; font-size: 11px; }
+
+  /* ---------- KPI Ribbon ---------- */
+  .kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 22px; }
+  .kpi {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 18px; position: relative; overflow: hidden;
+  }
+  .kpi::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--accent); opacity: .5;
+  }
+  .kpi.green::before { background: var(--green); }
+  .kpi.amber::before { background: var(--amber); }
+  .kpi-label { font-size: 11px; color: var(--text-3); text-transform: uppercase; font-weight: 700; letter-spacing: .5px; }
+  .kpi-value { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin-top: 8px; font-family: 'JetBrains Mono', monospace; }
+  .kpi-delta { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; margin-top: 6px; color: var(--green); }
+  .kpi-delta.down { color: var(--accent); }
+
+  /* ---------- Main grid ---------- */
+  .grid { display: grid; grid-template-columns: 1fr 360px; gap: 18px; }
+  @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } .kpis { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .kpis { grid-template-columns: 1fr; } }
+
+  /* ---------- Card ---------- */
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 18px; border-bottom: 1px solid var(--line);
+    gap: 10px; flex-wrap: wrap;
+  }
+  .card-head h3 { margin: 0; font-size: 14px; font-weight: 700; letter-spacing: .1px; }
+  .card-head .sub { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+  .card-body { padding: 0; }
+
+  /* ---------- Table ---------- */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .6px; background: var(--bg-2); position: sticky; top: 0; }
+  tbody tr { transition: background .15s; }
+  tbody tr:hover { background: var(--bg-2); }
+  @media (max-width: 600px) {
+    th, td { padding: 10px 10px; font-size: 12px; }
+    /* On mobile, hide category & margin columns to reduce scroll */
+    #tbl .hide-mob { display: none; }
+  }
+  td.num { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  td.editable { cursor: text; position: relative; }
+  td.editable:hover { background: var(--bg-3); }
+  .cell-edit-input {
+    width: 100%; background: var(--bg-3); border: 1px solid var(--accent);
+    color: var(--text); padding: 6px 8px; border-radius: 6px; font-family: 'JetBrains Mono', monospace;
+    font-weight: 600; font-size: 13px; outline: none;
+  }
+  .row-flash {
+    animation: redFlash 1.2s ease-out;
+  }
+  @keyframes redFlash {
+    0% { background: rgba(225,6,0,.35); }
+    100% { background: transparent; }
+  }
+  .delta-pill {
+    display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px;
+    background: var(--accent-soft); color: var(--accent); font-size: 10px; font-weight: 800;
+    animation: pillIn .4s ease-out;
+  }
+  @keyframes pillIn {
+    from { transform: translateY(-4px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .channel-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 700;
+  }
+  .channel-pill.wa { background: rgba(37, 211, 102, .12); color: #25d366; }
+  .channel-pill.ms { background: rgba(0, 132, 255, .12); color: #0084ff; }
+  .channel-pill.web { background: rgba(168, 85, 247, .12); color: #a855f7; }
+  .stock-cell { display: flex; align-items: center; gap: 8px; }
+  .stock-bar { width: 60px; height: 4px; background: var(--bg-3); border-radius: 2px; overflow: hidden; }
+  .stock-bar .fill { height: 100%; background: var(--green); transition: width .4s, background .2s; }
+  .stock-bar .fill.low { background: var(--amber); }
+  .stock-bar .fill.critical { background: var(--accent); }
+  .badge-cat {
+    display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;
+    background: var(--bg-3); color: var(--text-2); border: 1px solid var(--line);
+  }
+  .sku { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-2); }
+
+  /* ---------- Low stock banner ---------- */
+  .alert {
+    display: none; align-items: center; gap: 14px;
+    background: linear-gradient(90deg, rgba(225,6,0,.14), rgba(225,6,0,.04));
+    border: 1px solid rgba(225,6,0,.3); border-radius: var(--radius);
+    padding: 14px 18px; margin-bottom: 18px;
+  }
+  .alert.show { display: flex; }
+  .alert-icon {
+    width: 36px; height: 36px; border-radius: 10px; background: var(--accent);
+    display: grid; place-items: center; color: #fff; font-weight: 900; flex-shrink: 0;
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(225,6,0,.5); }
+    50% { box-shadow: 0 0 0 10px rgba(225,6,0,0); }
+  }
+  .alert-text { flex: 1; }
+  .alert-text .t { font-weight: 800; font-size: 13px; }
+  .alert-text .d { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+
+  /* ---------- Side panel ---------- */
+  .side { display: flex; flex-direction: column; gap: 18px; }
+  .channel-row { display: flex; align-items: center; gap: 12px; padding: 10px 18px; border-bottom: 1px solid var(--line); }
+  .channel-row:last-child { border-bottom: none; }
+  .channel-ico { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-weight: 800; font-size: 12px; color: #fff; flex-shrink: 0; }
+  .channel-ico.wa { background: #25d366; }
+  .channel-ico.ms { background: #0084ff; }
+  .channel-ico.web { background: #a855f7; }
+  .channel-meta { flex: 1; min-width: 0; }
+  .channel-meta .n { font-size: 13px; font-weight: 700; }
+  .channel-meta .s { font-size: 11px; color: var(--text-3); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .channel-amt { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px; color: var(--green); }
+  .channel-time { font-size: 10px; color: var(--text-3); }
+
+  /* ---------- Doughnut ---------- */
+  .donut-wrap { display: flex; align-items: center; gap: 18px; padding: 18px; }
+  .donut-svg { width: 140px; height: 140px; flex-shrink: 0; transform: rotate(-90deg); }
+  .donut-track { fill: none; stroke: var(--bg-3); stroke-width: 14; }
+  .donut-seg { fill: none; stroke-width: 14; transition: stroke-dasharray .6s ease; }
+  .donut-legend { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+  .legend-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .legend-name { flex: 1; color: var(--text-2); }
+  .legend-val { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+
+  /* ---------- Modal ---------- */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: var(--modal-backdrop); backdrop-filter: blur(6px);
+    display: none; align-items: center; justify-content: center; z-index: 100;
+  }
+  .modal-backdrop.show { display: flex; animation: fadeIn .2s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    width: 100%; max-width: 560px; padding: 24px;
+    box-shadow: var(--shadow);
+    animation: slideUp .25s ease-out;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal h2 { margin: 0 0 4px; font-size: 20px; font-weight: 800; }
+  .modal .sub { color: var(--text-3); font-size: 12px; margin-bottom: 20px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .field label { display: block; font-size: 11px; color: var(--text-3); text-transform: uppercase; font-weight: 700; margin-bottom: 6px; letter-spacing: .4px; }
+  .field input {
+    width: 100%; background: var(--bg-3); border: 1px solid var(--line);
+    color: var(--text); padding: 10px 12px; border-radius: 8px; font-family: inherit;
+    font-size: 13px; outline: none; transition: border-color .15s;
+  }
+  .field input:focus { border-color: var(--accent); }
+  .preview-card {
+    background: var(--bg-3); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px; margin-top: 16px;
+  }
+  .preview-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; }
+  .preview-row .k { color: var(--text-3); }
+  .preview-row .v { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  /* ---------- Toast ---------- */
+  .toast-wrap { position: fixed; bottom: 24px; right: 24px; z-index: 200; display: flex; flex-direction: column; gap: 10px; }
+  .toast {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px 16px; min-width: 280px; box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 12px;
+    animation: toastIn .3s ease-out;
+  }
+  @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  .toast.success { border-left: 3px solid var(--green); }
+  .toast.warn { border-left: 3px solid var(--amber); }
+  .toast.err { border-left: 3px solid var(--accent); }
+  .toast-ico { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-weight: 800; font-size: 13px; flex-shrink: 0; color: #fff; }
+  .toast.success .toast-ico { background: var(--green); color: #001a10; }
+  .toast.warn .toast-ico { background: var(--amber); color: #1a1100; }
+  .toast.err .toast-ico { background: var(--accent); }
+  .toast-text .t { font-size: 13px; font-weight: 700; }
+  .toast-text .d { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+
+  /* ---------- Live dot ---------- */
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: inline-block; margin-right: 6px; animation: blink 1.2s infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+
+  /* =================================================================
+     GLOBAL MOBILE-FRIENDLY OVERRIDES
+     ================================================================= */
+  @media (max-width: 900px) {
+    /* Topbar: collapse nav, hide some elements */
+    .topbar-inner { padding: 10px 14px; gap: 10px; }
+    .topbar-nav { order: 10; flex-basis: 100%; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+    .topbar-nav button { white-space: nowrap; padding: 6px 10px; font-size: 12px; }
+    .topbar-search { min-width: 0; order: 5; flex: 1 1 100%; max-width: 100%; }
+    .topbar-user { padding: 4px 8px 4px 4px; }
+    .topbar-user .meta { display: none; }
+    .topbar-bell { width: 32px; height: 32px; }
+    .theme-toggle { width: 32px; height: 32px; }
+  }
+
+  @media (max-width: 600px) {
+    /* Bangla how-to card: stack steps vertically */
+    .htc-steps { flex-direction: column; }
+    .htc-arrow { transform: rotate(90deg); align-self: center; }
+    .htc-step { min-width: 0; }
+    .htc-head { flex-wrap: wrap; }
+    .htc-title { font-size: 13px; }
+    .htc-sub { font-size: 10px; }
+    /* Compact bn-guide */
+    .bn-guide { padding: 4px 8px; margin-right: 0; margin-bottom: 8px; width: 100%; }
+    .bn-guide .arrow { display: none; }
+    .bn-step { padding: 2px 6px; }
+    .bn-step .bn { font-size: 11px; }
+    /* Courier cards */
+    .courier-grid { grid-template-columns: 1fr; }
+    .courier-stats { grid-template-columns: 1fr 1fr; }
+    /* Vendor cards */
+    .vendor-grid { grid-template-columns: 1fr; }
+    .vendor-contact { grid-template-columns: 1fr; }
+    /* Restock modal */
+    .modal { max-width: 95vw !important; padding: 16px; }
+    /* KPI values */
+    .kpi-value { font-size: 22px; }
+    /* Page headers */
+    .page-head h1 { font-size: 20px; }
+    .page-head p { font-size: 12px; }
+    /* Buttons in actions */
+    .page-head .actions { width: 100%; }
+    .page-head .actions .btn { flex: 1 1 calc(50% - 5px); justify-content: center; min-width: 120px; }
+  }
+
+  @media (max-width: 400px) {
+    .kpi { padding: 14px; }
+    .kpi-value { font-size: 20px; }
+    .topbar-search input { font-size: 12px; }
+    .htc-step { padding: 10px; }
+  }
+
+  /* ---------- Bangla how-to card (full-width) ---------- */
+  .how-to-card {
+    background: var(--how-to-bg);
+    border: 1px solid var(--how-to-border); border-radius: var(--radius);
+    padding: 18px 22px; margin-bottom: 22px;
+  }
+  .htc-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .htc-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(225,6,0,.15); border: 1px solid rgba(225,6,0,.3);
+    display: grid; place-items: center; font-size: 20px; flex-shrink: 0;
+  }
+  .htc-title { font-size: 15px; font-weight: 800; color: var(--text); }
+  .htc-sub { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+  .htc-steps { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; }
+  .htc-step {
+    flex: 1; min-width: 180px;
+    display: flex; align-items: flex-start; gap: 10px;
+    background: var(--how-to-step-bg); border: 1px solid var(--how-to-step-border); border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .htc-step-auto { background: rgba(0,214,143,.06); border-color: rgba(0,214,143,.25); }
+  .htc-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: grid; place-items: center; font-size: 13px; font-weight: 900; flex-shrink: 0;
+  }
+  .htc-step-auto .htc-num { background: var(--green); }
+  .htc-body { flex: 1; min-width: 0; }
+  .htc-bn { font-size: 13px; font-weight: 800; color: var(--text); line-height: 1.3; }
+  .htc-en { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+  .htc-hint { font-size: 10px; color: var(--text-3); margin-top: 4px; font-style: italic; }
+  .htc-arrow { display: flex; align-items: center; color: var(--accent); font-size: 22px; font-weight: 900; flex-shrink: 0; }
+  @media (max-width: 900px) {
+    .htc-arrow { display: none; }
+    .htc-step { min-width: 100%; }
+  }
+
+  /* ---------- Bangla onboarding guide (inline) ---------- */
+  .bn-guide {
+    display: flex; align-items: center; gap: 6px;
+    background: linear-gradient(90deg, rgba(225,6,0,.10), rgba(0, 214, 143,.06));
+    border: 1px solid rgba(225,6,0,.25); border-radius: var(--radius);
+    padding: 6px 10px 6px 14px; margin-right: 8px;
+    font-size: 12px; color: var(--text-2); flex-wrap: wrap; row-gap: 4px;
+  }
+  .bn-guide .bn-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-weight: 800; color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: .4px;
+    padding-right: 8px; border-right: 1px solid var(--line-2); margin-right: 4px;
+  }
+  .bn-step { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 8px; background: var(--bn-step-bg); }
+  .bn-step .num {
+    width: 18px; height: 18px; border-radius: 50%; background: var(--accent); color: #fff;
+    display: grid; place-items: center; font-size: 10px; font-weight: 900; flex-shrink: 0;
+  }
+  .bn-step .bn { font-weight: 700; color: var(--text); white-space: nowrap; }
+  .bn-step .arrow { color: var(--text-3); font-weight: 700; padding: 0 1px; font-size: 12px; }
+  .bn-step .ico { font-size: 13px; }
+
+  /* On very narrow screens, compress to just a 4-pill chain */
+  @media (max-width: 1100px) {
+    .bn-guide .bn-label { display: none; }
+    .bn-guide { padding: 6px 10px; margin-right: 6px; }
+  }
+  @media (max-width: 720px) {
+    .bn-guide { display: none; }
+  }
+
+  /* ---------- Courier module ---------- */
+  .courier-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 22px; }
+  @media (max-width: 900px) { .courier-grid { grid-template-columns: repeat(2, 1fr); } }
+  .courier-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px; position: relative; overflow: hidden;
+  }
+  .courier-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--courier-color, var(--accent));
+  }
+  .courier-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .courier-logo {
+    width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center;
+    font-weight: 900; font-size: 13px; color: #fff;
+    background: var(--courier-color, var(--accent));
+  }
+  .courier-name { font-size: 13px; font-weight: 800; }
+  .courier-tag { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: .3px; }
+  .courier-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cs { background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+  .cs-label { font-size: 9px; color: var(--text-3); text-transform: uppercase; font-weight: 700; letter-spacing: .4px; }
+  .cs-value { font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+  .cs-value.green { color: var(--green); }
+  .cs-value.amber { color: var(--amber); }
+
+  /* Courier gross-profit footer (bilingual) */
+  .courier-profit { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); display: flex; flex-direction: column; gap: 10px; }
+  .cp-row { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 8px; row-gap: 2px; }
+  .cp-label-en { font-size: 11px; color: var(--text-2); font-weight: 700; }
+  .cp-label-en .cp-en-tag { font-weight: 500; color: var(--text-3); font-size: 10px; }
+  .cp-label-bn { grid-column: 1 / 2; font-size: 10px; color: var(--text-3); }
+  .cp-value { grid-row: 1 / 3; grid-column: 2 / 3; font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 800; align-self: center; }
+  .cp-value.green { color: var(--green); }
+  .cp-row.profit .cp-label-en { color: var(--text); }
+
+  /* Shipments table */
+  .ship-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .ship-table th { background: var(--bg-2); font-size: 10px; padding: 10px 12px; }
+  .ship-table td { padding: 11px 12px; border-bottom: 1px solid var(--line); }
+  .ship-table tr:last-child td { border-bottom: none; }
+  .ship-table tbody tr { transition: background .15s; }
+  .ship-table tbody tr:hover { background: var(--bg-2); }
+  .tracking-id { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-2); }
+  .ship-courier { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 11px; }
+  .ship-courier .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--courier-color, var(--accent)); }
+
+  .timeline { display: flex; align-items: center; gap: 4px; }
+  .tl-step { width: 22px; height: 4px; background: var(--bg-3); border-radius: 2px; transition: background .3s; }
+  .tl-step.done { background: var(--green); }
+  .tl-step.active { background: var(--amber); animation: blink 1.2s infinite; }
+
+  .status-pill {
+    display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 800;
+    border: 1px solid var(--line);
+  }
+  .status-pill.placed   { background: var(--bg-3); color: var(--text-2); }
+  .status-pill.picked   { background: rgba(0, 132, 255, .12); color: #0084ff; border-color: rgba(0, 132, 255, .3); }
+  .status-pill.transit  { background: rgba(168, 85, 247, .12); color: #a855f7; border-color: rgba(168, 85, 247, .3); }
+  .status-pill.out      { background: rgba(255, 176, 32, .12); color: var(--amber); border-color: rgba(255, 176, 32, .3); }
+  .status-pill.delivered{ background: rgba(0, 214, 143, .12); color: var(--green); border-color: rgba(0, 214, 143, .3); }
+  .status-pill.failed   { background: rgba(225, 6, 0, .12); color: var(--accent); border-color: rgba(225, 6, 0, .3); }
+
+  /* ---------- Vendor module ---------- */
+  .vendor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 16px; }
+  @media (max-width: 900px) { .vendor-grid { grid-template-columns: 1fr; } }
+  .vendor-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px; position: relative; overflow: hidden;
+  }
+  .vendor-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .vendor-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    display: grid; place-items: center; color: #fff; font-weight: 900; font-size: 14px;
+    flex-shrink: 0;
+  }
+  .vendor-name { font-size: 14px; font-weight: 800; line-height: 1.2; }
+  .vendor-bn { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+  .vendor-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .vendor-meta .chip {
+    display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 700;
+    background: var(--bg-3); color: var(--text-2); border: 1px solid var(--line);
+  }
+  .vendor-meta .chip.brand { background: var(--accent-soft); color: var(--accent); border-color: rgba(225,6,0,.3); }
+  .vendor-meta .chip.resp { background: rgba(0, 214, 143, .12); color: var(--green); border-color: rgba(0,214,143,.3); }
+  .vendor-contact { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .vc-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px 10px; border-radius: 8px; font-weight: 700; font-size: 12px;
+    border: 1px solid var(--line); background: var(--bg-2); color: var(--text);
+    cursor: pointer; transition: all .15s; text-decoration: none; font-family: inherit;
+  }
+  .vc-btn:hover { background: var(--surface-2); }
+  .vc-btn.wa { background: #25d366; border-color: #25d366; color: #fff; }
+  .vc-btn.wa:hover { background: #1ebe5a; }
+  .vc-btn.call { background: var(--surface); border-color: var(--line-2); }
+  .vc-btn.call:hover { background: var(--surface-2); border-color: var(--accent); color: var(--accent); }
+  .vc-btn .ico { font-size: 14px; }
+
+  /* Restock modal: vendor list */
+  .restock-list { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; max-height: 50vh; overflow-y: auto; padding-right: 4px; }
+  .restock-item {
+    background: var(--bg-3); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+  }
+  .restock-item .ri-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 8px; }
+  .ri-name { font-weight: 800; font-size: 13px; }
+  .ri-bn { font-size: 10px; color: var(--text-3); margin-top: 2px; }
+  .ri-stock { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 11px; padding: 3px 8px; border-radius: 6px; }
+  .ri-stock.critical { background: rgba(225, 6, 0, .14); color: var(--accent); }
+  .ri-stock.low { background: rgba(255, 176, 32, .14); color: var(--amber); }
+  .ri-qty { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 12px; color: var(--text-2); }
+  .ri-qty input {
+    width: 60px; background: var(--bg-2); border: 1px solid var(--line);
+    color: var(--text); padding: 4px 8px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12px; outline: none;
+  }
+  .ri-vendors { display: flex; flex-direction: column; gap: 6px; }
+  .ri-vendor {
+    display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px;
+  }
+  .ri-vendor .v-name { flex: 1; font-size: 12px; font-weight: 700; }
+  .ri-vendor .v-bn { font-size: 10px; color: var(--text-3); }
+  .ri-vendor .v-resp { font-size: 10px; color: var(--green); font-weight: 700; }
+  .ri-actions { display: flex; gap: 6px; }
+  .ri-actions a {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 5px 9px; border-radius: 6px; font-weight: 700; font-size: 11px;
+    text-decoration: none; color: #fff; transition: opacity .15s;
+  }
+  .ri-actions a:hover { opacity: .85; }
+  .ri-actions a.wa { background: #25d366; }
+  .ri-actions a.call { background: #0084ff; }
+  .ri-actions a.wa::before { content: '💬'; }
+  .ri-actions a.call::before { content: '📞'; }
+</style>
+</head>
+<body>
+
+<!-- ====================== TOP BAR ====================== -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">BP</div>
+      <div class="brand-text">
+        <div class="a">BikePartsBD.net</div>
+        <div class="b">Kayi Corporation — Inventory OS</div>
+      </div>
+    </div>
+    <div class="topbar-nav">
+      <button class="active">Inventory</button>
+      <button>Orders</button>
+      <button>Channels</button>
+      <button>Suppliers</button>
+      <button>Reports</button>
+    </div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-search">
+      <span style="color:var(--text-3)">🔍</span>
+      <input type="text" placeholder="Search SKU, name, or brand…" id="searchInput" />
+    </div>
+    <button class="theme-toggle" id="themeToggle" title="Toggle theme / থিম পরিবর্তন" aria-label="Toggle theme">
+      <span class="theme-icon-dark">🌙</span>
+      <span class="theme-icon-light">☀️</span>
+    </button>
+    <div class="topbar-bell"><span>🔔</span><span class="dot"></span></div>
+    <div class="topbar-user">
+      <div class="avatar">KC</div>
+      <div class="meta">
+        <div class="n">Kayi Corp.</div>
+        <div class="r">Admin</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== PAGE ====================== -->
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <h1>Inventory Dashboard</h1>
+      <p>Live stock, profit, and channel performance for BikePartsBD.net — Jashore outlet.</p>
+    </div>
+    <div class="actions">
+      <div class="bn-guide" title="প্রোডাক্ট যোগ করার ৪ ধাপ · 4 steps to add a product">
+        <div class="bn-label"><span class="ico">📖</span> গাইড</div>
+        <div class="bn-step"><span class="num">১</span><span class="bn">নাম লিখুন</span></div>
+        <span class="arrow">›</span>
+        <div class="bn-step"><span class="num">২</span><span class="bn">কেনা দাম</span></div>
+        <span class="arrow">›</span>
+        <div class="bn-step"><span class="num">৩</span><span class="bn">বিক্রয় দাম</span></div>
+        <span class="arrow">›</span>
+        <div class="bn-step"><span class="num">৪</span><span class="bn">✨ অটো সব</span></div>
+      </div>
+      <button class="btn" id="btnExport">⬇ Export CSV</button>
+      <button class="btn" id="btnSimulate"><span class="live-dot"></span>Start Live Simulation</button>
+      <button class="btn btn-primary" id="btnAdd">＋ Add Bike Part</button>
+    </div>
+  </div>
+
+  <!-- Low stock alert -->
+  <div class="alert" id="alertLow">
+    <div class="alert-icon">!</div>
+    <div class="alert-text">
+      <div class="t">Low stock detected</div>
+      <div class="d">One or more parts are below the safety threshold. Restock before the next courier pickup.</div>
+    </div>
+    <button class="btn btn-primary" id="btnRestockAll">1-Click Restock +25</button>
+  </div>
+
+  <!-- KPI Ribbon -->
+  <div class="kpis" id="kpis">
+    <div class="kpi">
+      <div class="kpi-label">Total SKUs</div>
+      <div class="kpi-value" id="kpiSku">0</div>
+      <div class="kpi-delta">▲ +2 this week</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Total Stock</div>
+      <div class="kpi-value" id="kpiStock">0</div>
+      <div class="kpi-delta">▲ +38 units</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-label">Inventory Value (Buy)</div>
+      <div class="kpi-value" id="kpiValue">৳ 0</div>
+      <div class="kpi-delta">▲ 4.2%</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-label">Realized Profit</div>
+      <div class="kpi-value" id="kpiProfit">৳ 0</div>
+      <div class="kpi-delta">▲ Live</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-label">Realized Revenue</div>
+      <div class="kpi-value" id="kpiRevenue">৳ 0</div>
+      <div class="kpi-delta">▲ Live</div>
+    </div>
+  </div>
+
+  <!-- BANGLA HOW-TO CARD (always visible) -->
+  <div class="how-to-card">
+    <div class="htc-head">
+      <div class="htc-icon">📖</div>
+      <div>
+        <div class="htc-title">কিভাবে প্রোডাক্ট যোগ করবেন · How to add a product</div>
+        <div class="htc-sub">মাত্র ৩টি ঘর পূরণ করুন — বাকি সব অটো হয়ে যাবে / Just 3 fields — everything else is automatic</div>
+      </div>
+    </div>
+    <div class="htc-steps">
+      <div class="htc-step">
+        <div class="htc-num">১</div>
+        <div class="htc-body">
+          <div class="htc-bn">প্রোডাক্টের নাম লিখুন</div>
+          <div class="htc-en">Type the product name (English)</div>
+          <div class="htc-hint">যেমন: <i>Yamaha R15 V3 Brake Pad</i></div>
+        </div>
+      </div>
+      <div class="htc-arrow">›</div>
+      <div class="htc-step">
+        <div class="htc-num">২</div>
+        <div class="htc-body">
+          <div class="htc-bn">কেনা দাম লিখুন</div>
+          <div class="htc-en">Enter the buying price (৳)</div>
+          <div class="htc-hint">ভেণ্ডরকে যে দামে কিনবেন / Supplier cost</div>
+        </div>
+      </div>
+      <div class="htc-arrow">›</div>
+      <div class="htc-step">
+        <div class="htc-num">৩</div>
+        <div class="htc-body">
+          <div class="htc-bn">বিক্রয় দাম লিখুন</div>
+          <div class="htc-en">Enter the selling price (৳)</div>
+          <div class="htc-hint">কাস্টমারের কাছে বিক্রির দাম / Customer price</div>
+        </div>
+      </div>
+      <div class="htc-arrow">›</div>
+      <div class="htc-step htc-step-auto">
+        <div class="htc-num">✨</div>
+        <div class="htc-body">
+          <div class="htc-bn">অটো-জেনারেটেড</div>
+          <div class="htc-en">Auto-generated fields</div>
+          <div class="htc-hint">SKU · বাংলা নাম · ব্র্যান্ড · ক্যাটাগরি · লাভ · মার্জিন</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid">
+    <!-- Inventory table -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h3>Parts Inventory</h3>
+          <div class="sub">Click any price to edit • Auto SKU & Bangla translation on add</div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-sm" data-filter="ALL">All</button>
+          <button class="btn btn-sm btn-ghost" data-filter="YAMAHA">Yamaha</button>
+          <button class="btn btn-sm btn-ghost" data-filter="SUZUKI">Suzuki</button>
+          <button class="btn btn-sm btn-ghost" data-filter="BAJAJ">Bajaj</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table id="tbl">
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Part Name</th>
+                <th>Brand</th>
+                <th class="hide-mob">Category</th>
+                <th>Stock</th>
+                <th>Buy</th>
+                <th>Sell</th>
+                <th>Unit Profit</th>
+                <th class="hide-mob">Margin</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side panel -->
+    <div class="side">
+      <!-- Live order feed -->
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3><span class="live-dot"></span>Live Order Feed</h3>
+            <div class="sub">Real-time inflow from channels</div>
+          </div>
+        </div>
+        <div class="card-body" id="feed"></div>
+      </div>
+
+      <!-- Channel revenue doughnut -->
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3>Channel Revenue</h3>
+            <div class="sub">Today’s realized sales</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="donut-wrap">
+            <svg class="donut-svg" viewBox="0 0 120 120" id="donut">
+              <circle class="donut-track" cx="60" cy="60" r="48"></circle>
+            </svg>
+            <div class="donut-legend" id="donutLegend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================== VENDOR CONTACTS ====================== -->
+  <div class="page-head" style="margin-top:32px">
+    <div>
+      <h1>Vendor Contacts <span style="font-size:14px;color:var(--text-3);font-weight:500;margin-left:8px">ভেন্ডর পরিচিতি</span></h1>
+      <p>One-tap call or WhatsApp to restock fast — even before the next courier pickup.</p>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="btnAddVendor">＋ Add Vendor</button>
+    </div>
+  </div>
+
+  <div class="vendor-grid" id="vendorGrid"></div>
+
+  <!-- ====================== COURIER TRACKING ====================== -->
+  <div class="page-head" style="margin-top:32px">
+    <div>
+      <h1>Courier Tracking <span style="font-size:14px;color:var(--text-3);font-weight:500;margin-left:8px">কুরিয়ার ট্র্যাকিং</span></h1>
+      <p>Nationwide delivery partners — Sundarban, SA Paribahan, Karotoa, Janani.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnShipmentAll">🚚 Mark all picked up</button>
+      <button class="btn" id="btnAdvanceShipment">▶ Advance all in transit</button>
+      <button class="btn btn-primary" id="btnNewShipment">＋ New Shipment</button>
+    </div>
+  </div>
+
+  <!-- Courier totals KPI strip -->
+  <div class="kpis" id="courierKpis" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 16px">
+    <div class="kpi green" style="--courier-color: var(--green)">
+      <div class="kpi-label">Total Shipments · মোট শিপমেন্ট</div>
+      <div class="kpi-value" id="ckTotal">0</div>
+      <div class="kpi-delta" id="ckTotalBn">সব কুরিয়ার</div>
+    </div>
+    <div class="kpi" style="--courier-color: #a855f7">
+      <div class="kpi-label">Gross Revenue · মোট আয়</div>
+      <div class="kpi-value" id="ckRevenue">৳ 0</div>
+      <div class="kpi-delta" id="ckRevenueBn">সব কুরিয়ার মিলিয়ে</div>
+    </div>
+    <div class="kpi green" style="--courier-color: var(--green)">
+      <div class="kpi-label">Gross Profit · সর্বমোট মুনাফা</div>
+      <div class="kpi-value" id="ckProfit">৳ 0</div>
+      <div class="kpi-delta" id="ckProfitBn">বিক্রয় লাভ</div>
+    </div>
+  </div>
+
+  <!-- Courier cards -->
+  <div class="courier-grid" id="courierGrid"></div>
+
+  <!-- Shipments table -->
+  <div class="card" style="margin-top:18px">
+    <div class="card-head">
+      <div>
+        <h3>Active Shipments</h3>
+        <div class="sub">Live tracking — auto-updated from Jashore outlet</div>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-sm" data-ship="ALL">All</button>
+        <button class="btn btn-sm btn-ghost" data-ship="Sundarban">Sundarban</button>
+        <button class="btn btn-sm btn-ghost" data-ship="SA Paribahan">SA Paribahan</button>
+        <button class="btn btn-sm btn-ghost" data-ship="Karotoa">Karotoa</button>
+        <button class="btn btn-sm btn-ghost" data-ship="Janani">Janani</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table class="ship-table">
+          <thead>
+            <tr>
+              <th>Tracking ID</th>
+              <th>Customer</th>
+              <th>Item</th>
+              <th>Courier</th>
+              <th>Destination</th>
+              <th>Progress</th>
+              <th>Status</th>
+              <th>ETA</th>
+            </tr>
+          </thead>
+          <tbody id="shipBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== ADD MODAL ====================== -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal" style="max-width:520px">
+    <h2>＋ নতুন পার্ট যোগ করুন <span style="font-size:13px;color:var(--text-3);font-weight:500">/ Add Bike Part</span></h2>
+    <div class="sub" style="font-size:12px">
+      মাত্র <b style="color:var(--accent)">৩টি ঘর</b> পূরণ করুন — বাকি সব (SKU, বাংলা নাম, ব্র্যান্ড, ক্যাটাগরি, লাভ) <b>অটো</b> হয়ে যাবে।<br>
+      <span style="color:var(--text-3);font-size:11px">Only 3 fields — SKU, Bangla, brand, category, profit all auto-generate.</span>
+    </div>
+
+    <!-- Inline Bangla walkthrough -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px;">
+      <div style="background:var(--bg-3);border:1px solid var(--line);border-radius:8px;padding:10px 10px 8px;border-top:2px solid var(--accent)">
+        <div style="font-size:10px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.3px">ধাপ ১ · Step 1</div>
+        <div style="font-weight:800;font-size:12px;margin-top:4px">প্রোডাক্টের নাম</div>
+        <div style="font-size:11px;color:var(--text-2);margin-top:2px">ইংরেজিতে লিখুন — যেমন: <i>Yamaha R15 V3 Brake Pad</i></div>
+      </div>
+      <div style="background:var(--bg-3);border:1px solid var(--line);border-radius:8px;padding:10px 10px 8px;border-top:2px solid var(--accent)">
+        <div style="font-size:10px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.3px">ধাপ ২ · Step 2</div>
+        <div style="font-weight:800;font-size:12px;margin-top:4px">কেনা দাম (৳)</div>
+        <div style="font-size:11px;color:var(--text-2);margin-top:2px">ভেণ্ডরকে যে দামে কিনবেন — সাপ্লায়ার প্রাইস</div>
+      </div>
+      <div style="background:var(--bg-3);border:1px solid var(--line);border-radius:8px;padding:10px 10px 8px;border-top:2px solid var(--accent)">
+        <div style="font-size:10px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.3px">ধাপ ৩ · Step 3</div>
+        <div style="font-weight:800;font-size:12px;margin-top:4px">বিক্রয় দাম (৳)</div>
+        <div style="font-size:11px;color:var(--text-2);margin-top:2px">কাস্টমারের কাছে যে দামে বিক্রি করবেন</div>
+      </div>
+    </div>
+
+    <div class="form-grid" style="grid-template-columns: 1fr">
+      <div class="field">
+        <label>প্রোডাক্টের নাম · Product Name</label>
+        <input id="fName" placeholder="e.g. Yamaha R15 V3 Ceramic Front Brake Pad" />
+      </div>
+      <div class="field" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+        <div>
+          <label>কেনা দাম · Buying Price (৳)</label>
+          <input id="fBuy" type="number" min="0" placeholder="650" />
+        </div>
+        <div>
+          <label>বিক্রয় দাম · Selling Price (৳)</label>
+          <input id="fSell" type="number" min="0" placeholder="1050" />
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-card" id="preview" style="display:none">
+      <div style="font-size:10px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">✨ অটো-জেনারেটেড · Auto-generated</div>
+      <div class="preview-row"><span class="k">SKU</span><span class="v" id="pSku">—</span></div>
+      <div class="preview-row"><span class="k">বাংলা নাম · Bangla Name</span><span class="v" id="pBangla" style="font-family:Inter">—</span></div>
+      <div class="preview-row"><span class="k">ব্র্যান্ড · Brand</span><span class="v" id="pBrand" style="font-family:Inter">—</span></div>
+      <div class="preview-row"><span class="k">ক্যাটাগরি · Category</span><span class="v" id="pCat" style="font-family:Inter">—</span></div>
+      <div class="preview-row"><span class="k">একক লাভ · Unit Profit</span><span class="v" id="pProfit">৳ 0</span></div>
+      <div class="preview-row"><span class="k">মার্জিন · Margin</span><span class="v" id="pMargin">0%</span></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="btnCancel">বাতিল · Cancel</button>
+      <button class="btn btn-primary" id="btnSave">＋ ইনভেন্টরিতে যোগ করুন · Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast wrap -->
+<div class="toast-wrap" id="toasts"></div>
+
+<!-- ====================== ADD VENDOR MODAL ====================== -->
+<div class="modal-backdrop" id="vendorModal">
+  <div class="modal" style="max-width:520px">
+    <h2>＋ Add Vendor</h2>
+    <div class="sub">Save supplier contact for emergency restock calls & WhatsApp.</div>
+    <div class="form-grid">
+      <div class="field full">
+        <label>Vendor Name (English)</label>
+        <input id="vName" placeholder="e.g. Rahim Auto Parts" />
+      </div>
+      <div class="field">
+        <label>Bangla Name (optional)</label>
+        <input id="vBn" placeholder="রহিম অটো পার্টস" />
+      </div>
+      <div class="field">
+        <label>Primary Brand</label>
+        <input id="vBrand" placeholder="Yamaha / Suzuki / Bajaj" />
+      </div>
+      <div class="field">
+        <label>Phone Number</label>
+        <input id="vPhone" placeholder="+8801711-234567" />
+      </div>
+      <div class="field">
+        <label>WhatsApp Number</label>
+        <input id="vWa" placeholder="8801711234567 (without +)" />
+      </div>
+      <div class="field">
+        <label>Area / City</label>
+        <input id="vArea" placeholder="Jessore / Dhaka / Khulna" />
+      </div>
+      <div class="field">
+        <label>Avg. Response</label>
+        <input id="vResp" placeholder="~2 hrs" value="~2 hrs" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="vCancel">Cancel</button>
+      <button class="btn btn-primary" id="vSave">Add Vendor</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== RESTOCK MODAL (Vendor Picker) ====================== -->
+<div class="modal-backdrop" id="restockModal">
+  <div class="modal" style="max-width:620px">
+    <h2>🚚 Emergency Restock</h2>
+    <div class="sub" id="restockSub">Low-stock parts — call or WhatsApp vendors to send goods fast.</div>
+    <div class="restock-list" id="restockList"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="restockClose">Close</button>
+      <button class="btn btn-primary" id="restockAllBtn">＋25 to All</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   BikePartsBD.net — Inventory OS (single-file, no deps)
+   ============================================================ */
+
+/* ---------- Helpers ---------- */
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+
+const formatCurrency = (n) => '৳ ' + Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const formatInt = (n) => Number(n || 0).toLocaleString('en-IN');
+
+/* ---------- Bangla dictionary (for common part words) ---------- */
+const BANGLA = {
+  // brands
+  'yamaha':'ইয়ামাহা','suzuki':'সুজুকি','bajaj':'বাজাজ','honda':'হোন্ডা','tvs':'টিভিএস','hero':'হিরো',
+  'ngk':'এনজিকে','bosch':'বশ','denso':'ডেন্সো',
+  // models
+  'r15':'আর১৫','r v3':'আর ভি৩','v3':'ভি৩','v4':'ভি৪','v2':'ভি২','sf':'এসএফ',
+  'fzs':'এফজেডএস','fz s':'এফজেড এস','fz':'এফজেড','mt15':'এমটি১৫','mt 15':'এমটি ১৫','mt':'এমটি',
+  'fzx':'এফজেডএক্স','fazer':'ফেজার','gixxer':'জিক্সার','pulsar':'পালসার','pulser':'পালসার',
+  'discover':'ডিসকভার','apache':'অ্যাপাচি','n160':'এন১৬০','ns160':'এনএস১৬০','ns':'এনএস','rs':'আরএস',
+  'splendor':'স্প্লেন্ডার','platina':'প্লাটিনা','cbz':'সিবিজেড','cbr':'সিবিআর',
+  // adjectives / qualifiers
+  'ceramic':'সিরামিক','genuine':'জেনুইন','oem':'ওইএম','original':'অরিজিনাল','assembly':'অ্যাসেম্বলি',
+  'led':'এলইডি','halogen':'হ্যালোজেন','projector':'প্রজেক্টর',
+  // position
+  'front':'সামনের','rear':'পেছনের','back':'পেছনের','left':'বাম','right':'ডান','upper':'উপরের','lower':'নিচের',
+  // braking
+  'brake':'ব্রেক','pad':'প্যাড','brake pad':'ব্রেক প্যাড','disc':'ডিস্ক','drum':'ড্রাম','caliper':'ক্যালিপার',
+  'hose':'হোস','hose pipe':'হোস পাইপ','pipe':'পাইপ',
+  // clutch / drivetrain
+  'clutch':'ক্লাচ','plate':'প্লেট','cable':'ক্যাবল','chain':'চেইন','sprocket':'স্প্রকেট','gear':'গিয়ার',
+  // engine
+  'engine':'ইঞ্জিন','camshaft':'ক্যামশ্যাফট','rocker':'রকার','valve':'ভালভ','piston':'পিস্টন','cylinder':'সিলিন্ডার',
+  // lubrication / filtration
+  'oil':'তেল','filter':'ফিল্টার','air filter':'এয়ার ফিল্টার','oil filter':'অয়েল ফিল্টার',
+  // ignition / electrical
+  'spark':'স্পার্ক','plug':'প্লাগ','spark plug':'স্পার্ক প্লাগ','battery':'ব্যাটারি',
+  'wiring':'ওয়ারিং','harness':'হার্নেস','kit':'কিট','wiring harness':'ওয়ারিং হার্নেস','wiring harness kit':'ওয়ারিং হার্নেস কিট',
+  'headlight':'হেডলাইট','tail light':'টেইল লাইট','indicator':'ইন্ডিকেটর','mirror':'মিরর',
+  // body / fuel
+  'tank':'ট্যাংক','fuel':'ফুয়েল','fuel tank':'ফুয়েল ট্যাংক','cap':'ক্যাপ','fuel tank cap':'ফুয়েল ট্যাংক ক্যাপ',
+  'seat':'সিট','cover':'কভার','fairing':'ফেয়ারিং','side panel':'সাইড প্যানেল','panel':'প্যানেল',
+  // controls
+  'lever':'লিভার','handle':'হ্যান্ডেল','grip':'গ্রিপ','footrest':'ফুটরেস্ট','switch':'সুইচ',
+  // wheels
+  'wheel':'হুইল','tire':'টায়ার','tyre':'টায়ার','tube':'টিউব','fender':'ফেন্ডার','mudguard':'মাডগার্ড','visor':'ভাইজার',
+  // gear
+  'helmet':'হেলমেট','full face':'ফুল ফেস','half face':'হাফ ফেস','glove':'গ্লাভস','gloves':'গ্লাভস','boot':'বুট','jacket':'জ্যাকেট',
+  // misc
+  'set':'সেট','pair':'পেয়ার','unit':'ইউনিট','piece':'পিস','for':'এর জন্য','with':'সহ','and':'ও'
+};
+
+const toBangla = (text) => {
+  if (!text) return '';
+  const lower = text.toLowerCase().replace(/[^\w\s-]/g, ' ');
+  const numMap = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
+  const toBnNum = (s) => s.split('').map(c => numMap[c] !== undefined ? numMap[c] : c).join('');
+  // Build list of dictionary keys sorted by length desc so multi-word phrases win first
+  const keys = Object.keys(BANGLA).sort((a,b) => b.length - a.length);
+  let working = ' ' + lower + ' ';
+  const replacements = [];
+  keys.forEach(k => {
+    // word-boundary safe match (handle spaces inside key)
+    const escaped = k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(`(^|\\s)${escaped}(?=\\s|$)`, 'g');
+    if (re.test(working)) {
+      re.lastIndex = 0;
+      working = working.replace(re, (m, lead) => {
+        const code = '\u0001' + replacements.length + '\u0001';
+        replacements.push(BANGLA[k]);
+        return lead + code;
+      });
+    }
+  });
+  // Convert remaining ASCII digits to Bangla
+  let out = '';
+  let inToken = false;
+  working.split(/(\s+)/).forEach(seg => {
+    if (/^\u0001\d+\u0001$/.test(seg)) {
+      out += seg;
+    } else if (/^\s+$/.test(seg)) {
+      out += seg;
+    } else if (seg) {
+      // Convert digits within
+      out += toBnNum(seg);
+    }
+  });
+  // Replace placeholders with translations
+  out = out.replace(/\u0001(\d+)\u0001/g, (_, i) => replacements[+i] || '');
+  return out.replace(/\s+/g, ' ').trim();
+};
+
+const autoCategory = (name) => {
+  const n = (name||'').toLowerCase();
+  if (n.includes('brake') || n.includes('pad') || n.includes('disc')) return 'BRAKING SYSTEM';
+  if (n.includes('clutch') || n.includes('plate')) return 'CLUTCH SYSTEM';
+  if (n.includes('chain') || n.includes('sprocket')) return 'DRIVETRAIN';
+  if (n.includes('oil') && n.includes('filter')) return 'LUBRICATION';
+  if (n.includes('filter')) return 'FILTRATION';
+  if (n.includes('spark') || n.includes('plug')) return 'IGNITION';
+  if (n.includes('battery')) return 'ELECTRICAL';
+  if (n.includes('light') || n.includes('indicator') || n.includes('wiring')) return 'ELECTRICAL';
+  if (n.includes('tank') || n.includes('fuel')) return 'FUEL SYSTEM';
+  if (n.includes('mirror') || n.includes('visor') || n.includes('fairing') || n.includes('panel') || n.includes('fender')) return 'BODY & FAIRING';
+  if (n.includes('lever') || n.includes('grip') || n.includes('handle')) return 'CONTROLS';
+  if (n.includes('tire') || n.includes('tyre') || n.includes('tube') || n.includes('wheel')) return 'WHEELS & TYRES';
+  if (n.includes('helmet') || n.includes('glove') || n.includes('boot') || n.includes('jacket')) return 'RIDING GEAR';
+  if (n.includes('camshaft') || n.includes('rocker') || n.includes('engine')) return 'ENGINE PARTS';
+  return 'GENERAL';
+};
+
+const autoBrand = (name) => {
+  const n = (name||'').toLowerCase();
+  if (n.includes('yamaha') || n.includes('r15') || n.includes('fzs') || n.includes('mt15') || n.includes('fzx') || n.includes('fz')) return 'YAMAHA';
+  if (n.includes('suzuki') || n.includes('gixxer')) return 'SUZUKI';
+  if (n.includes('bajaj') || n.includes('pulsar') || n.includes('pulser') || n.includes('discover') || n.includes('n160')) return 'BAJAJ';
+  if (n.includes('honda')) return 'HONDA';
+  if (n.includes('tvs') || n.includes('apache')) return 'TVS';
+  return 'UNIVERSAL';
+};
+
+const skuCounters = {};
+const SKU_CAT_MAP = {
+  'BRAKING SYSTEM':'BRK','CLUTCH SYSTEM':'CLT','DRIVETRAIN':'DRV','LUBRICATION':'LUB',
+  'FILTRATION':'FLT','IGNITION':'IGN','ELECTRICAL':'ELC','FUEL SYSTEM':'FUL',
+  'BODY & FAIRING':'BDY','CONTROLS':'CTL','WHEELS & TYRES':'WHL','RIDING GEAR':'GEAR',
+  'ENGINE PARTS':'ENG','GENERAL':'GEN'
+};
+const genSKU = (cat) => {
+  const prefix = (SKU_CAT_MAP[cat] || 'GEN');
+  skuCounters[prefix] = (skuCounters[prefix] || 0) + 1;
+  // 4-digit padded SKU body for a clean uniform pattern (0001, 0002, …)
+  const n = String(skuCounters[prefix]).padStart(4, '0');
+  return `VP-${prefix}-${n}`;
+};
+
+/* ---------- Sample data (5 starter parts) ---------- */
+let parts = [
+  {
+    sku: 'VP-BRK-0001',
+    name: 'Yamaha R15 V3 Ceramic Front Brake Pad',
+    bangla: 'ইয়ামাহা আর১৫ ভি৩ সিরামিক সামনের ব্রেক প্যাড',
+    brand: 'YAMAHA', category: 'BRAKING SYSTEM',
+    stock: 8, buy: 650, sell: 1050
+  },
+  {
+    sku: 'VP-CLT-0001',
+    name: 'Yamaha FZS V3 Clutch Plate Set',
+    bangla: 'ইয়ামাহা এফজেডএস ভি৩ ক্লাচ প্লেট সেট',
+    brand: 'YAMAHA', category: 'CLUTCH SYSTEM',
+    stock: 14, buy: 820, sell: 1350
+  },
+  {
+    sku: 'VP-ELC-0001',
+    name: 'Suzuki Gixxer SF Wiring Harness Kit',
+    bangla: 'সুজুকি জিক্সার এসএফ ওয়ারিং হার্নেস কিট',
+    brand: 'SUZUKI', category: 'ELECTRICAL',
+    stock: 22, buy: 1450, sell: 2300
+  },
+  {
+    sku: 'VP-ENG-0001',
+    name: 'Bajaj Pulsar NS160 Camshaft Assembly',
+    bangla: 'বাজাজ পালসার এনএস১৬০ ক্যামশ্যাফট অ্যাসেম্বলি',
+    brand: 'BAJAJ', category: 'ENGINE PARTS',
+    stock: 5, buy: 2200, sell: 3450
+  },
+  {
+    sku: 'VP-FUL-0001',
+    name: 'Yamaha MT15 Fuel Tank Cap Genuine',
+    bangla: 'ইয়ামাহা এমটি১৫ ফুয়েল ট্যাংক ক্যাপ জেনুইন',
+    brand: 'YAMAHA', category: 'FUEL SYSTEM',
+    stock: 31, buy: 380, sell: 750
+  }
+];
+
+// Pre-seed SKU counters from existing inventory so new parts continue the sequence
+parts.forEach(p => {
+  const m = p.sku.match(/^VP-([A-Z]{3})-(\d+)$/);
+  if (m) {
+    const [, prefix, num] = m;
+    skuCounters[prefix] = Math.max(skuCounters[prefix] || 0, parseInt(num, 10) || 0);
+  }
+});
+
+/* ---------- Live feed / channel state ---------- */
+let feed = [
+  { ch: 'wa', name: 'Rakib Hossain', item: 'R15 V3 Brake Pad', qty: 2, amt: 2100, t: '2m ago' },
+  { ch: 'ms', name: 'Sabbir Ahmed',  item: 'FZS Clutch Plate', qty: 1, amt: 1350, t: '6m ago' },
+  { ch: 'web', name: 'Tamim Iqbal',  item: 'Gixxer Wiring Kit', qty: 1, amt: 2300, t: '11m ago' },
+  { ch: 'wa', name: 'Nadim Khan',    item: 'MT15 Tank Cap', qty: 3, amt: 2250, t: '18m ago' }
+];
+
+/* ---------- Vendors (for emergency restock contact) ---------- */
+let vendors = [
+  { id: 'V001', name: 'Rahim Auto Parts',  bangla: 'রহিম অটো পার্টস',  phone: '+8801711234567', whatsapp: '8801711234567', brand: 'YAMAHA', area: 'Jessore', response: '~2 hrs' },
+  { id: 'V002', name: 'Karim Motors',      bangla: 'করিম মোটরস',        phone: '+8801811234567', whatsapp: '8801811234567', brand: 'SUZUKI', area: 'Jessore', response: '~3 hrs' },
+  { id: 'V003', name: 'Jamal Trading',     bangla: 'জামাল ট্রেডিং',       phone: '+8801911234567', whatsapp: '8801911234567', brand: 'BAJAJ',  area: 'Dhaka',   response: '~1 day' },
+  { id: 'V004', name: 'Hossain Spare',     bangla: 'হোসেন স্পেয়ার',       phone: '+8801611234567', whatsapp: '8801611234567', brand: 'YAMAHA', area: 'Dhaka',   response: '~4 hrs' },
+  { id: 'V005', name: 'Rana Engineering',  bangla: 'রানা ইঞ্জিনিয়ারিং',   phone: '+8801511234567', whatsapp: '8801511234567', brand: 'BAJAJ',  area: 'Khulna',  response: '~5 hrs' },
+  { id: 'V006', name: 'Akter Auto',        bangla: 'আক্তার অটো',          phone: '+8801311234567', whatsapp: '8801311234567', brand: 'SUZUKI', area: 'Khulna',  response: '~2 hrs' }
+];
+
+/* ---------- Couriers ---------- */
+const COURIERS = [
+  { id: 'Sundarban',    short: 'SDB', color: '#e10600', eta: '2-3 days' },
+  { id: 'SA Paribahan', short: 'SA',  color: '#0084ff', eta: '1-2 days' },
+  { id: 'Karotoa',      short: 'KRT', color: '#ffb020', eta: '3-4 days' },
+  { id: 'Janani',       short: 'JNN', color: '#00d68f', eta: '2-3 days' }
+];
+
+const STATUS_FLOW = ['placed','picked','transit','out','delivered'];
+const STATUS_LABEL = {
+  placed: 'Placed', picked: 'Picked Up', transit: 'In Transit',
+  out: 'Out for Delivery', delivered: 'Delivered'
+};
+
+// Bangla labels for courier metrics
+const BN = {
+  grossProfit: 'মোট লাভ',
+  grossProfitLong: 'সর্বমোট মুনাফা',
+  revenue: 'আয়',
+  units: 'ইউনিট',
+  delivered: 'ডেলিভারড',
+  inTransit: 'ট্রানজিটে',
+  success: 'সফলতার হার'
+};
+
+const BD_CITIES = ['Dhaka', 'Chattogram', 'Khulna', 'Rajshahi', 'Sylhet', 'Barisal', 'Rangpur', 'Mymensingh', 'Comilla', 'Gazipur', 'Narayanganj', 'Jessore', 'Cox\'s Bazar', 'Tangail', 'Bogura'];
+
+const CUSTOMER_NAMES = ['Rakib Hossain', 'Sabbir Ahmed', 'Tamim Iqbal', 'Nadim Khan', 'Faisal Rahman', 'Imran Sheikh', 'Saif Mahmud', 'Hasan Jamil', 'Riyad Tahsin', 'Nafis Ahmed', 'Shuvo Das', 'Rimon Sarker', 'Arif Bhuiyan', 'Tareq Aziz', 'Maruf Khan'];
+
+let shipmentIdSeq = 1042;
+const genTrackingId = (courier) => {
+  shipmentIdSeq++;
+  return `${courier.short}-${shipmentIdSeq}-BD`;
+};
+
+let shipments = [
+  { id: genTrackingId(COURIERS[0]), customer: 'Rakib Hossain',   item: 'R15 V3 Brake Pad',  courier: 'Sundarban',    dest: 'Dhaka',     status: 'transit',   eta: 'Tomorrow, 4 PM',  qty: 2, buy: 650, sell: 1050 },
+  { id: genTrackingId(COURIERS[1]), customer: 'Sabbir Ahmed',    item: 'FZS Clutch Plate',  courier: 'SA Paribahan', dest: 'Chattogram', status: 'out',       eta: 'Today, 7 PM',     qty: 1, buy: 820, sell: 1350 },
+  { id: genTrackingId(COURIERS[2]), customer: 'Tamim Iqbal',     item: 'Gixxer Wiring Kit', courier: 'Karotoa',     dest: 'Sylhet',    status: 'picked',    eta: 'In 3 days',      qty: 1, buy: 1450, sell: 2300 },
+  { id: genTrackingId(COURIERS[3]), customer: 'Nadim Khan',      item: 'MT15 Tank Cap',     courier: 'Janani',      dest: 'Khulna',    status: 'delivered', eta: 'Delivered',      qty: 3, buy: 380,  sell: 750 },
+  { id: genTrackingId(COURIERS[0]), customer: 'Faisal Rahman',   item: 'NS160 Camshaft',    courier: 'Sundarban',    dest: 'Rajshahi',  status: 'placed',    eta: 'In 4 days',      qty: 1, buy: 2200, sell: 3450 },
+  { id: genTrackingId(COURIERS[1]), customer: 'Imran Sheikh',    item: 'R15 V3 Brake Pad',  courier: 'SA Paribahan', dest: 'Cox\'s Bazar', status: 'transit',  eta: 'In 2 days',      qty: 1, buy: 650,  sell: 1050 },
+  { id: genTrackingId(COURIERS[2]), customer: 'Saif Mahmud',     item: 'FZS Clutch Plate',  courier: 'Karotoa',     dest: 'Barisal',   status: 'out',       eta: 'Today, 9 PM',     qty: 2, buy: 820,  sell: 1350 },
+  { id: genTrackingId(COURIERS[3]), customer: 'Hasan Jamil',     item: 'Gixxer Wiring Kit', courier: 'Janani',      dest: 'Rangpur',   status: 'picked',    eta: 'In 3 days',      qty: 1, buy: 1450, sell: 2300 }
+];
+
+let currentShipFilter = 'ALL';
+
+let channelRevenue = { wa: 0, ms: 0, web: 0 };
+let totalProfit = 0;
+let totalRevenue = 0;
+let simTimer = null;
+let simInterval = 8000;
+let currentFilter = 'ALL';
+let isFirstLoad = true;
+
+/* ---------- Renderers ---------- */
+function renderTable() {
+  const tb = $('#tbody');
+  const q = ($('#searchInput').value || '').toLowerCase();
+  const filtered = parts.filter(p => {
+    const matchF = currentFilter === 'ALL' || p.brand === currentFilter;
+    const matchQ = !q || p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q);
+    return matchF && matchQ;
+  });
+
+  if (filtered.length === 0) {
+    tb.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-3)">No parts found. Click "Add Bike Part" to add your first one.</td></tr>`;
+  } else {
+    tb.innerHTML = filtered.map((p, idx) => {
+      const profit = p.sell - p.buy;
+      const margin = p.sell > 0 ? ((profit / p.sell) * 100).toFixed(1) : '0.0';
+      const stockClass = p.stock < 5 ? 'critical' : (p.stock < 10 ? 'low' : '');
+      const stockPct = Math.min(100, (p.stock / 50) * 100);
+      return `
+        <tr data-idx="${parts.indexOf(p)}">
+          <td class="sku">${p.sku}</td>
+          <td>
+            <div style="font-weight:600">${p.name}</div>
+            <div style="font-size:11px;color:var(--text-3);margin-top:2px">${p.bangla}</div>
+          </td>
+          <td><span class="badge-cat">${p.brand}</span></td>
+          <td class="hide-mob"><span class="badge-cat">${p.category}</span></td>
+          <td>
+            <div class="stock-cell">
+              <span class="num">${p.stock}</span>
+              <div class="stock-bar"><div class="fill ${stockClass}" style="width:${stockPct}%"></div></div>
+            </div>
+          </td>
+          <td class="num editable" data-field="buy" data-idx="${parts.indexOf(p)}">${formatCurrency(p.buy)}</td>
+          <td class="num editable" data-field="sell" data-idx="${parts.indexOf(p)}">${formatCurrency(p.sell)}</td>
+          <td class="num" style="color:var(--green);font-weight:700">${formatCurrency(profit)}</td>
+          <td class="num hide-mob">${margin}%</td>
+        </tr>
+      `;
+    }).join('');
+  }
+  attachCellEditors();
+  renderKPIs();
+  renderLowStockAlert();
+}
+
+function renderKPIs() {
+  $('#kpiSku').textContent = formatInt(parts.length);
+  $('#kpiStock').textContent = formatInt(parts.reduce((s, p) => s + p.stock, 0));
+  $('#kpiValue').textContent = formatCurrency(parts.reduce((s, p) => s + p.buy * p.stock, 0));
+  $('#kpiProfit').textContent = formatCurrency(totalProfit);
+  $('#kpiRevenue').textContent = formatCurrency(totalRevenue);
+}
+
+function renderLowStockAlert() {
+  const has = parts.some(p => p.stock < 10);
+  $('#alertLow').classList.toggle('show', has);
+}
+
+function renderFeed() {
+  const html = feed.slice(0, 6).map(f => {
+    const labels = { wa: 'WhatsApp', ms: 'Messenger', web: 'Website' };
+    const ic = { wa: 'WA', ms: 'MS', web: 'WB' };
+    return `
+      <div class="channel-row">
+        <div class="channel-ico ${f.ch}">${ic[f.ch]}</div>
+        <div class="channel-meta">
+          <div class="n">${f.name}</div>
+          <div class="s">${f.qty}× ${f.item} • ${labels[f.ch]}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="channel-amt">+${formatCurrency(f.amt)}</div>
+          <div class="channel-time">${f.t}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  $('#feed').innerHTML = html;
+}
+
+function renderDonut() {
+  const total = channelRevenue.wa + channelRevenue.ms + channelRevenue.web;
+  const C = 2 * Math.PI * 48;
+  const segs = [
+    { key: 'wa',  color: '#25d366', val: channelRevenue.wa },
+    { key: 'ms',  color: '#0084ff', val: channelRevenue.ms },
+    { key: 'web', color: '#a855f7', val: channelRevenue.web }
+  ];
+  let offset = 0;
+  let svgInner = '';
+  segs.forEach(s => {
+    if (total === 0) return;
+    const len = (s.val / total) * C;
+    svgInner += `<circle class="donut-seg" cx="60" cy="60" r="48" stroke="${s.color}" stroke-dasharray="${len} ${C - len}" stroke-dashoffset="${-offset}"></circle>`;
+    offset += len;
+  });
+  if (total === 0) {
+    svgInner = `<circle class="donut-seg" cx="60" cy="60" r="48" stroke="#2e2e2e" stroke-dasharray="0 ${C}"></circle>`;
+  }
+  $('#donut').innerHTML = `<circle class="donut-track" cx="60" cy="60" r="48"></circle>${svgInner}`;
+
+  $('#donutLegend').innerHTML = segs.map(s => `
+    <div class="legend-row">
+      <div class="legend-dot" style="background:${s.color}"></div>
+      <div class="legend-name">${s.key === 'wa' ? 'WhatsApp' : s.key === 'ms' ? 'Messenger' : 'Website'}</div>
+      <div class="legend-val">${formatCurrency(s.val)}</div>
+    </div>
+  `).join('');
+}
+
+/* ---------- Inline cell editor ---------- */
+function attachCellEditors() {
+  $$('td.editable').forEach(td => {
+    td.onclick = (e) => {
+      if (td.querySelector('input')) return;
+      const idx = +td.dataset.idx;
+      const field = td.dataset.field;
+      const current = parts[idx][field];
+      const originalText = td.textContent;
+      td.textContent = '';
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.className = 'cell-edit-input';
+      input.value = current;
+      td.appendChild(input);
+      input.focus();
+      input.select();
+
+      const commit = () => {
+        const newVal = parseFloat(input.value);
+        if (isNaN(newVal) || newVal < 0) {
+          td.textContent = originalText;
+          return;
+        }
+        const oldVal = parts[idx][field];
+        parts[idx][field] = newVal;
+
+        // Re-render but mark this row for flash + delta
+        const tr = td.parentElement;
+        const trIdx = +tr.dataset.idx;
+        renderTable();
+        const newTr = $(`tr[data-idx="${trIdx}"]`);
+        if (newTr) {
+          newTr.classList.add('row-flash');
+          const delta = newVal - oldVal;
+          // Find the cell that was edited in the new row
+          const cell = newTr.querySelector(`td[data-field="${field}"]`);
+          if (cell && delta !== 0) {
+            const sign = delta > 0 ? '+' : '';
+            const arrow = delta > 0 ? '▲' : '▼';
+            const pill = document.createElement('span');
+            pill.className = 'delta-pill';
+            pill.textContent = `${arrow} ${sign}${formatCurrency(delta)}`;
+            cell.appendChild(pill);
+            setTimeout(() => pill.remove(), 4000);
+          }
+        }
+        toast('success', 'Price updated', `${parts[idx].name} → ${field === 'buy' ? 'Buy' : 'Sell'}: ${formatCurrency(newVal)}`);
+      };
+
+      input.onkeydown = (ev) => {
+        if (ev.key === 'Enter') { commit(); }
+        if (ev.key === 'Escape') { td.textContent = originalText; }
+      };
+      input.onblur = commit;
+      e.stopPropagation();
+    };
+  });
+}
+
+/* ---------- Toasts ---------- */
+function toast(type, title, desc) {
+  // Suppress notification spam on first load
+  if (isFirstLoad && type === 'success' && title && title.includes('updated')) return;
+  const wrap = $('#toasts');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  const ic = { success: '✓', warn: '!', err: '×' }[type] || '·';
+  el.innerHTML = `
+    <div class="toast-ico">${ic}</div>
+    <div class="toast-text">
+      <div class="t">${title}</div>
+      <div class="d">${desc || ''}</div>
+    </div>
+  `;
+  wrap.appendChild(el);
+  setTimeout(() => {
+    el.style.transition = 'opacity .3s, transform .3s';
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(20px)';
+    setTimeout(() => el.remove(), 320);
+  }, 3500);
+}
+
+/* ---------- Modal: Add Part (3 fields only) ---------- */
+const updatePreview = () => {
+  const name = $('#fName').value.trim();
+  const buy = parseFloat($('#fBuy').value) || 0;
+  const sell = parseFloat($('#fSell').value) || 0;
+  if (!name) { $('#preview').style.display = 'none'; return; }
+  const cat = autoCategory(name);
+  const brand = autoBrand(name);
+  $('#preview').style.display = 'block';
+  $('#pSku').textContent = genSKU(cat);
+  $('#pBangla').textContent = toBangla(name);
+  $('#pBrand').textContent = brand;
+  $('#pCat').textContent = cat;
+  $('#pProfit').textContent = formatCurrency(sell - buy);
+  $('#pMargin').textContent = sell > 0 ? ((sell - buy) / sell * 100).toFixed(1) + '%' : '0%';
+};
+
+const openModal = () => {
+  $('#modal').classList.add('show');
+  $('#fName').value = '';
+  $('#fBuy').value = '';
+  $('#fSell').value = '';
+  $('#preview').style.display = 'none';
+  setTimeout(() => $('#fName').focus(), 50);
+};
+const closeModal = () => $('#modal').classList.remove('show');
+
+$('#btnAdd').onclick = openModal;
+$('#btnCancel').onclick = closeModal;
+$('#modal').onclick = (e) => { if (e.target === $('#modal')) closeModal(); };
+
+['fName','fBuy','fSell'].forEach(id => {
+  $('#' + id).addEventListener('input', updatePreview);
+});
+
+$('#btnSave').onclick = () => {
+  const name = $('#fName').value.trim();
+  const buy = parseFloat($('#fBuy').value);
+  const sell = parseFloat($('#fSell').value);
+  if (!name) return toast('err', 'Missing name', 'Please enter a product name.');
+  if (isNaN(buy) || buy <= 0) return toast('err', 'Invalid buying price', 'Enter a positive number.');
+  if (isNaN(sell) || sell <= 0) return toast('err', 'Invalid selling price', 'Enter a positive number.');
+  if (sell < buy) return toast('warn', 'Low margin', 'Sell price is below buy price — you’ll lose money.');
+
+  const cat = autoCategory(name);
+  const brand = autoBrand(name);
+  const sku = genSKU(cat);
+  const bangla = toBangla(name);
+  // Default stock = 0; user can use Restock +25 or stock column to add later
+  const stock = 0;
+
+  parts.unshift({ sku, name, bangla, brand, category: cat, stock, buy, sell });
+  closeModal();
+  renderTable();
+  toast('success', 'Part added', `${name} (${sku}) — ৳${(sell - buy).toLocaleString('en-IN')} profit per unit.`);
+};
+
+/* ---------- Restock ---------- */
+$('#btnRestockAll').onclick = () => {
+  let n = 0;
+  parts.forEach(p => { if (p.stock < 10) { p.stock += 25; n++; } });
+  renderTable();
+  if (n) toast('success', 'Restocked +25', `${n} part${n>1?'s':''} replenished across all channels.`);
+  else toast('warn', 'Nothing to restock', 'All parts are above the threshold.');
+};
+
+/* ---------- Filters & search ---------- */
+$$('[data-filter]').forEach(b => {
+  b.onclick = () => {
+    $$('[data-filter]').forEach(x => { x.classList.remove('btn-primary'); x.classList.add('btn-ghost'); });
+    b.classList.add('btn-primary');
+    b.classList.remove('btn-ghost');
+    currentFilter = b.dataset.filter;
+    renderTable();
+  };
+});
+$('#searchInput').oninput = renderTable;
+
+/* ---------- Live simulation ---------- */
+const SAMPLE_CUSTOMERS = ['Rakib H.', 'Sabbir A.', 'Tamim I.', 'Nadim K.', 'Faisal R.', 'Imran S.', 'Saif M.', 'Hasan J.', 'Riyad T.', 'Nafis A.'];
+
+const simulateSale = () => {
+  if (parts.length === 0) return;
+  const p = parts[Math.floor(Math.random() * parts.length)];
+  const maxQty = Math.min(3, p.stock);
+  if (maxQty <= 0) return;
+  const qty = Math.max(1, Math.floor(Math.random() * maxQty) + 1);
+  const channels = ['wa','ms','web'];
+  const ch = channels[Math.floor(Math.random() * channels.length)];
+  const amt = qty * p.sell;
+  const profit = qty * (p.sell - p.buy);
+
+  // mutate
+  p.stock -= qty;
+  channelRevenue[ch] += amt;
+  totalProfit += profit;
+  totalRevenue += amt;
+
+  const t = new Date();
+  const ts = `${t.getHours().toString().padStart(2,'0')}:${t.getMinutes().toString().padStart(2,'0')}:${t.getSeconds().toString().padStart(2,'0')}`;
+  const customer = SAMPLE_CUSTOMERS[Math.floor(Math.random() * SAMPLE_CUSTOMERS.length)];
+  feed.unshift({ ch, name: customer, item: p.name, qty, amt, t: ts });
+
+  // Auto-create a shipment for this sale
+  createShipmentFor(p.name, customer, qty);
+
+  renderTable();
+  renderDonut();
+  renderFeed();
+  renderCouriers();
+  renderCourierKpis();
+  renderShipments();
+
+  // low-stock toast when crossing threshold
+  if (p.stock < 10 && p.stock + qty >= 10) {
+    toast('warn', 'Low stock', `${p.name} dropped to ${p.stock} units.`);
+  }
+};
+
+$('#btnSimulate').onclick = () => {
+  if (simTimer) {
+    clearInterval(simTimer);
+    simTimer = null;
+    if (courierTimer) { clearInterval(courierTimer); courierTimer = null; }
+    $('#btnSimulate').innerHTML = '<span class="live-dot"></span>Start Live Simulation';
+  } else {
+    simTimer = setInterval(simulateSale, simInterval);
+    // Auto-advance shipments every 2 cycles for a flowing feel
+    courierTimer = setInterval(() => {
+      const n = advanceAllActive();
+      if (n > 0) { renderCouriers(); renderCourierKpis(); renderShipments(); }
+    }, simInterval * 2);
+    $('#btnSimulate').innerHTML = '<span class="live-dot" style="background:var(--accent)"></span>Stop Simulation';
+    toast('success', 'Live simulation on', 'Watching Messenger, WhatsApp & Website orders in real-time.');
+  }
+};
+
+/* ---------- Courier buttons ---------- */
+let courierTimer = null;
+
+$$('[data-ship]').forEach(b => {
+  b.onclick = () => {
+    $$('[data-ship]').forEach(x => { x.classList.remove('btn-primary'); x.classList.add('btn-ghost'); });
+    b.classList.add('btn-primary');
+    b.classList.remove('btn-ghost');
+    currentShipFilter = b.dataset.ship;
+    renderShipments();
+  };
+});
+
+$('#btnShipmentAll').onclick = () => {
+  let n = 0;
+  shipments.forEach(s => {
+    if (s.status === 'placed') { s.status = 'picked'; n++; }
+  });
+  renderCouriers();
+  renderCourierKpis();
+  renderShipments();
+  toast(n > 0 ? 'success' : 'warn', n > 0 ? `${n} shipment${n>1?'s':''} picked up` : 'Nothing to pick up', n > 0 ? 'Courier dispatched from Jashore outlet.' : 'All shipments already in motion.');
+};
+
+$('#btnAdvanceShipment').onclick = () => {
+  const n = advanceAllActive();
+  renderCouriers();
+  renderCourierKpis();
+  renderShipments();
+  toast(n > 0 ? 'success' : 'warn', n > 0 ? `${n} shipment${n>1?'s':''} advanced` : 'All delivered', n > 0 ? 'Status updated across all couriers.' : 'No active shipments to advance.');
+};
+
+$('#btnNewShipment').onclick = () => {
+  if (parts.length === 0) return toast('err', 'No parts', 'Add inventory first.');
+  const p = parts[Math.floor(Math.random() * parts.length)];
+  const customer = CUSTOMER_NAMES[Math.floor(Math.random() * CUSTOMER_NAMES.length)];
+  createShipmentFor(p.name, customer, 1);
+  renderCouriers();
+  renderCourierKpis();
+  renderShipments();
+  toast('success', 'New shipment created', `${customer} • ${p.name} via ${shipments[0].courier}`);
+};
+
+/* ---------- Export ---------- */
+$('#btnExport').onclick = () => {
+  const rows = ['SKU,Name,Bangla,Brand,Category,Stock,Buy,Sell,Profit,Margin%'];
+  parts.forEach(p => {
+    const profit = p.sell - p.buy;
+    const margin = p.sell > 0 ? (profit / p.sell * 100).toFixed(1) : '0';
+    rows.push(`"${p.sku}","${p.name}","${p.bangla}","${p.brand}","${p.category}",${p.stock},${p.buy},${p.sell},${profit},${margin}`);
+  });
+  const csv = rows.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `bikepartsbd-inventory-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  toast('success', 'Exported', `${parts.length} rows saved to CSV.`);
+};
+
+/* ---------- Courier renderers ---------- */
+function renderCourierKpis() {
+  const total = shipments.length;
+  const grossRevenue = shipments.reduce((s, x) => s + (x.qty || 1) * (x.sell || 0), 0);
+  const grossProfit  = shipments.reduce((s, x) => s + (x.qty || 1) * ((x.sell || 0) - (x.buy || 0)), 0);
+  $('#ckTotal').textContent   = formatInt(total);
+  $('#ckTotalBn').textContent = total > 0 ? `${total}টি চলমান শিপমেন্ট` : 'কোন শিপমেন্ট নেই';
+  $('#ckRevenue').textContent    = formatCurrency(grossRevenue);
+  $('#ckRevenueBn').textContent  = `সব কুরিয়ার মিলিয়ে মোট আয়`;
+  $('#ckProfit').textContent     = formatCurrency(grossProfit);
+  $('#ckProfitBn').textContent   = `ইউনিট লাভ × পরিমাণ`;
+}
+
+function renderCouriers() {
+  const grid = $('#courierGrid');
+  grid.innerHTML = COURIERS.map(c => {
+    const list = shipments.filter(s => s.courier === c.id);
+    const total = list.length;
+    const delivered = list.filter(s => s.status === 'delivered').length;
+    const inTransit = list.filter(s => ['transit','out','picked'].includes(s.status)).length;
+    const success = total > 0 ? ((delivered / total) * 100).toFixed(0) : '—';
+    // Gross profit for this courier: Σ qty * (sell - buy) across all shipments
+    const grossProfit = list.reduce((sum, s) => sum + (s.qty || 1) * ((s.sell || 0) - (s.buy || 0)), 0);
+    const grossRevenue = list.reduce((sum, s) => sum + (s.qty || 1) * (s.sell || 0), 0);
+    const unitsShipped = list.reduce((s, x) => s + (x.qty || 1), 0);
+    return `
+      <div class="courier-card" style="--courier-color:${c.color}">
+        <div class="courier-head">
+          <div class="courier-logo">${c.short}</div>
+          <div>
+            <div class="courier-name">${c.id}</div>
+            <div class="courier-tag">${c.eta} • Nationwide</div>
+          </div>
+        </div>
+        <div class="courier-stats">
+          <div class="cs">
+            <div class="cs-label">Shipments</div>
+            <div class="cs-value">${total}</div>
+          </div>
+          <div class="cs">
+            <div class="cs-label">In Transit</div>
+            <div class="cs-value amber">${inTransit}</div>
+          </div>
+          <div class="cs">
+            <div class="cs-label">Delivered</div>
+            <div class="cs-value green">${delivered}</div>
+          </div>
+          <div class="cs">
+            <div class="cs-label">Success Rate</div>
+            <div class="cs-value ${total>0 && success>=80?'green':''}">${success}${total>0?'%':'—'}</div>
+          </div>
+        </div>
+        <div class="courier-profit">
+          <div class="cp-row">
+            <div class="cp-label-en">Gross Revenue</div>
+            <div class="cp-label-bn">মোট আয়</div>
+            <div class="cp-value">${formatCurrency(grossRevenue)}</div>
+          </div>
+          <div class="cp-row profit">
+            <div class="cp-label-en">Gross Profit <span class="cp-en-tag">/ মোট লাভ</span></div>
+            <div class="cp-label-bn">সর্বমোট মুনাফা</div>
+            <div class="cp-value green">${formatCurrency(grossProfit)}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderShipments() {
+  const body = $('#shipBody');
+  const filtered = shipments.filter(s => currentShipFilter === 'ALL' || s.courier === currentShipFilter);
+  if (filtered.length === 0) {
+    body.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text-3)">No shipments for this courier yet.</td></tr>`;
+    return;
+  }
+  const stepIdx = (st) => STATUS_FLOW.indexOf(st);
+  body.innerHTML = filtered.map(s => {
+    const c = COURIERS.find(x => x.id === s.courier);
+    const i = stepIdx(s.status);
+    let stepsHtml = '';
+    for (let k = 0; k < STATUS_FLOW.length; k++) {
+      let cls = '';
+      if (k < i) cls = 'done';
+      else if (k === i) cls = s.status === 'delivered' ? 'done' : 'active';
+      stepsHtml += `<div class="tl-step ${cls}"></div>`;
+    }
+    return `
+      <tr>
+        <td class="tracking-id">${s.id}</td>
+        <td><div style="font-weight:700">${s.customer}</div><div style="font-size:10px;color:var(--text-3)">${s.qty||1}× ${s.item}</div></td>
+        <td style="font-size:11px">${s.item}</td>
+        <td><span class="ship-courier"><span class="dot" style="background:${c.color}"></span>${c.id}</span></td>
+        <td style="font-weight:600">${s.dest}</td>
+        <td><div class="timeline">${stepsHtml}</div></td>
+        <td><span class="status-pill ${s.status}">${STATUS_LABEL[s.status]}</span></td>
+        <td style="font-size:11px;color:var(--text-2)">${s.eta}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function createShipmentFor(partName, customer, qty = 1) {
+  const c = COURIERS[Math.floor(Math.random() * COURIERS.length)];
+  const dest = BD_CITIES[Math.floor(Math.random() * BD_CITIES.length)];
+  const destEta = {
+    'Sundarban': '2-3 days',
+    'SA Paribahan': '1-2 days',
+    'Karotoa': '3-4 days',
+    'Janani': '2-3 days'
+  }[c.id];
+  // Look up buy/sell from parts for accurate courier-level profit
+  const part = parts.find(p => p.name === partName);
+  const buy = part ? part.buy : 0;
+  const sell = part ? part.sell : 0;
+  shipments.unshift({
+    id: genTrackingId(c),
+    customer,
+    item: partName,
+    courier: c.id,
+    dest,
+    status: 'placed',
+    eta: destEta,
+    qty,
+    buy,
+    sell
+  });
+  // Cap at 30 shipments
+  if (shipments.length > 30) shipments = shipments.slice(0, 30);
+}
+
+function advanceShipment(id) {
+  const s = shipments.find(x => x.id === id);
+  if (!s) return;
+  const i = STATUS_FLOW.indexOf(s.status);
+  if (i < STATUS_FLOW.length - 1) {
+    s.status = STATUS_FLOW[i + 1];
+    if (s.status === 'delivered') s.eta = 'Delivered';
+  }
+}
+
+function advanceAllActive() {
+  let n = 0;
+  shipments.forEach(s => {
+    const i = STATUS_FLOW.indexOf(s.status);
+    if (i < STATUS_FLOW.length - 1) {
+      s.status = STATUS_FLOW[i + 1];
+      if (s.status === 'delivered') s.eta = 'Delivered';
+      n++;
+    }
+  });
+  return n;
+}
+
+/* ---------- Vendor renderers & handlers ---------- */
+function renderVendors() {
+  const grid = $('#vendorGrid');
+  if (vendors.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-3);background:var(--surface);border:1px dashed var(--line);border-radius:var(--radius)">No vendors yet. Click "+ Add Vendor" to add your first supplier.</div>`;
+    return;
+  }
+  grid.innerHTML = vendors.map(v => {
+    const initials = v.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+    const waLink = `https://wa.me/${v.whatsapp}?text=${encodeURIComponent(`Hello ${v.name}, this is BikePartsBD Jashore. We need urgent restock for ${v.brand} parts. Please confirm availability. — Kayi Corporation`)}`;
+    const callLink = `tel:${v.phone}`;
+    return `
+      <div class="vendor-card">
+        <div class="vendor-head">
+          <div class="vendor-avatar">${initials}</div>
+          <div style="flex:1; min-width:0;">
+            <div class="vendor-name">${v.name}</div>
+            <div class="vendor-bn">${v.bangla || '—'} · ${v.id}</div>
+          </div>
+        </div>
+        <div class="vendor-meta">
+          <span class="chip brand">${v.brand}</span>
+          <span class="chip">📍 ${v.area}</span>
+          <span class="chip resp">⚡ ${v.response}</span>
+        </div>
+        <div class="vendor-contact">
+          <a class="vc-btn wa" href="${waLink}" target="_blank" rel="noopener" data-vendor="${v.id}" data-act="wa">
+            <span class="ico">💬</span> WhatsApp
+          </a>
+          <a class="vc-btn call" href="${callLink}" data-vendor="${v.id}" data-act="call">
+            <span class="ico">📞</span> Call ${v.phone}
+          </a>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+const openVendorModal = () => {
+  $('#vendorModal').classList.add('show');
+  ['vName','vBn','vBrand','vPhone','vWa','vArea','vResp'].forEach(id => $('#'+id).value = id === 'vResp' ? '~2 hrs' : '');
+  setTimeout(() => $('#vName').focus(), 50);
+};
+const closeVendorModal = () => $('#vendorModal').classList.remove('show');
+
+$('#btnAddVendor').onclick = openVendorModal;
+$('#vCancel').onclick = closeVendorModal;
+$('#vendorModal').onclick = (e) => { if (e.target === $('#vendorModal')) closeVendorModal(); };
+
+$('#vSave').onclick = () => {
+  const name = $('#vName').value.trim();
+  const phone = $('#vPhone').value.trim();
+  const wa = $('#vWa').value.trim() || phone.replace(/[^0-9]/g, '');
+  const brand = ($('#vBrand').value.trim() || 'UNIVERSAL').toUpperCase();
+  if (!name) return toast('err', 'Missing name', 'Please enter a vendor name.');
+  if (!phone) return toast('err', 'Missing phone', 'Please enter a phone number.');
+
+  const id = 'V' + String(vendors.length + 1).padStart(3, '0');
+  const bangla = $('#vBn').value.trim() || toBangla(name);
+  vendors.push({
+    id, name, bangla, phone, whatsapp: wa, brand,
+    area: $('#vArea').value.trim() || 'Unknown',
+    response: $('#vResp').value.trim() || '~2 hrs'
+  });
+  closeVendorModal();
+  renderVendors();
+  toast('success', 'Vendor added', `${name} (${brand}) — ready to contact.`);
+};
+
+/* ---------- Restock flow with vendor contact ---------- */
+const openRestockModal = () => {
+  const lowParts = parts.filter(p => p.stock < 10);
+  if (lowParts.length === 0) {
+    toast('warn', 'Nothing to restock', 'All parts are above the threshold.');
+    return;
+  }
+  $('#restockSub').innerHTML = `<strong style="color:var(--accent)">${lowParts.length}</strong> part${lowParts.length>1?'s':''} need restock — call or WhatsApp vendors to send goods fast. / দ্রুত মাল পাঠাতে ভেন্ডরকে কল বা হোয়াটসঅ্যাপ করুন।`;
+  const list = $('#restockList');
+  list.innerHTML = lowParts.map(p => {
+    // Find vendors matching this part's brand, fall back to any
+    const matched = vendors.filter(v => v.brand === p.brand);
+    const fallback = vendors.filter(v => v.brand !== p.brand);
+    const candidates = [...matched, ...fallback].slice(0, 3);
+    if (candidates.length === 0) {
+      return `
+        <div class="restock-item" data-sku="${p.sku}">
+          <div class="ri-head">
+            <div><div class="ri-name">${p.name}</div><div class="ri-bn">${p.bangla}</div></div>
+            <div class="ri-stock ${p.stock < 5 ? 'critical' : 'low'}">${p.stock} left</div>
+          </div>
+          <div class="ri-vendors" style="color:var(--text-3);font-size:11px;padding:8px 0">No vendors added for ${p.brand} yet. <a href="#" data-add-vendor="1" style="color:var(--accent)">+ Add a vendor</a></div>
+        </div>
+      `;
+    }
+    const stockClass = p.stock < 5 ? 'critical' : 'low';
+    return `
+      <div class="restock-item" data-sku="${p.sku}">
+        <div class="ri-head">
+          <div>
+            <div class="ri-name">${p.name}</div>
+            <div class="ri-bn">${p.bangla} · ${p.brand} · ${p.sku}</div>
+          </div>
+          <div class="ri-stock ${stockClass}">${p.stock} left</div>
+        </div>
+        <div class="ri-qty">
+          Order qty:
+          <input type="number" min="1" value="25" data-qty="${p.sku}" />
+          units
+        </div>
+        <div class="ri-vendors">
+          ${candidates.map(v => {
+            const qty = 25;
+            const bnMsg = `হ্যালো ${v.bangla || v.name}, বাইকপার্টসবিডি জশোর থেকে। ${p.bangla} (${p.sku}) — ${qty}টি জরুরি দরকার। দয়া করে আজই পাঠান। — কায়ি কর্পোরেশন`;
+            const enMsg = `Hello ${v.name}, this is BikePartsBD Jashore. We urgently need ${qty} units of ${p.name} (SKU: ${p.sku}). Please dispatch today. — Kayi Corporation`;
+            const waLink = `https://wa.me/${v.whatsapp}?text=${encodeURIComponent(bnMsg + '\n\n' + enMsg)}`;
+            const callLink = `tel:${v.phone}`;
+            return `
+              <div class="ri-vendor">
+                <div style="flex:1; min-width:0;">
+                  <div class="v-name">${v.name}</div>
+                  <div class="v-bn">${v.bangla || ''} · ${v.area}</div>
+                </div>
+                <div class="v-resp">⚡ ${v.response}</div>
+                <div class="ri-actions">
+                  <a class="wa" href="${waLink}" target="_blank" rel="noopener" data-vendor="${v.id}" data-sku="${p.sku}" data-act="wa">WhatsApp</a>
+                  <a class="call" href="${callLink}" data-vendor="${v.id}" data-sku="${p.sku}" data-act="call">Call</a>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+  $('#restockModal').classList.add('show');
+};
+const closeRestockModal = () => $('#restockModal').classList.remove('show');
+
+$('#btnRestockAll').onclick = openRestockModal;
+$('#restockClose').onclick = closeRestockModal;
+$('#restockModal').onclick = (e) => { if (e.target === $('#restockModal')) closeRestockModal(); };
+
+$('#restockAllBtn').onclick = () => {
+  let n = 0;
+  parts.forEach(p => { if (p.stock < 10) { p.stock += 25; n++; } });
+  renderTable();
+  if (n) {
+    toast('success', 'Restocked +25', `${n} part${n>1?'s':''} replenished.`);
+    // Refresh restock modal if open
+    if ($('#restockModal').classList.contains('show')) openRestockModal();
+  } else {
+    toast('warn', 'Nothing to restock', 'All parts are above the threshold.');
+  }
+};
+
+/* ---------- Theme toggle (dark / light) ---------- */
+const THEME_KEY = 'bikepartsbd_theme';
+const applyTheme = (theme) => {
+  document.documentElement.setAttribute('data-theme', theme);
+  try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+  // Force re-render of SVG-donut so segment colors look right
+  if (typeof renderDonut === 'function') renderDonut();
+};
+const initTheme = () => {
+  let saved = 'dark';
+  try { saved = localStorage.getItem(THEME_KEY) || 'dark'; } catch (e) {}
+  applyTheme(saved);
+};
+$('#themeToggle').onclick = () => {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+  toast('success',
+    current === 'dark' ? 'Light mode on' : 'Dark mode on',
+    current === 'dark' ? '☀️ হালকা মোড · easier on the eyes' : '🌙 ডার্ক মোড · brand-preferred'
+  );
+};
+initTheme();
+
+/* ---------- Init ---------- */
+renderTable();
+renderFeed();
+renderDonut();
+renderVendors();
+renderCouriers();
+renderCourierKpis();
+renderShipments();
+
+/* After initial render, allow real-time toasts */
+setTimeout(() => { isFirstLoad = false; }, 1500);
+</script>
+
+</body>
+</html>

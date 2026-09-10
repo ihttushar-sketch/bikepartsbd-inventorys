@@ -1,0 +1,38 @@
+# Build & cache artifacts
+.npm/
+.cache/
+.local/
+.mypy_cache/
+.next/
+.nox/
+.nuxt/
+.output/
+.parcel-cache/
+.pytest_cache/
+.ruff_cache/
+.svelte-kit/
+.tox/
+.turbo/
+.venv/
+.vite/
+__pycache__/
+build/
+coverage/
+dist/
+node_modules/
+out/
+target/
+
+# Sensitive files
+.git/config
+.git/credentials
+.git-credentials
+.netrc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+test_*.js
+*.tmp
