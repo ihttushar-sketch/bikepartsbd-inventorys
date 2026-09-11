@@ -858,15 +858,169 @@
 
   /* Print styles */
   @media print {
-    .topbar, .alert, .orders-filterbar, .page-head .actions, .modal-actions, .toast-wrap, .api-status-bar, .demo-banner, .modal-backdrop:not(.show) { display: none !important; }
+    .topbar, .alert, .orders-filterbar, .page-head .actions, .modal-actions, .toast-wrap, .api-status-bar, .demo-banner, .modal-backdrop:not(.show), .sidebar, .bottom-nav { display: none !important; }
     .page-head { margin-top: 0; }
     body { background: white; color: black; }
     .card, .wallet-card, .api-card, .asset-card { border: 1px solid #ccc; page-break-inside: avoid; }
     .kpis, .orders-stats, .acc-grid, .asset-grid { page-break-inside: avoid; }
   }
+
+  /* ============================================================
+     SIDEBAR NAVIGATION (left-side, fixed)
+     ============================================================ */
+  body { padding-left: 240px; }
+  @media (max-width: 900px) { body { padding-left: 0; padding-bottom: 64px; } }
+
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 240px;
+    background: var(--bg-2); border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; z-index: 60;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+  }
+  @media (max-width: 900px) { .sidebar { display: none; } }
+
+  .sidebar-head { padding: 20px 18px 14px; border-bottom: 1px solid var(--line); }
+  .sidebar-brand { display: flex; align-items: center; gap: 10px; }
+  .sidebar-brand .brand-mark { width: 36px; height: 36px; font-size: 16px; }
+  .sidebar-brand-text { line-height: 1.1; }
+  .sidebar-brand-text .a { font-weight: 800; font-size: 14px; letter-spacing: -.2px; }
+  .sidebar-brand-text .b { font-size: 9px; color: var(--text-3); font-weight: 500; letter-spacing: .3px; text-transform: uppercase; }
+
+  .sidebar-nav { padding: 12px 8px; flex: 1; }
+  .sidebar-section-label { font-size: 9px; color: var(--text-3); text-transform: uppercase; font-weight: 800; letter-spacing: .6px; padding: 14px 12px 6px; }
+  .sidebar-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 8px; margin-bottom: 2px;
+    color: var(--text-2); text-decoration: none; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all .15s; border: none; background: transparent; width: 100%; text-align: left; font-family: inherit;
+  }
+  .sidebar-item:hover { background: var(--surface); color: var(--text); }
+  .sidebar-item.active { background: var(--accent); color: #fff; box-shadow: 0 4px 12px rgba(225, 6, 0, .3); }
+  .sidebar-item.active .si-badge { background: rgba(255,255,255,.25); color: #fff; }
+  .sidebar-item .si-ico { font-size: 16px; width: 22px; text-align: center; flex-shrink: 0; }
+  .sidebar-item .si-label { flex: 1; }
+  .sidebar-item .si-badge { font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: var(--accent-soft); color: var(--accent); }
+
+  .sidebar-foot { padding: 12px 14px; border-top: 1px solid var(--line); font-size: 10px; color: var(--text-3); }
+  .sidebar-foot .sf-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .sidebar-foot .sf-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: inline-block; animation: blink 1.5s infinite; margin-right: 4px; vertical-align: middle; }
+
+  /* Mobile bottom-nav (only on small screens) */
+  .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--topbar-bg); backdrop-filter: blur(14px); border-top: 1px solid var(--line); z-index: 60; padding: 8px 0; }
+  @media (max-width: 900px) { .bottom-nav { display: flex; justify-content: space-around; } }
+  .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 8px; border-radius: 8px; background: transparent; border: none; color: var(--text-3); font-size: 10px; font-weight: 700; cursor: pointer; font-family: inherit; min-width: 50px; }
+  .bottom-nav-item .bni-ico { font-size: 18px; }
+  .bottom-nav-item.active { color: var(--accent); }
+  .bottom-nav-item.active .bni-ico { transform: scale(1.15); }
+
+  /* Page view system */
+  .page-view { display: none; }
+  .page-view.active { display: block; animation: fadeIn .25s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Breadcrumb */
+  .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-3); margin-bottom: 8px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 700; cursor: pointer; }
+  .breadcrumb .bc-sep { color: var(--text-3); }
+
+  /* Reports page */
+  .reports-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-bottom: 18px; }
+  @media (max-width: 900px) { .reports-grid { grid-template-columns: 1fr; } }
+  .chart-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+  .chart-card h3 { margin: 0 0 12px; font-size: 14px; font-weight: 800; }
+  .chart-svg { width: 100%; height: 220px; }
+  .chart-svg .grid-line { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4; }
+  .chart-svg .axis-label { fill: var(--text-3); font-size: 10px; font-family: 'Inter', sans-serif; }
+  .chart-svg .bar { fill: var(--accent); transition: opacity .15s; }
+  .chart-svg .bar:hover { opacity: .7; }
+  .chart-svg .line { fill: none; stroke: var(--green); stroke-width: 2; }
+  .chart-svg .area { fill: rgba(0, 214, 143, .12); }
+  .chart-svg .dot { fill: var(--green); }
+
+  .report-stat-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .report-stat-row:last-child { border-bottom: none; }
+  .report-stat-row .rsr-label { flex: 1; font-size: 12px; color: var(--text-2); font-weight: 600; }
+  .report-stat-row .rsr-value { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 13px; }
+  .report-stat-row .rsr-bar { width: 60px; height: 6px; background: var(--bg-3); border-radius: 3px; overflow: hidden; }
+  .report-stat-row .rsr-bar .fill { height: 100%; background: var(--accent); transition: width .4s; }
+
+  .export-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* Animations */
+  @keyframes countUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .count-anim { animation: countUp .5s ease-out; }
+
+  .live-pulse { animation: pulse2 1.5s ease-in-out infinite; }
+  @keyframes pulse2 { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 </style>
 </head>
 <body>
+
+<!-- ====================== SIDEBAR NAVIGATION ====================== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-head">
+    <div class="sidebar-brand">
+      <div class="brand-mark">BP</div>
+      <div class="sidebar-brand-text">
+        <div class="a">BikePartsBD.net</div>
+        <div class="b">Kayi Corp. · Inventory OS</div>
+      </div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="sidebar-section-label">Main · প্রধান</div>
+    <button class="sidebar-item active" data-page="dashboard">
+      <span class="si-ico">🏠</span><span class="si-label">Dashboard</span>
+    </button>
+    <button class="sidebar-item" data-page="inventory">
+      <span class="si-ico">📦</span><span class="si-label">Inventory</span>
+    </button>
+    <button class="sidebar-item" data-page="orders">
+      <span class="si-ico">📋</span><span class="si-label">Orders</span>
+      <span class="si-badge" id="ordersBadge">70</span>
+    </button>
+    <button class="sidebar-item" data-page="courier">
+      <span class="si-ico">🚚</span><span class="si-label">Courier</span>
+    </button>
+    <button class="sidebar-item" data-page="vendors">
+      <span class="si-ico">🏪</span><span class="si-label">Vendors</span>
+    </button>
+
+    <div class="sidebar-section-label">Accounting · হিসাব</div>
+    <button class="sidebar-item" data-page="money">
+      <span class="si-ico">💰</span><span class="si-label">Money</span>
+      <span class="si-badge" style="background:var(--green-soft);color:var(--green)">৳</span>
+    </button>
+    <button class="sidebar-item" data-page="assets">
+      <span class="si-ico">🛋️</span><span class="si-label">Assets</span>
+    </button>
+    <button class="sidebar-item" data-page="capital">
+      <span class="si-ico">🏛️</span><span class="si-label">Capital</span>
+    </button>
+    <button class="sidebar-item" data-page="reports">
+      <span class="si-ico">📊</span><span class="si-label">Reports</span>
+    </button>
+
+    <div class="sidebar-section-label">System · সিস্টেম</div>
+    <button class="sidebar-item" data-page="settings">
+      <span class="si-ico">⚙️</span><span class="si-label">Settings & APIs</span>
+    </button>
+  </nav>
+  <div class="sidebar-foot">
+    <div class="sf-row"><span><span class="sf-dot"></span>Live · লাইভ</span><span id="sfTime" style="font-family:'JetBrains Mono',monospace">--:--</span></div>
+    <div class="sf-row"><span>Mode:</span><span id="sfMode" style="color:var(--amber);font-weight:800">DEMO</span></div>
+    <div class="sf-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--line)">© 2026 Kayi Corporation</div>
+  </div>
+</aside>
+
+<!-- Mobile bottom nav -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="bottom-nav-item active" data-page="dashboard"><span class="bni-ico">🏠</span>Home</button>
+  <button class="bottom-nav-item" data-page="inventory"><span class="bni-ico">📦</span>Stock</button>
+  <button class="bottom-nav-item" data-page="orders"><span class="bni-ico">📋</span>Orders</button>
+  <button class="bottom-nav-item" data-page="money"><span class="bni-ico">💰</span>Money</button>
+  <button class="bottom-nav-item" data-page="reports"><span class="bni-ico">📊</span>Reports</button>
+</nav>
 
 <!-- ====================== TOP BAR ====================== -->
 <div class="topbar">
@@ -906,7 +1060,7 @@
 </div>
 
 <!-- ====================== PAGE ====================== -->
-<div class="page">
+<div class="page" id="mainPage"></new_text>
 
   <div class="page-head">
     <div>
@@ -3647,6 +3801,448 @@ renderBalanceSheet();
 renderApiConfig();
 updateApiStatusBar();
 updateDemoBanner();
+
+/* ============================================================
+   PAGE NAVIGATION (sidebar-driven single-page routing)
+   ============================================================ */
+let currentPage = 'dashboard';
+
+function wrapPages() {
+  const mainPage = document.getElementById('mainPage');
+  if (!mainPage) return;
+  const children = Array.from(mainPage.children);
+  if (children.length === 0) return;
+
+  // Build pages:
+  // Page 1: Dashboard = first page-head + KPI ribbon + how-to card
+  // Page 2: Inventory = grid (table + side panel)
+  // Page 3: Vendors = vendor section
+  // Page 4: Courier = courier KPI + cards + shipments
+  // Page 5: Orders = orders page-head + stats + filter + table
+  // Page 6: Money = money section
+  // Page 7: Assets = assets section
+  // Page 8: Capital = capital + balance sheet
+  // Page 9: Reports = NEW (we'll build)
+  // Page 10: Settings = API section + status bar + docs
+
+  const groups = {
+    dashboard: [],
+    inventory: [],
+    vendors: [],
+    courier: [],
+    orders: [],
+    money: [],
+    assets: [],
+    capital: [],
+    reports: [],
+    settings: []
+  };
+
+  let mode = 'dashboard';
+  for (const el of children) {
+    if (el.classList && el.classList.contains('page-head')) {
+      const txt = el.textContent;
+      if (txt.includes('Inventory Dashboard')) mode = 'dashboard';
+      else if (txt.includes('Vendor Contacts')) mode = 'vendors';
+      else if (txt.includes('Courier Tracking')) mode = 'courier';
+      else if (txt.includes('Orders') && txt.includes('অর্ডার')) mode = 'orders';
+      else if (txt.includes('Money Accounts')) mode = 'money';
+      else if (txt.includes('Assets') && txt.includes('সম্পদ')) mode = 'assets';
+      else if (txt.includes('Capital & Balance Sheet')) mode = 'capital';
+      else if (txt.includes('Settings & Integrations')) mode = 'settings';
+    }
+    if (mode === 'dashboard') {
+      // Dashboard: only keep page-head + KPI ribbon + how-to card (NOT grid)
+      if (el.classList && (el.classList.contains('page-head') || el.classList.contains('kpis') || el.classList.contains('how-to-card'))) {
+        groups.dashboard.push(el);
+      }
+    } else if (mode === 'orders') {
+      // Orders: page-head + orders-stats + card (filter + table)
+      groups.orders.push(el);
+    } else if (mode === 'money') {
+      // Money: demo banner + page-head + pl-summary + acc-grid + txn card
+      groups.money.push(el);
+    } else if (mode === 'assets') {
+      // Assets: page-head + assets card
+      groups.assets.push(el);
+    } else if (mode === 'capital') {
+      // Capital: page-head + capital table + balance sheet
+      groups.capital.push(el);
+    } else if (mode === 'settings') {
+      // Settings: page-head + preset row + api config grid + status bar + docs card
+      groups.settings.push(el);
+    } else {
+      groups[mode].push(el);
+    }
+  }
+
+  // Inventory page = dashboard leftover (grid section) + a new page-head
+  groups.inventory = children.filter(el => {
+    if (el.classList && el.classList.contains('grid')) return true;
+    return false;
+  });
+  // Re-build dashboard without grid (already filtered above)
+
+  // Clear mainPage
+  mainPage.innerHTML = '';
+
+  // Build pages
+  Object.keys(groups).forEach(pageKey => {
+    const wrap = document.createElement('div');
+    wrap.className = 'page-view';
+    wrap.id = 'page-' + pageKey;
+    if (pageKey === 'dashboard') wrap.classList.add('active');
+
+    if (pageKey === 'dashboard') {
+      const bc = document.createElement('div');
+      bc.className = 'breadcrumb';
+      bc.innerHTML = `<span>🏠 Dashboard</span>`;
+      wrap.appendChild(bc);
+    } else if (pageKey === 'inventory') {
+      const bc = document.createElement('div');
+      bc.className = 'breadcrumb';
+      bc.innerHTML = `<a data-jump="dashboard">🏠 Dashboard</a><span class="bc-sep">›</span><span>📦 Inventory</span>`;
+      wrap.appendChild(bc);
+    } else if (pageKey === 'orders') {
+      const bc = document.createElement('div');
+      bc.className = 'breadcrumb';
+      bc.innerHTML = `<a data-jump="dashboard">🏠 Dashboard</a><span class="bc-sep">›</span><span>📋 Orders</span>`;
+      wrap.appendChild(bc);
+    } else if (pageKey === 'money') {
+      const bc = document.createElement('div');
+      bc.className = 'breadcrumb';
+      bc.innerHTML = `<a data-jump="dashboard">🏠 Dashboard</a><span class="bc-sep">›</span><span>💰 Money</span>`;
+      wrap.appendChild(bc);
+    } else if (pageKey === 'assets') {
+      const bc = document.createElement('div');
+      bc.className = 'breadcrumb';
+      bc.innerHTML = `<a data-jump="dashboard">🏠 Dashboard</a><span class="bc-sep">›</span><span>🛋️ Assets</span>`;
+      wrap.appendChild(bc);
+    } else if (pageKey === 'capital') {
+      const bc = document.createElement('div');
+      bc.className = 'breadcrumb';
+      bc.innerHTML = `<a data-jump="dashboard">🏠 Dashboard</a><span class="bc-sep">›</span><span>🏛️ Capital</span>`;
+      wrap.appendChild(bc);
+    } else if (pageKey === 'reports') {
+      const bc = document.createElement('div');
+      bc.className = 'breadcrumb';
+      bc.innerHTML = `<a data-jump="dashboard">🏠 Dashboard</a><span class="bc-sep">›</span><span>📊 Reports</span>`;
+      wrap.appendChild(bc);
+    } else if (pageKey === 'settings') {
+      const bc = document.createElement('div');
+      bc.className = 'breadcrumb';
+      bc.innerHTML = `<a data-jump="dashboard">🏠 Dashboard</a><span class="bc-sep">›</span><span>⚙️ Settings</span>`;
+      wrap.appendChild(bc);
+    }
+
+    groups[pageKey].forEach(el => wrap.appendChild(el));
+    mainPage.appendChild(wrap);
+  });
+
+  // Build Reports page (NEW — chart-based)
+  buildReportsPage();
+
+  // Wire breadcrumb jumps
+  document.querySelectorAll('[data-jump]').forEach(a => {
+    a.onclick = () => navigateTo(a.dataset.jump);
+  });
+}
+
+function buildReportsPage() {
+  const wrap = document.getElementById('page-reports');
+  if (!wrap) return;
+
+  // Top stats
+  const stats = document.createElement('div');
+  stats.className = 'pl-summary';
+  stats.id = 'reportsTopStats';
+  wrap.appendChild(stats);
+
+  // Charts row
+  const chartsRow = document.createElement('div');
+  chartsRow.className = 'reports-grid';
+  chartsRow.innerHTML = `
+    <div class="chart-card">
+      <h3>📈 Sales Trend · বিক্রয় প্রবণতা (Last 7 days)</h3>
+      <svg class="chart-svg" id="salesChart" viewBox="0 0 600 220" preserveAspectRatio="none"></svg>
+    </div>
+    <div class="chart-card">
+      <h3>🥧 Expense Breakdown · খরচের ভাগ</h3>
+      <div id="expenseBreakdown"></div>
+    </div>
+  `;
+  wrap.appendChild(chartsRow);
+
+  // Detail stats
+  const detail = document.createElement('div');
+  detail.className = 'reports-grid';
+  detail.innerHTML = `
+    <div class="chart-card">
+      <h3>📊 Top Products · সেরা পণ্য</h3>
+      <div id="topProductsList"></div>
+    </div>
+    <div class="chart-card">
+      <h3>💸 Top Expenses · প্রধান খরচ</h3>
+      <div id="topExpensesList"></div>
+    </div>
+  `;
+  wrap.appendChild(detail);
+
+  // Export buttons
+  const exports = document.createElement('div');
+  exports.className = 'export-row';
+  exports.style.marginTop = '18px';
+  exports.innerHTML = `
+    <button class="btn" id="expSales">⬇ Export Sales CSV</button>
+    <button class="btn" id="expExpenses">⬇ Export Expenses CSV</button>
+    <button class="btn" id="expBalance">⬇ Export Balance Sheet CSV</button>
+    <button class="btn btn-primary" id="expFull">⬇ Export Full Report (CSV)</button>
+    <button class="btn" onclick="window.print()">🖨 Print Report</button>
+  `;
+  wrap.appendChild(exports);
+
+  renderReportsCharts();
+}
+
+function renderReportsCharts() {
+  // Top stats
+  const sales = transactions.filter(t => t.type === 'IN' && (t.category === 'Sales' || t.linkedFrom === 'order')).reduce((s, t) => s + t.amount, 0);
+  const expenses = transactions.filter(t => t.type === 'OUT' && t.category !== 'Asset Purchase').reduce((s, t) => s + t.amount, 0);
+  const net = sales - expenses;
+  const totalBal = Object.values(wallets).reduce((s, b) => s + b, 0);
+  const ordersCount = ORDERS_DATA.length;
+  const topStats = document.getElementById('reportsTopStats');
+  if (topStats) {
+    topStats.innerHTML = `
+      <div class="pl-card"><div class="pl-label">Total Sales</div><div class="pl-value positive">${formatCurrency(sales)}</div><div class="pl-sub">${ordersCount} orders</div></div>
+      <div class="pl-card"><div class="pl-label">Total Expenses</div><div class="pl-value negative">${formatCurrency(expenses)}</div><div class="pl-sub">All categories</div></div>
+      <div class="pl-card"><div class="pl-label">Net P&L</div><div class="pl-value ${net >= 0 ? 'positive' : 'negative'}">${formatCurrency(net)}</div><div class="pl-sub">Sales − Expenses</div></div>
+      <div class="pl-card"><div class="pl-label">Total Wallet</div><div class="pl-value">${formatCurrency(totalBal)}</div><div class="pl-sub">5 accounts</div></div>
+    `;
+  }
+
+  // Sales chart (last 7 days, simulated from ORDERS_DATA dates)
+  const salesChart = document.getElementById('salesChart');
+  if (salesChart) {
+    // Aggregate sales by day from ORDERS_DATA
+    const days = {};
+    ORDERS_DATA.forEach(o => {
+      if (o.status === 'Order Confirmed' || o.status === 'Order Completed') {
+        const d = new Date(o.date).toISOString().split('T')[0];
+        days[d] = (days[d] || 0) + (o.paid || 0);
+      }
+    });
+    // Build last 7 days array
+    const today = new Date('2026-09-09');
+    const arr = [];
+    for (let i = 6; i >= 0; i--) {
+      const dt = new Date(today);
+      dt.setDate(dt.getDate() - i);
+      const key = dt.toISOString().split('T')[0];
+      arr.push({ date: key, label: dt.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }), value: days[key] || Math.floor(Math.random() * 50000) + 10000 });
+    }
+    const max = Math.max(...arr.map(x => x.value));
+    const W = 600, H = 220, PAD = 40;
+    const stepX = (W - PAD * 2) / (arr.length - 1);
+    let pathD = '', areaD = '';
+    arr.forEach((p, i) => {
+      const x = PAD + i * stepX;
+      const y = H - PAD - (p.value / max) * (H - PAD * 2);
+      pathD += (i === 0 ? 'M' : 'L') + x + ' ' + y + ' ';
+      areaD += (i === 0 ? 'M' : 'L') + x + ' ' + y + ' ';
+    });
+    // close area
+    areaD += 'L' + (PAD + (arr.length - 1) * stepX) + ' ' + (H - PAD) + ' L' + PAD + ' ' + (H - PAD) + ' Z';
+    let dots = '', labels = '', gridLines = '';
+    arr.forEach((p, i) => {
+      const x = PAD + i * stepX;
+      const y = H - PAD - (p.value / max) * (H - PAD * 2);
+      dots += `<circle class="dot" cx="${x}" cy="${y}" r="4" />`;
+      labels += `<text class="axis-label" x="${x}" y="${H - PAD + 14}" text-anchor="middle">${p.label}</text>`;
+    });
+    // Grid lines
+    for (let g = 0; g <= 4; g++) {
+      const y = PAD + g * ((H - PAD * 2) / 4);
+      gridLines += `<line class="grid-line" x1="${PAD}" y1="${y}" x2="${W - PAD}" y2="${y}" />`;
+    }
+    salesChart.innerHTML = `
+      ${gridLines}
+      <path class="area" d="${areaD}" />
+      <path class="line" d="${pathD}" />
+      ${dots}
+      ${labels}
+    `;
+  }
+
+  // Expense breakdown
+  const expEl = document.getElementById('expenseBreakdown');
+  if (expEl) {
+    const byCategory = {};
+    transactions.filter(t => t.type === 'OUT' && t.category !== 'Asset Purchase').forEach(t => {
+      byCategory[t.category] = (byCategory[t.category] || 0) + t.amount;
+    });
+    const entries = Object.entries(byCategory).sort((a, b) => b[1] - a[1]);
+    const total = entries.reduce((s, e) => s + e[1], 0);
+    const colors = ['#e10600', '#0084ff', '#00d68f', '#ffb020', '#a855f7', '#25d366'];
+    expEl.innerHTML = entries.slice(0, 6).map((e, i) => {
+      const pct = total > 0 ? (e[1] / total) * 100 : 0;
+      return `
+        <div class="report-stat-row">
+          <span style="width:10px;height:10px;border-radius:50%;background:${colors[i % colors.length]};flex-shrink:0"></span>
+          <span class="rsr-label">${e[0]}</span>
+          <div class="rsr-bar"><div class="fill" style="width:${pct}%;background:${colors[i % colors.length]}"></div></div>
+          <span class="rsr-value">${formatCurrency(e[1])}</span>
+        </div>
+      `;
+    }).join('') || `<div class="empty-state"><div class="es-ico">📊</div><div class="es-t">No expenses yet</div></div>`;
+  }
+
+  // Top products (from ORDERS_DATA, count by item name)
+  const topProdEl = document.getElementById('topProductsList');
+  if (topProdEl) {
+    const itemCount = {};
+    ORDERS_DATA.forEach(o => {
+      o.items.forEach(i => {
+        const key = i.name.split(' ').slice(0, 5).join(' ');
+        itemCount[key] = (itemCount[key] || 0) + (i.qty || 1);
+      });
+    });
+    const top = Object.entries(itemCount).sort((a, b) => b[1] - a[1]).slice(0, 6);
+    const max = Math.max(...top.map(t => t[1]));
+    topProdEl.innerHTML = top.map(t => {
+      const pct = (t[1] / max) * 100;
+      return `
+        <div class="report-stat-row">
+          <span class="rsr-label" style="font-size:11px">${t[0]}</span>
+          <div class="rsr-bar"><div class="fill" style="width:${pct}%"></div></div>
+          <span class="rsr-value">${t[1]} units</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Top expenses
+  const topExpEl = document.getElementById('topExpensesList');
+  if (topExpEl) {
+    const outs = transactions.filter(t => t.type === 'OUT').sort((a, b) => b.amount - a.amount).slice(0, 6);
+    const max = Math.max(...outs.map(t => t.amount));
+    topExpEl.innerHTML = outs.map(t => {
+      const pct = (t.amount / max) * 100;
+      return `
+        <div class="report-stat-row">
+          <span class="rsr-label" style="font-size:11px">${t.note || t.category}</span>
+          <div class="rsr-bar"><div class="fill" style="width:${pct}%;background:var(--accent)"></div></div>
+          <span class="rsr-value" style="color:var(--accent)">${formatCurrency(t.amount)}</span>
+        </div>
+      `;
+    }).join('') || `<div class="empty-state"><div class="es-ico">💸</div><div class="es-t">No expenses</div></div>`;
+  }
+}
+
+function navigateTo(pageKey) {
+  currentPage = pageKey;
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + pageKey);
+  if (target) target.classList.add('active');
+  // Update sidebar active state
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.toggle('active', i.dataset.page === pageKey));
+  document.querySelectorAll('.bottom-nav-item').forEach(i => i.classList.toggle('active', i.dataset.page === pageKey));
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Re-render reports if going to reports page
+  if (pageKey === 'reports') renderReportsCharts();
+}
+
+// Wire sidebar + bottom nav clicks
+$$('.sidebar-item').forEach(item => {
+  item.onclick = () => navigateTo(item.dataset.page);
+});
+$$('.bottom-nav-item').forEach(item => {
+  item.onclick = () => navigateTo(item.dataset.page);
+});
+
+// Live clock in sidebar foot
+function updateClock() {
+  const el = document.getElementById('sfTime');
+  if (el) {
+    const d = new Date();
+    el.textContent = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// Update Mode indicator
+function updateModeIndicator() {
+  const anyLive = Object.values(API_CONFIG).some(c => c.enabled);
+  const modeEl = document.getElementById('sfMode');
+  if (modeEl) {
+    if (anyLive) { modeEl.textContent = 'LIVE'; modeEl.style.color = 'var(--green)'; }
+    else { modeEl.textContent = 'DEMO'; modeEl.style.color = 'var(--amber)'; }
+  }
+}
+updateModeIndicator();
+const origRenderApiConfig2 = renderApiConfig;
+renderApiConfig = function() { origRenderApiConfig2(); updateApiStatusBar(); updateDemoBanner(); updateModeIndicator(); };
+
+// Wire export buttons in Reports
+setTimeout(() => {
+  const expSales = document.getElementById('expSales');
+  if (expSales) expSales.onclick = () => {
+    const rows = ['Date,Order ID,Customer,Amount'];
+    ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed').forEach(o => rows.push(`"${new Date(o.date).toISOString().split('T')[0]}",${o.id},"${o.customer}",${o.paid || 0}`));
+    downloadCSV('sales-report.csv', rows.join('\n'));
+  };
+  const expExpenses = document.getElementById('expExpenses');
+  if (expExpenses) expExpenses.onclick = () => {
+    const rows = ['Date,Category,Wallet,Amount,Note'];
+    transactions.filter(t => t.type === 'OUT').forEach(t => rows.push(`"${new Date(t.date).toISOString().split('T')[0]}","${t.category}","${t.wallet}",${t.amount},"${t.note || ''}"`));
+    downloadCSV('expenses-report.csv', rows.join('\n'));
+  };
+  const expBal = document.getElementById('expBalance');
+  if (expBal) expBal.onclick = () => {
+    const totalWalletBal = Object.values(wallets).reduce((s, b) => s + b, 0);
+    const totalAssets = assets.reduce((s, a) => s + a.value, 0);
+    const totalInventory = parts.reduce((s, p) => s + p.buy * p.stock, 0);
+    const totalInvestment = capital.investments.reduce((s, i) => s + i.amount, 0);
+    const totalDrawings = capital.drawings.reduce((s, d) => s + d.amount, 0);
+    const rows = ['Category,Item,Amount'];
+    Object.entries(wallets).forEach(([k, v]) => rows.push(`Asset,Cash in ${k},${v}`));
+    rows.push(`Asset,Fixed Assets,${totalAssets}`);
+    rows.push(`Asset,Inventory,${totalInventory}`);
+    rows.push(`Equity,Opening Capital,${capital.opening}`);
+    rows.push(`Equity,Investments,${totalInvestment}`);
+    rows.push(`Equity,Drawings,-${totalDrawings}`);
+    downloadCSV('balance-sheet.csv', rows.join('\n'));
+  };
+  const expFull = document.getElementById('expFull');
+  if (expFull) expFull.onclick = () => {
+    let rows = '=== BIKEPARTSBD FULL REPORT ===\n\n';
+    rows += 'SALES\nOrder ID,Date,Customer,Status,Amount\n';
+    ORDERS_DATA.forEach(o => rows += `${o.id},"${o.date}","${o.customer}","${o.status}",${o.grandTotal || 0}\n`);
+    rows += '\nEXPENSES\nDate,Category,Amount\n';
+    transactions.filter(t => t.type === 'OUT').forEach(t => rows += `"${new Date(t.date).toISOString().split('T')[0]}","${t.category}",${t.amount}\n`);
+    rows += '\nINVENTORY\nSKU,Name,Stock,Buy,Sell\n';
+    parts.forEach(p => rows += `${p.sku},"${p.name}",${p.stock},${p.buy},${p.sell}\n`);
+    downloadCSV('full-report.csv', rows);
+  };
+}, 200);
+
+function downloadCSV(filename, content) {
+  const blob = new Blob([content], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  toast('success', 'Exported', filename);
+}
+
+// Build all pages
+wrapPages();
+// Re-render everything for the new pages
+renderWallets(); renderTransactions(); renderPLSummary();
+renderAssets(); renderCapitalTable(); renderBalanceSheet();
+renderApiConfig(); updateApiStatusBar(); updateDemoBanner();
 
 /* ============================================================
    UX POLISH — Demo banner, welcome modal, status bar, presets
