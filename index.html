@@ -4911,6 +4911,21 @@ function buildReportsPage() {
   `;
   wrap.appendChild(detail);
 
+  // NEW: YoY Comparison
+  const yoyCard = document.createElement('div');
+  yoyCard.className = 'chart-card';
+  yoyCard.style.marginTop = '18px';
+  yoyCard.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+      <h3 style="margin:0">📈 Year-over-Year Comparison · বছর-ভিত্তিক তুলনা</h3>
+      <button class="btn btn-sm" onclick="exportYoYCSV()">⬇ Export CSV</button>
+    </div>
+    <div style="font-size:11px;color:var(--text-3);margin-bottom:12px">Compare current year vs previous year · মাসভিত্তিক</div>
+    <div class="big-stat-grid" id="yoySummary"></div>
+    <svg class="chart-svg" id="yoyChart" viewBox="0 0 720 240" preserveAspectRatio="none" style="margin-top:14px"></svg>
+  `;
+  wrap.appendChild(yoyCard);
+
   // Export buttons (with PDF option)
   const exports = document.createElement('div');
   exports.className = 'export-row';
@@ -5020,6 +5035,7 @@ function renderReportsCharts() {
   renderABCAnalysis();
   renderDeadStock();
   renderTopCustomers();
+  renderYoYComparison();
 
   // Top stats</old_text>
   const sales = transactions.filter(t => t.type === 'IN' && (t.category === 'Sales' || t.linkedFrom === 'order')).reduce((s, t) => s + t.amount, 0);
@@ -5740,6 +5756,31 @@ function renderSalesGoalPage() {
   });
 }
 
+function exportYoYCSV() {
+  const data = {};
+  ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed').forEach(o => {
+    const d = new Date(o.date);
+    const y = d.getFullYear();
+    const m = d.getMonth();
+    if (!data[y]) data[y] = {};
+    if (!data[y][m]) data[y][m] = { sales: 0, orders: 0 };
+    data[y][m].sales += (o.paid || 0);
+    data[y][m].orders++;
+  });
+  const years = Object.keys(data).sort();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const rows = ['Month,' + years.map(y => `${y} Sales,${y} Orders`).join(',')];
+  months.forEach((mn, i) => {
+    const row = [mn];
+    years.forEach(y => {
+      row.push((data[y][i]?.sales || 0).toFixed(2));
+      row.push(data[y][i]?.orders || 0);
+    });
+    rows.push(row.join(','));
+  });
+  downloadCSV('year-over-year.csv', rows.join('\n'));
+}
+
 function monthName(m) {
   return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][m];
 }
@@ -5873,6 +5914,101 @@ function sendWATemplate(id) {
 }
 
 function escapeHtml(s) { return (s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+/* ============================================================
+   ROUND 5: YEAR-OVER-YEAR COMPARISON
+   ============================================================ */
+function renderYoYComparison() {
+  const el = document.getElementById('yoyChart');
+  if (!el) return;
+
+  // Group orders by month + year
+  const data = {}; // { year: { month: { sales, orders, items } } }
+  ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed').forEach(o => {
+    const d = new Date(o.date);
+    const y = d.getFullYear();
+    const m = d.getMonth();
+    if (!data[y]) data[y] = {};
+    if (!data[y][m]) data[y][m] = { sales: 0, orders: 0, items: 0 };
+    data[y][m].sales += (o.paid || 0);
+    data[y][m].orders++;
+    data[y][m].items += o.items.reduce((s, i) => s + i.qty, 0);
+  });
+
+  const years = Object.keys(data).sort();
+  const currentYear = years[years.length - 1];
+  const prevYear = years[years.length - 2] || currentYear;
+
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  // SVG grouped bar chart
+  const W = 720, H = 240, PAD = 40;
+  const max = Math.max(...months => 0, ...[...Array(12)].flatMap((_, i) => [data[currentYear]?.[i]?.sales || 0, data[prevYear]?.[i]?.sales || 0]));
+  const groupW = (W - PAD * 2) / 12;
+  const barW = (groupW - 6) / 2;
+
+  let bars = '', gridLines = '', xLabels = '';
+  for (let i = 0; i <= 4; i++) {
+    const y = PAD + (H - PAD * 2) * (i / 4);
+    const v = max * (1 - i / 4);
+    gridLines += `<line class="grid-line" x1="${PAD}" y1="${y}" x2="${W - PAD}" y2="${y}" stroke="var(--line)" stroke-dasharray="3,3"/>`;
+    gridLines += `<text class="axis-label" x="${PAD - 6}" y="${y + 4}" text-anchor="end">${(v / 1000).toFixed(0)}k</text>`;
+  }
+
+  for (let m = 0; m < 12; m++) {
+    const x = PAD + m * groupW + 3;
+    const cY = data[currentYear]?.[m]?.sales || 0;
+    const pY = data[prevYear]?.[m]?.sales || 0;
+    const cH = (cY / max) * (H - PAD * 2);
+    const pH = (pY / max) * (H - PAD * 2);
+    bars += `<rect x="${x}" y="${H - PAD - cH}" width="${barW}" height="${cH}" fill="#e10600" rx="3"><title>${monthNames[m]} ${currentYear}: ${formatCurrency(cY)}</title></rect>`;
+    bars += `<rect x="${x + barW + 2}" y="${H - PAD - pH}" width="${barW}" height="${pH}" fill="#6b7280" rx="3"><title>${monthNames[m]} ${prevYear}: ${formatCurrency(pY)}</title></rect>`;
+    xLabels += `<text class="axis-label" x="${x + barW}" y="${H - 8}" text-anchor="middle">${monthNames[m]}</text>`;
+  }
+
+  el.innerHTML = `
+    ${gridLines}${bars}${xLabels}
+    <g transform="translate(${W - 180}, 8)">
+      <rect x="0" y="0" width="12" height="12" fill="#e10600" rx="2"/>
+      <text class="axis-label" x="18" y="10">${currentYear}</text>
+      <rect x="0" y="20" width="12" height="12" fill="#6b7280" rx="2"/>
+      <text class="axis-label" x="18" y="30">${prevYear}</text>
+    </g>
+  `;
+
+  // YoY summary stats
+  let currTotal = 0, prevTotal = 0;
+  for (let m = 0; m < 12; m++) {
+    currTotal += data[currentYear]?.[m]?.sales || 0;
+    prevTotal += data[prevYear]?.[m]?.sales || 0;
+  }
+  const diff = currTotal - prevTotal;
+  const growthPct = prevTotal > 0 ? (diff / prevTotal * 100) : 0;
+
+  const sumEl = document.getElementById('yoySummary');
+  if (sumEl) {
+    sumEl.innerHTML = `
+      <div class="big-stat" style="--stat-color:var(--accent)">
+        <div class="bs-icon">📅</div>
+        <div class="bs-label">${currentYear} Total</div>
+        <div class="bs-value" style="color:var(--accent)">${formatCurrency(currTotal)}</div>
+        <div class="bs-sub">${data[currentYear] ? Object.values(data[currentYear]).reduce((s, m) => s + m.orders, 0) : 0} orders · ${data[currentYear] ? Object.values(data[currentYear]).reduce((s, m) => s + m.items, 0) : 0} items</div>
+      </div>
+      <div class="big-stat" style="--stat-color:#6b7280">
+        <div class="bs-icon">📅</div>
+        <div class="bs-label">${prevYear} Total</div>
+        <div class="bs-value">${formatCurrency(prevTotal)}</div>
+        <div class="bs-sub">${data[prevYear] ? Object.values(data[prevYear]).reduce((s, m) => s + m.orders, 0) : 0} orders · ${data[prevYear] ? Object.values(data[prevYear]).reduce((s, m) => s + m.items, 0) : 0} items</div>
+      </div>
+      <div class="big-stat" style="--stat-color:${growthPct >= 0 ? 'var(--green)' : 'var(--accent)'}">
+        <div class="bs-icon">${growthPct >= 0 ? '📈' : '📉'}</div>
+        <div class="bs-label">YoY Growth · বৃদ্ধি</div>
+        <div class="bs-value" style="color:${growthPct >= 0 ? 'var(--green)' : 'var(--accent)'}">${growthPct >= 0 ? '+' : ''}${growthPct.toFixed(1)}%</div>
+        <div class="bs-sub">${growthPct >= 0 ? '+' : ''}${formatCurrency(Math.abs(diff))} vs last year<br>${growthPct >= 50 ? '🎉 Excellent growth!' : growthPct >= 0 ? '✅ Growing' : '⚠️ Declining'}</div>
+      </div>
+    `;
+  }
+}
 
 /* ============================================================
    ROUND 3: AUTO INVOICE GENERATOR
