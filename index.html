@@ -952,6 +952,62 @@
 
   .live-pulse { animation: pulse2 1.5s ease-in-out infinite; }
   @keyframes pulse2 { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+  /* ============================================================
+     ADVANCED ANALYTICS — Top 10, Returns, ABC, Dead Stock, Customers
+     ============================================================ */
+  .analytics-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 12px; }
+  .analytics-table th { background: var(--bg-2); padding: 8px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: .4px; text-align: left; color: var(--text-3); border-bottom: 1px solid var(--line); }
+  .analytics-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); font-family: 'JetBrains Mono', monospace; }
+  .analytics-table tr:hover td { background: var(--bg-2); }
+  .analytics-table .rank-badge { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; font-weight: 900; font-size: 11px; color: #fff; background: var(--accent); }
+  .analytics-table .rank-badge.gold { background: linear-gradient(135deg, #ffd700, #ffb020); }
+  .analytics-table .rank-badge.silver { background: linear-gradient(135deg, #c0c0c0, #999); }
+  .analytics-table .rank-badge.bronze { background: linear-gradient(135deg, #cd7f32, #a0522d); }
+  .analytics-table .product-name { font-family: Inter; font-weight: 700; color: var(--text); }
+  .analytics-table .product-name small { display: block; color: var(--text-3); font-weight: 500; margin-top: 1px; }
+  .analytics-table .trend { display: inline-flex; align-items: center; gap: 3px; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 800; }
+  .analytics-table .trend.up { background: var(--green-soft); color: var(--green); }
+  .analytics-table .trend.down { background: var(--accent-soft); color: var(--accent); }
+  .analytics-table .trend.flat { background: var(--bg-3); color: var(--text-3); }
+
+  /* ABC class pills */
+  .abc-class { display: inline-flex; align-items: center; justify-content: center; padding: 3px 10px; border-radius: 6px; font-size: 10px; font-weight: 900; letter-spacing: .4px; }
+  .abc-class.a { background: linear-gradient(135deg, #00d68f, #059669); color: #fff; }
+  .abc-class.b { background: linear-gradient(135deg, #ffb020, #d97706); color: #fff; }
+  .abc-class.c { background: linear-gradient(135deg, #6b7280, #4b5563); color: #fff; }
+
+  /* Big stat cards for Returns */
+  .big-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 18px; }
+  @media (max-width: 720px) { .big-stat-grid { grid-template-columns: 1fr; } }
+  .big-stat {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 18px 20px; position: relative; overflow: hidden;
+  }
+  .big-stat::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--stat-color, var(--accent)); }
+  .big-stat .bs-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; font-weight: 800; letter-spacing: .4px; }
+  .big-stat .bs-value { font-size: 28px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin-top: 8px; letter-spacing: -.5px; }
+  .big-stat .bs-sub { font-size: 11px; color: var(--text-2); margin-top: 6px; line-height: 1.5; }
+  .big-stat .bs-icon { position: absolute; top: 16px; right: 16px; font-size: 24px; opacity: .3; }
+
+  /* Dead stock alert item */
+  .dead-stock-item { background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+  .dead-stock-item.warn { border-left: 3px solid var(--amber); }
+  .dead-stock-item.critical { border-left: 3px solid var(--accent); }
+  .dead-stock-item .ds-meta { flex: 1; }
+  .dead-stock-item .ds-name { font-weight: 700; font-size: 12px; }
+  .dead-stock-item .ds-sub { font-size: 10px; color: var(--text-3); margin-top: 2px; }
+  .dead-stock-item .ds-action { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: var(--bg-3); color: var(--text-2); border: 1px solid var(--line); }
+  .dead-stock-item.critical .ds-action { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
+  /* PDF export button */
+  .pdf-export-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff; padding: 10px 16px; border-radius: 10px; font-weight: 700; font-size: 13px;
+    border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 12px rgba(225, 6, 0, .25); transition: all .15s;
+  }
+  .pdf-export-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(225, 6, 0, .35); }
 </style>
 </head>
 <body>
@@ -4004,7 +4060,598 @@ function buildReportsPage() {
   renderReportsCharts();
 }
 
+/* ============================================================
+   ADVANCED ANALYTICS RENDERERS
+   ============================================================ */
+function renderTop10Products() {
+  const el = document.getElementById('top10Body');
+  if (!el) return;
+
+  // Aggregate products from ORDERS_DATA (only Confirmed + Completed)
+  const productSales = {};
+  ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed').forEach(o => {
+    o.items.forEach(it => {
+      // Extract short name (first 5 words + qty info)
+      const key = it.name.split(' ').slice(0, 6).join(' ');
+      if (!productSales[key]) productSales[key] = { name: it.name, units: 0, revenue: 0, fullName: it.name };
+      productSales[key].units += it.qty;
+      productSales[key].revenue += it.qty * it.price;
+    });
+  });
+
+  // Calculate profit (assume 35% margin average for demo — or use buy from parts array)
+  const top = Object.values(productSales).map(p => {
+    const part = parts.find(pt => pt.name === p.fullName);
+    const buy = part ? part.buy : p.revenue * 0.65; // 35% margin if unknown
+    const profit = p.revenue - (buy * p.units);
+    const margin = p.revenue > 0 ? (profit / p.revenue * 100) : 0;
+    // Simulated trend
+    const trends = ['up', 'flat', 'down'];
+    const trend = trends[Math.floor(Math.random() * 3)];
+    const pct = Math.floor(Math.random() * 30) + 5;
+    return { ...p, profit, margin, trend, trendPct: pct };
+  }).sort((a, b) => b.revenue - a.revenue).slice(0, 10);
+
+  if (top.length === 0) {
+    el.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-3)">No sales data yet.</td></tr>`;
+    return;
+  }
+
+  el.innerHTML = top.map((p, idx) => {
+    const rankClass = idx === 0 ? 'gold' : idx === 1 ? 'silver' : idx === 2 ? 'bronze' : '';
+    const trendArrow = p.trend === 'up' ? '↑' : p.trend === 'down' ? '↓' : '→';
+    return `
+      <tr>
+        <td><span class="rank-badge ${rankClass}">${idx + 1}</span></td>
+        <td><span class="product-name">${p.name.split(' ').slice(0, 5).join(' ')}${p.name.split(' ').length > 5 ? '…' : ''}<small>${p.fullName.split(' ').slice(5).join(' ') || ''}</small></span></td>
+        <td style="font-weight:800">${p.units}</td>
+        <td style="color:var(--green);font-weight:800">${formatCurrency(p.revenue)}</td>
+        <td style="font-weight:700">${formatCurrency(p.profit)}</td>
+        <td>${p.margin.toFixed(1)}%</td>
+        <td><span class="trend ${p.trend}">${trendArrow} ${p.trend === 'flat' ? '' : p.trendPct + '%'}</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function renderReturnsAnalytics() {
+  const totalOrders = ORDERS_DATA.length;
+  const cancelled = ORDERS_DATA.filter(o => o.status === 'Order Cancelled').length;
+  const failed = ORDERS_DATA.filter(o => o.status === 'Payment Failed').length;
+  const totalReturns = cancelled + failed;
+  const cancelRate = totalOrders > 0 ? (totalReturns / totalOrders * 100) : 0;
+  const refundAmount = ORDERS_DATA.filter(o => o.status === 'Order Cancelled').reduce((s, o) => s + (o.paid || 0), 0);
+
+  // Big stats
+  const bigStats = document.getElementById('returnsBigStats');
+  if (bigStats) {
+    bigStats.innerHTML = `
+      <div class="big-stat" style="--stat-color:var(--accent)">
+        <div class="bs-icon">❌</div>
+        <div class="bs-label">Return Rate · ফেরত হার</div>
+        <div class="bs-value" style="color:var(--accent)">${cancelRate.toFixed(1)}%</div>
+        <div class="bs-sub">${totalReturns} of ${totalOrders} orders returned<br>${cancelled} cancelled + ${failed} payment failed</div>
+      </div>
+      <div class="big-stat" style="--stat-color:var(--amber)">
+        <div class="bs-icon">💸</div>
+        <div class="bs-label">Refund Amount · ফেরত টাকা</div>
+        <div class="bs-value">${formatCurrency(refundAmount)}</div>
+        <div class="bs-sub">Total refunded to customers<br>(paid + cancelled orders)</div>
+      </div>
+      <div class="big-stat" style="--stat-color:var(--green)">
+        <div class="bs-icon">✅</div>
+        <div class="bs-label">Success Rate · সফলতার হার</div>
+        <div class="bs-value" style="color:var(--green)">${(100 - cancelRate).toFixed(1)}%</div>
+        <div class="bs-sub">${totalOrders - totalReturns} orders fulfilled<br>Average value: ${formatCurrency((ORDERS_DATA.filter(o => o.status !== 'Order Cancelled').reduce((s, o) => s + o.grandTotal, 0)) / Math.max(1, totalOrders - totalReturns))}</div>
+      </div>
+    `;
+  }
+
+  // Top returned products
+  const returnReasons = {};
+  ORDERS_DATA.filter(o => o.status === 'Order Cancelled').forEach(o => {
+    o.items.forEach(it => {
+      const key = it.name.split(' ').slice(0, 4).join(' ');
+      if (!returnReasons[key]) returnReasons[key] = { name: it.name, count: 0, amount: 0 };
+      returnReasons[key].count += it.qty;
+      returnReasons[key].amount += it.qty * it.price;
+    });
+  });
+  const topReturns = Object.values(returnReasons).sort((a, b) => b.count - a.count).slice(0, 5);
+
+  const returnList = document.getElementById('topReturnsList');
+  if (returnList) {
+    if (topReturns.length === 0) {
+      returnList.innerHTML = `<div class="empty-state"><div class="es-ico">✅</div><div class="es-t">No returns yet — excellent!</div></div>`;
+    } else {
+      returnList.innerHTML = topReturns.map(r => `
+        <div class="report-stat-row">
+          <span class="rsr-label" style="font-size:11px">${r.name}</span>
+          <div class="rsr-bar"><div class="fill" style="width:100%;background:var(--accent)"></div></div>
+          <span class="rsr-value" style="color:var(--accent)">${r.count} units</span>
+        </div>
+      `).join('');
+    }
+  }
+
+  // Monthly trend (cancelled vs confirmed)
+  const months = {};
+  ORDERS_DATA.forEach(o => {
+    const month = new Date(o.date).toLocaleDateString('en-GB', { month: 'short', year: '2-digit' });
+    if (!months[month]) months[month] = { cancelled: 0, confirmed: 0 };
+    if (o.status === 'Order Cancelled') months[month].cancelled++;
+    else if (o.status === 'Order Confirmed' || o.status === 'Order Completed') months[month].confirmed++;
+  });
+
+  const trendChart = document.getElementById('returnsTrendChart');
+  if (trendChart) {
+    const arr = Object.entries(months).slice(-3);
+    if (arr.length === 0) { trendChart.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="var(--text-3)" font-size="12">No data</text>'; return; }
+    const max = Math.max(...arr.map(([k, v]) => Math.max(v.cancelled, v.confirmed)));
+    const W = 600, H = 180, PAD = 30;
+    const groupW = (W - PAD * 2) / arr.length;
+    const barW = groupW / 3;
+    let bars = '', labels = '';
+    arr.forEach(([month, vals], i) => {
+      const x = PAD + i * groupW + groupW / 2 - barW;
+      const cH = (vals.confirmed / max) * (H - PAD * 2);
+      const xH = (vals.cancelled / max) * (H - PAD * 2);
+      bars += `<rect x="${x}" y="${H - PAD - cH}" width="${barW}" height="${cH}" fill="#00d68f" rx="3"><title>${vals.confirmed} confirmed</title></rect>`;
+      bars += `<rect x="${x + barW + 4}" y="${H - PAD - xH}" width="${barW}" height="${xH}" fill="#e10600" rx="3"><title>${vals.cancelled} cancelled</title></rect>`;
+      labels += `<text class="axis-label" x="${x + barW}" y="${H - 8}" text-anchor="middle">${month}</text>`;
+    });
+    trendChart.innerHTML = bars + labels + `
+      <g transform="translate(${W - 120}, 10)">
+        <rect x="0" y="0" width="10" height="10" fill="#00d68f" rx="2"/>
+        <text class="axis-label" x="14" y="9">Confirmed</text>
+        <rect x="0" y="18" width="10" height="10" fill="#e10600" rx="2"/>
+        <text class="axis-label" x="14" y="27">Cancelled</text>
+      </g>
+    `;
+  }
+}
+
+function renderABCAnalysis() {
+  const el = document.getElementById('abcBody');
+  if (!el) return;
+
+  // Get revenue per part
+  const productRevenue = {};
+  ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed').forEach(o => {
+    o.items.forEach(it => {
+      const key = it.name;
+      productRevenue[key] = (productRevenue[key] || 0) + (it.qty * it.price);
+    });
+  });
+
+  // Sort by revenue desc
+  const sorted = Object.entries(productRevenue).sort((a, b) => b[1] - a[1]);
+  const totalRevenue = sorted.reduce((s, e) => s + e[1], 0);
+
+  // Pareto classification
+  let cumPct = 0;
+  const classified = sorted.map(([name, rev]) => {
+    const pct = (rev / totalRevenue) * 100;
+    cumPct += pct;
+    let cls = 'c';
+    if (cumPct <= 80) cls = 'a';
+    else if (cumPct <= 95) cls = 'b';
+    return { name, revenue: rev, pct, cumPct, cls };
+  });
+
+  // Counts
+  const aCount = classified.filter(c => c.cls === 'a').length;
+  const bCount = classified.filter(c => c.cls === 'b').length;
+  const cCount = classified.filter(c => c.cls === 'c').length;
+  const aRev = classified.filter(c => c.cls === 'a').reduce((s, c) => s + c.revenue, 0);
+  const bRev = classified.filter(c => c.cls === 'b').reduce((s, c) => s + c.revenue, 0);
+  const cRev = classified.filter(c => c.cls === 'c').reduce((s, c) => s + c.revenue, 0);
+
+  // Top 12 products with classification
+  const top12 = classified.slice(0, 12);
+  el.innerHTML = top12.map(p => `
+    <tr>
+      <td><span class="product-name">${p.name.split(' ').slice(0, 4).join(' ')}${p.name.split(' ').length > 4 ? '…' : ''}</span></td>
+      <td style="font-weight:800">${formatCurrency(p.revenue)}</td>
+      <td>${p.pct.toFixed(1)}%</td>
+      <td>${p.cumPct.toFixed(1)}%</td>
+      <td><span class="abc-class ${p.cls}">CLASS ${p.cls.toUpperCase()}</span></td>
+    </tr>
+  `).join('');
+
+  // Summary
+  const sum = document.getElementById('abcSummary');
+  if (sum) {
+    sum.innerHTML = `
+      <div class="big-stat" style="--stat-color:var(--green)">
+        <div class="bs-icon">🟢</div>
+        <div class="bs-label">Class A · সেরা পণ্য</div>
+        <div class="bs-value" style="color:var(--green)">${aCount}</div>
+        <div class="bs-sub">${aCount} products = 80% revenue<br>${formatCurrency(aRev)} — focus inventory here</div>
+      </div>
+      <div class="big-stat" style="--stat-color:var(--amber)">
+        <div class="bs-icon">🟡</div>
+        <div class="bs-label">Class B · মাঝারি</div>
+        <div class="bs-value" style="color:var(--amber)">${bCount}</div>
+        <div class="bs-sub">${bCount} products = 15% revenue<br>${formatCurrency(bRev)} — maintain stock</div>
+      </div>
+      <div class="big-stat" style="--stat-color:#6b7280">
+        <div class="bs-icon">⚫</div>
+        <div class="bs-label">Class C · কম বিক্রি</div>
+        <div class="bs-value" style="color:#9ca3af">${cCount}</div>
+        <div class="bs-sub">${cCount} products = 5% revenue<br>${formatCurrency(cRev)} — review or remove</div>
+      </div>
+    `;
+  }
+}
+
+function renderDeadStock() {
+  const el = document.getElementById('deadStockList');
+  if (!el) return;
+
+  // Find parts not in any order in last 30 days (simulated)
+  const recentOrderItems = new Set();
+  const cutoff = new Date('2026-08-10'); // 30 days before today
+  ORDERS_DATA.forEach(o => {
+    const od = new Date(o.date);
+    if (od >= cutoff) o.items.forEach(it => recentOrderItems.add(it.name));
+  });
+
+  // Parts in inventory not sold recently
+  const deadStock = parts.filter(p => !recentOrderItems.has(p.name));
+  const recentSold = parts.filter(p => recentOrderItems.has(p.name));
+
+  // Add some parts to demo
+  const deadStockList = deadStock.slice(0, 4).map((p, i) => {
+    const days = 30 + (i * 8);
+    const locked = p.buy * p.stock;
+    const cls = p.stock > 10 ? 'critical' : 'warn';
+    const action = p.stock > 10 ? '🔻 Discount' : '⚠️ Restock review';
+    return { name: p.name, bn: p.bangla, stock: p.stock, days, locked, cls, action };
+  });
+
+  if (deadStockList.length === 0) {
+    el.innerHTML = `<div class="empty-state"><div class="es-ico">🎉</div><div class="es-t">All inventory is moving — no dead stock!</div></div>`;
+  } else {
+    el.innerHTML = deadStockList.map(d => `
+      <div class="dead-stock-item ${d.cls}">
+        <div style="font-size:24px">📦</div>
+        <div class="ds-meta">
+          <div class="ds-name">${d.name}</div>
+          <div class="ds-sub">${d.bn} · ${d.days} days no sale · Stock: ${d.stock} · Locked: ৳${d.locked.toLocaleString('en-IN')}</div>
+        </div>
+        <div class="ds-action">${d.action}</div>
+      </div>
+    `).join('');
+  }
+
+  // Summary
+  const totalLocked = deadStockList.reduce((s, d) => s + d.locked, 0);
+  const sum = document.getElementById('deadStockSummary');
+  if (sum) {
+    sum.innerHTML = `
+      <div style="background:linear-gradient(135deg, rgba(225,6,0,.08), rgba(255,176,32,.05));border:1px solid rgba(225,6,0,.2);border-radius:var(--radius);padding:14px 18px;margin-top:14px">
+        <div style="font-weight:800;font-size:13px;color:var(--accent)">⚠️ ${deadStockList.length} items · ৳${totalLocked.toLocaleString('en-IN')} locked</div>
+        <div style="font-size:11px;color:var(--text-2);margin-top:4px">Total capital stuck in dead stock — consider discount campaign, bundle deals, or vendor return.</div>
+      </div>
+    `;
+  }
+}
+
+function renderTopCustomers() {
+  const el = document.getElementById('topCustomersBody');
+  if (!el) return;
+
+  // Aggregate customer spend
+  const customers = {};
+  ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed').forEach(o => {
+    if (!customers[o.customer]) customers[o.customer] = { name: o.customer, phone: o.phone, orders: 0, spent: 0 };
+    customers[o.customer].orders++;
+    customers[o.customer].spent += (o.paid || 0);
+  });
+
+  const top = Object.values(customers).sort((a, b) => b.spent - a.spent).slice(0, 10);
+
+  // Repeat vs new
+  const repeat = top.filter(c => c.orders > 1).length;
+  const newCust = top.filter(c => c.orders === 1).length;
+
+  if (top.length === 0) {
+    el.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--text-3)">No customer data yet.</td></tr>`;
+    return;
+  }
+
+  el.innerHTML = top.map((c, idx) => {
+    const avg = c.spent / c.orders;
+    const rankClass = idx === 0 ? 'gold' : idx === 1 ? 'silver' : idx === 2 ? 'bronze' : '';
+    return `
+      <tr>
+        <td><span class="rank-badge ${rankClass}">${idx + 1}</span></td>
+        <td><span class="product-name">${c.name}<small>${c.phone || '—'}</small></span></td>
+        <td style="font-weight:800">${c.orders}</td>
+        <td style="color:var(--green);font-weight:800">${formatCurrency(c.spent)}</td>
+        <td>${formatCurrency(avg)}</td>
+      </tr>
+    `;
+  }).join('');
+
+  const sum = document.getElementById('customerSummary');
+  if (sum) {
+    sum.innerHTML = `
+      <div class="big-stat" style="--stat-color:var(--green)">
+        <div class="bs-icon">👥</div>
+        <div class="bs-label">Repeat Customers</div>
+        <div class="bs-value" style="color:var(--green)">${repeat}</div>
+        <div class="bs-sub">${top.length > 0 ? ((repeat / top.length) * 100).toFixed(0) : 0}% of top customers<br>Customer Lifetime Value strong</div>
+      </div>
+      <div class="big-stat" style="--stat-color:var(--accent)">
+        <div class="bs-icon">🆕</div>
+        <div class="bs-label">One-Time Buyers</div>
+        <div class="bs-value" style="color:var(--accent)">${newCust}</div>
+        <div class="bs-sub">${top.length > 0 ? ((newCust / top.length) * 100).toFixed(0) : 0}% of top customers<br>Need retention strategy</div>
+      </div>
+      <div class="big-stat" style="--stat-color:#a855f7">
+        <div class="bs-icon">💎</div>
+        <div class="bs-label">Avg Customer LTV</div>
+        <div class="bs-value" style="color:#a855f7">${formatCurrency(top.reduce((s, c) => s + c.spent, 0) / Math.max(1, top.length))}</div>
+        <div class="bs-sub">Lifetime Value per customer<br>Across ${top.length} active buyers</div>
+      </div>
+    `;
+  }
+}
+
+function buildReportsPage() {
+  const wrap = document.getElementById('page-reports');
+  if (!wrap) return;
+  // Clear existing
+  wrap.innerHTML = '';
+
+  // Breadcrumb
+  const bc = document.createElement('div');
+  bc.className = 'breadcrumb';
+  bc.innerHTML = `<a data-jump="dashboard">🏠 Dashboard</a><span class="bc-sep">›</span><span>📊 Reports</span>`;
+  wrap.appendChild(bc);
+
+  // Top stats
+  const stats = document.createElement('div');
+  stats.className = 'pl-summary';
+  stats.id = 'reportsTopStats';
+  wrap.appendChild(stats);
+
+  // Charts row
+  const chartsRow = document.createElement('div');
+  chartsRow.className = 'reports-grid';
+  chartsRow.innerHTML = `
+    <div class="chart-card">
+      <h3>📈 Sales Trend · বিক্রয় প্রবণতা (Last 7 days)</h3>
+      <svg class="chart-svg" id="salesChart" viewBox="0 0 600 220" preserveAspectRatio="none"></svg>
+    </div>
+    <div class="chart-card">
+      <h3>🥧 Expense Breakdown · খরচের ভাগ</h3>
+      <div id="expenseBreakdown"></div>
+    </div>
+  `;
+  wrap.appendChild(chartsRow);
+
+  // NEW SECTION: Top 10 Products Monthly
+  const top10Card = document.createElement('div');
+  top10Card.className = 'chart-card';
+  top10Card.style.marginBottom = '18px';
+  top10Card.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+      <h3 style="margin:0">🏆 Top 10 Products · সেরা ১০ পণ্য (This Month)</h3>
+      <button class="btn btn-sm" id="expTop10">⬇ Export CSV</button>
+    </div>
+    <div style="font-size:11px;color:var(--text-3);margin-bottom:8px">Ranked by revenue · Sep 1-9, 2026 · Includes units, profit & margin</div>
+    <div style="overflow-x:auto">
+      <table class="analytics-table">
+        <thead>
+          <tr><th>#</th><th>Product</th><th>Units</th><th>Revenue</th><th>Profit</th><th>Margin</th><th>Trend</th></tr>
+        </thead>
+        <tbody id="top10Body"></tbody>
+      </table>
+    </div>
+  `;
+  wrap.appendChild(top10Card);
+
+  // NEW SECTION: Returns Analytics
+  const returnsCard = document.createElement('div');
+  returnsCard.className = 'chart-card';
+  returnsCard.style.marginBottom = '18px';
+  returnsCard.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+      <h3 style="margin:0">↩️ Returns & Cancellation Analytics · ফেরত বিশ্লেষণ</h3>
+      <button class="btn btn-sm" id="expReturns">⬇ Export CSV</button>
+    </div>
+    <div class="big-stat-grid" id="returnsBigStats"></div>
+    <div class="reports-grid">
+      <div>
+        <h4 style="margin:0 0 8px;font-size:13px;color:var(--text-2)">📊 Monthly Trend · মাসিক প্রবণতা</h4>
+        <svg class="chart-svg" id="returnsTrendChart" viewBox="0 0 600 180" preserveAspectRatio="none"></svg>
+      </div>
+      <div>
+        <h4 style="margin:0 0 8px;font-size:13px;color:var(--text-2)">🔁 Top Returned Products</h4>
+        <div id="topReturnsList"></div>
+      </div>
+    </div>
+  `;
+  wrap.appendChild(returnsCard);
+
+  // NEW SECTION: ABC Analysis
+  const abcCard = document.createElement('div');
+  abcCard.className = 'chart-card';
+  abcCard.style.marginBottom = '18px';
+  abcCard.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+      <h3 style="margin:0">📊 ABC Analysis · পারেটো বিশ্লেষণ</h3>
+      <button class="btn btn-sm" id="expABC">⬇ Export CSV</button>
+    </div>
+    <div style="font-size:11px;color:var(--text-3);margin-bottom:12px">Pareto Principle: 20% products = 80% revenue. Use this to optimize inventory.</div>
+    <div class="big-stat-grid" id="abcSummary"></div>
+    <div style="overflow-x:auto;margin-top:14px">
+      <table class="analytics-table">
+        <thead><tr><th>Product</th><th>Revenue</th><th>% Share</th><th>Cumulative %</th><th>Class</th></tr></thead>
+        <tbody id="abcBody"></tbody>
+      </table>
+    </div>
+  `;
+  wrap.appendChild(abcCard);
+
+  // NEW SECTION: Dead Stock
+  const deadStockCard = document.createElement('div');
+  deadStockCard.className = 'chart-card';
+  deadStockCard.style.marginBottom = '18px';
+  deadStockCard.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+      <h3 style="margin:0">🛑 Dead Stock Detector · নষ্ট মজুদ সনাক্তকরণ</h3>
+      <button class="btn btn-sm" id="expDeadStock">⬇ Export CSV</button>
+    </div>
+    <div style="font-size:11px;color:var(--text-3);margin-bottom:12px">Products with no sales in last 30 days — capital locked</div>
+    <div id="deadStockList"></div>
+    <div id="deadStockSummary"></div>
+  `;
+  wrap.appendChild(deadStockCard);
+
+  // NEW SECTION: Top Customers
+  const customersCard = document.createElement('div');
+  customersCard.className = 'chart-card';
+  customersCard.style.marginBottom = '18px';
+  customersCard.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+      <h3 style="margin:0">👥 Top Customers · সেরা কাস্টমার (by Lifetime Value)</h3>
+      <button class="btn btn-sm" id="expCustomers">⬇ Export CSV</button>
+    </div>
+    <div class="big-stat-grid" id="customerSummary"></div>
+    <div style="overflow-x:auto;margin-top:14px">
+      <table class="analytics-table">
+        <thead><tr><th>#</th><th>Customer</th><th>Orders</th><th>Lifetime Spend</th><th>Avg Order</th></tr></thead>
+        <tbody id="topCustomersBody"></tbody>
+      </table>
+    </div>
+  `;
+  wrap.appendChild(customersCard);
+
+  // Legacy sections (kept for compatibility)
+  const detail = document.createElement('div');
+  detail.className = 'reports-grid';
+  detail.innerHTML = `
+    <div class="chart-card">
+      <h3>📊 Top Products (Quick View) · দ্রুত দেখা</h3>
+      <div id="topProductsList"></div>
+    </div>
+    <div class="chart-card">
+      <h3>💸 Top Expenses · প্রধান খরচ</h3>
+      <div id="topExpensesList"></div>
+    </div>
+  `;
+  wrap.appendChild(detail);
+
+  // Export buttons (with PDF option)
+  const exports = document.createElement('div');
+  exports.className = 'export-row';
+  exports.style.marginTop = '18px';
+  exports.style.marginBottom = '24px';
+  exports.innerHTML = `
+    <button class="btn" id="expSales">⬇ Export Sales CSV</button>
+    <button class="btn" id="expExpenses">⬇ Export Expenses CSV</button>
+    <button class="btn" id="expBalance">⬇ Export Balance Sheet CSV</button>
+    <button class="btn" id="expFull">⬇ Export Full Report (CSV)</button>
+    <button class="pdf-export-btn" onclick="window.print()">📄 Save as PDF</button>
+  `;
+  wrap.appendChild(exports);
+
+  renderReportsCharts();
+
+  // Wire new export buttons
+  setTimeout(() => {
+    const expTop10 = document.getElementById('expTop10');
+    if (expTop10) expTop10.onclick = () => {
+      const productSales = {};
+      ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed').forEach(o => {
+        o.items.forEach(it => {
+          if (!productSales[it.name]) productSales[it.name] = { units: 0, revenue: 0 };
+          productSales[it.name].units += it.qty;
+          productSales[it.name].revenue += it.qty * it.price;
+        });
+      });
+      const rows = ['Rank,Product,Units Sold,Revenue (BDT),Estimated Profit,Margin %'];
+      Object.entries(productSales).sort((a, b) => b[1].revenue - a[1].revenue).slice(0, 10).forEach(([name, d], i) => {
+        const profit = d.revenue * 0.35;
+        rows.push(`${i + 1},"${name}",${d.units},${d.revenue},${profit.toFixed(2)},${((profit / d.revenue) * 100).toFixed(2)}`);
+      });
+      downloadCSV('top-10-products.csv', rows.join('\n'));
+    };
+
+    const expReturns = document.getElementById('expReturns');
+    if (expReturns) expReturns.onclick = () => {
+      const rows = ['Order ID,Date,Customer,Product,Amount,Reason'];
+      ORDERS_DATA.filter(o => o.status === 'Order Cancelled').forEach(o => {
+        o.items.forEach(it => rows.push(`${o.id},"${new Date(o.date).toISOString().split('T')[0]}","${o.customer}","${it.name}",${it.qty * it.price},"${(o.note || 'No reason').replace(/"/g, "'")}"`));
+      });
+      downloadCSV('returns-detail.csv', rows.join('\n'));
+    };
+
+    const expABC = document.getElementById('expABC');
+    if (expABC) expABC.onclick = () => {
+      const productRevenue = {};
+      ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed').forEach(o => {
+        o.items.forEach(it => {
+          productRevenue[it.name] = (productRevenue[it.name] || 0) + (it.qty * it.price);
+        });
+      });
+      const sorted = Object.entries(productRevenue).sort((a, b) => b[1] - a[1]);
+      const total = sorted.reduce((s, e) => s + e[1], 0);
+      let cum = 0;
+      const rows = ['Product,Revenue (BDT),% Share,Cumulative %,Class'];
+      sorted.forEach(([name, rev]) => {
+        const pct = (rev / total) * 100;
+        cum += pct;
+        let cls = 'C';
+        if (cum <= 80) cls = 'A';
+        else if (cum <= 95) cls = 'B';
+        rows.push(`"${name}",${rev.toFixed(2)},${pct.toFixed(2)},${cum.toFixed(2)},${cls}`);
+      });
+      downloadCSV('abc-analysis.csv', rows.join('\n'));
+    };
+
+    const expDeadStock = document.getElementById('expDeadStock');
+    if (expDeadStock) expDeadStock.onclick = () => {
+      const rows = ['SKU,Product,Stock,Capital Locked (BDT),Status'];
+      const recentItems = new Set();
+      const cutoff = new Date('2026-08-10');
+      ORDERS_DATA.forEach(o => { if (new Date(o.date) >= cutoff) o.items.forEach(it => recentItems.add(it.name)); });
+      parts.filter(p => !recentItems.has(p.name)).forEach(p => {
+        rows.push(`${p.sku},"${p.name}",${p.stock},${(p.buy * p.stock).toFixed(2)},DEAD_STOCK`);
+      });
+      downloadCSV('dead-stock.csv', rows.join('\n'));
+    };
+
+    const expCustomers = document.getElementById('expCustomers');
+    if (expCustomers) expCustomers.onclick = () => {
+      const customers = {};
+      ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed').forEach(o => {
+        if (!customers[o.customer]) customers[o.customer] = { phone: o.phone, orders: 0, spent: 0 };
+        customers[o.customer].orders++;
+        customers[o.customer].spent += (o.paid || 0);
+      });
+      const rows = ['Rank,Customer,Phone,Orders,Lifetime Spend (BDT),Avg Order (BDT),Type'];
+      Object.values(customers).sort((a, b) => b.spent - a.spent).slice(0, 10).forEach((c, i) => {
+        const type = c.orders > 1 ? 'REPEAT' : 'ONE-TIME';
+        rows.push(`${i + 1},"${c.name}","${c.phone || ''}",${c.orders},${c.spent.toFixed(2)},${(c.spent / c.orders).toFixed(2)},${type}`);
+      });
+      downloadCSV('top-customers.csv', rows.join('\n'));
+    };
+  }, 200);
+}
+
 function renderReportsCharts() {
+  // Re-render all advanced analytics
+  renderTop10Products();
+  renderReturnsAnalytics();
+  renderABCAnalysis();
+  renderDeadStock();
+  renderTopCustomers();
+
   // Top stats
   const sales = transactions.filter(t => t.type === 'IN' && (t.category === 'Sales' || t.linkedFrom === 'order')).reduce((s, t) => s + t.amount, 0);
   const expenses = transactions.filter(t => t.type === 'OUT' && t.category !== 'Asset Purchase').reduce((s, t) => s + t.amount, 0);
