@@ -1247,6 +1247,9 @@
       <span class="si-ico">🔔</span><span class="si-label">Notifications</span>
       <span class="si-badge" id="notifBadgeCount">0</span>
     </button>
+    <button class="sidebar-item" data-page="execreport">
+      <span class="si-ico">📊</span><span class="si-label">Executive Report</span>
+    </button>
     <button class="sidebar-item" data-page="courier">
       <span class="si-ico">🚚</span><span class="si-label">Courier</span>
     </button>
@@ -1435,7 +1438,21 @@
 
   <div class="card">
     <div id="notifListFull"></div>
-  </div>  <div class="card" style="margin-bottom:14px">
+  </div>
+
+  <!-- EXECUTIVE REPORT PAGE -->
+  <div class="execreport-page-marker"></div>
+  <div class="page-head no-print">
+    <div>
+      <h1>Executive Business Report · নির্বাহী প্রতিবেদন</h1>
+      <p>One-page business snapshot — print or save as PDF for partners/investors/bank.</p>
+    </div>
+    <div class="actions">
+      <button class="pdf-export-btn" id="printExecBtn">📄 Print / Save PDF</button>
+    </div>
+  </div>
+
+  <div id="execReportContent"></div>  <div class="card" style="margin-bottom:14px">
     <div class="upload-zone" id="uploadZone">
       <div class="uz-icon">📂</div>
       <div class="uz-title">CSV / Excel file drag-drop করুন</div>
@@ -4334,6 +4351,7 @@ function wrapPages() {
       else if (txt.includes('Staff Performance')) mode = 'staff';
       else if (txt.includes('Vendor Stock')) mode = 'vendorstock';
       else if (txt.includes('Notifications')) mode = 'notifications';
+      else if (txt.includes('Executive Report')) mode = 'execreport';
       else if (txt.includes('Sales Goal Tracking')) mode = 'goals';
       else if (txt.includes('Vendor Contacts')) mode = 'vendors';
       else if (txt.includes('Courier Tracking')) mode = 'courier';
@@ -6276,6 +6294,115 @@ function getNotifications() {
   return fresh;
 }
 
+/* ============================================================
+   ROUND 11: EXECUTIVE BUSINESS REPORT
+   ============================================================ */
+function renderExecutiveReport() {
+  const el = document.getElementById('execReportContent');
+  if (!el) return;
+
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const monthOrders = ORDERS_DATA.filter(o => new Date(o.date) >= monthStart && (o.status === 'Order Confirmed' || o.status === 'Order Completed'));
+  const monthRevenue = monthOrders.reduce((s, o) => s + (o.paid || 0), 0);
+  const monthOrdersCount = monthOrders.length;
+
+  const totalRevenue = ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed').reduce((s, o) => s + (o.paid || 0), 0);
+  const totalOrders = ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed').length;
+
+  const totalWallet = Object.values(wallets).reduce((s, w) => s + w.balance, 0);
+  const monthExpenses = transactions.filter(t => t.type === 'OUT' && new Date(t.date) >= monthStart).reduce((s, t) => s + t.amount, 0);
+  const monthPL = monthRevenue - monthExpenses;
+
+  const topProduct = (() => {
+    const sales = {};
+    monthOrders.forEach(o => o.items.forEach(it => {
+      sales[it.name] = (sales[it.name] || 0) + it.qty * it.price;
+    }));
+    const arr = Object.entries(sales).sort((a, b) => b[1] - a[1]);
+    return arr[0] || ['—', 0];
+  })();
+
+  const goals = getGoals();
+  const currentGoal = goals.find(g => g.year === now.getFullYear() && g.month === now.getMonth());
+  const goalPct = currentGoal ? Math.min(100, (monthRevenue / currentGoal.target * 100)) : 0;
+
+  el.innerHTML = `
+    <div class="invoice-card" style="max-width:900px;margin:0 auto">
+      <div class="inv-header" style="border-bottom-color:#e10600">
+        <div class="inv-logo">🚴 BikePartsBD.net<small>Kayi Corporation · Executive Business Snapshot</small></div>
+        <div class="inv-meta">
+          <div class="inv-label">Report Period</div>
+          <div class="inv-value">${monthName(now.getMonth())} ${now.getFullYear()}</div>
+          <div style="margin-top:8px;font-size:11px;color:#666">Generated: ${now.toLocaleString('en-GB')}</div>
+        </div>
+      </div>
+
+      <h2 style="margin:20px 0 12px;font-size:18px;color:#1a1a1a;border-bottom:2px solid #e10600;padding-bottom:8px">📊 Key Metrics · মূল মেট্রিক্স</h2>
+
+      <table>
+        <thead><tr><th>Metric · মেট্রিক</th><th>This Month · এই মাস</th><th>All Time · মোট</th></tr></thead>
+        <tbody>
+          <tr><td><strong>💰 Revenue</strong></td><td style="color:#00d68f;font-weight:800">${formatCurrency(monthRevenue)}</td><td>${formatCurrency(totalRevenue)}</td></tr>
+          <tr><td><strong>📦 Orders</strong></td><td style="font-weight:700">${monthOrdersCount}</td><td>${totalOrders}</td></tr>
+          <tr><td><strong>💸 Expenses</strong></td><td style="color:#e10600;font-weight:800">${formatCurrency(monthExpenses)}</td><td>${formatCurrency(transactions.filter(t => t.type === 'OUT').reduce((s, t) => s + t.amount, 0))}</td></tr>
+          <tr><td><strong>📈 Net P&L</strong></td><td style="font-weight:900;color:${monthPL >= 0 ? '#00d68f' : '#e10600'}">${formatCurrency(monthPL)}</td><td>—</td></tr>
+          <tr><td><strong>🏦 Wallet Balance</strong></td><td colspan="2" style="font-weight:800">${formatCurrency(totalWallet)} (5 accounts)</td></tr>
+        </tbody>
+      </table>
+
+      <h2 style="margin:20px 0 12px;font-size:18px;color:#1a1a1a;border-bottom:2px solid #e10600;padding-bottom:8px">🎯 Goal Progress · লক্ষ্য অগ্রগতি</h2>
+      <div style="background:#f5f5f5;padding:14px;border-radius:8px;margin-bottom:14px">
+        ${currentGoal ? `
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <strong>Monthly Target:</strong><span>${formatCurrency(currentGoal.target)}</span>
+          </div>
+          <div style="height:20px;background:#fff;border-radius:10px;overflow:hidden;margin-bottom:8px">
+            <div style="height:100%;width:${goalPct}%;background:linear-gradient(90deg,#e10600,#ff3838);border-radius:10px"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:14px">
+            <span>Achieved: <strong style="color:#00d68f">${formatCurrency(monthRevenue)}</strong></span>
+            <span style="color:${goalPct >= 100 ? '#00d68f' : '#e10600'};font-weight:900">${goalPct.toFixed(1)}%</span>
+          </div>
+        ` : `<em>No goal set for this month</em>`}
+      </div>
+
+      <h2 style="margin:20px 0 12px;font-size:18px;color:#1a1a1a;border-bottom:2px solid #e10600;padding-bottom:8px">🏆 Highlights · হাইলাইটস</h2>
+      <table>
+        <tbody>
+          <tr><td><strong>Top Product (Month)</strong></td><td style="font-weight:700">${topProduct[0]}</td></tr>
+          <tr><td><strong>Top Product Revenue</strong></td><td style="color:#00d68f;font-weight:800">${formatCurrency(topProduct[1])}</td></tr>
+          <tr><td><strong>Avg Order Value</strong></td><td style="font-weight:700">${formatCurrency(monthOrdersCount > 0 ? monthRevenue / monthOrdersCount : 0)}</td></tr>
+          <tr><td><strong>Active Staff</strong></td><td>${getStaff().length} members</td></tr>
+          <tr><td><strong>Inventory Items</strong></td><td>${parts.length} products · Total stock: ${parts.reduce((s, p) => s + p.stock, 0)}</td></tr>
+        </tbody>
+      </table>
+
+      <h2 style="margin:20px 0 12px;font-size:18px;color:#1a1a1a;border-bottom:2px solid #e10600;padding-bottom:8px">💼 Balance Sheet Snapshot · ব্যালেন্স শীট</h2>
+      <table>
+        <tbody>
+          <tr><td><strong>Cash (5 wallets)</strong></td><td style="text-align:right">${formatCurrency(totalWallet)}</td></tr>
+          <tr><td><strong>Inventory Value</strong></td><td style="text-align:right">${formatCurrency(parts.reduce((s, p) => s + (p.buy * p.stock), 0))}</td></tr>
+          <tr><td><strong>Fixed Assets</strong></td><td style="text-align:right">${formatCurrency(assets.reduce((s, a) => s + (a.cost || 0), 0))}</td></tr>
+          <tr><td><strong>Capital (Owner Equity)</strong></td><td style="text-align:right">${formatCurrency(capital.opening + capital.investments.reduce((s, i) => s + i.amount, 0) - capital.drawings.reduce((s, d) => s + d.amount, 0))}</td></tr>
+        </tbody>
+      </table>
+
+      <div class="inv-footer">
+        <strong>BikePartsBD.net · Kayi Corporation</strong><br>
+        Jashore, Bangladesh · +880-1XXX-XXXXXX<br>
+        <span style="font-size:10px;margin-top:8px;display:block">This report is auto-generated from live data. Confidential — for internal use, partners, and financial institutions only.</span>
+      </div>
+    </div>
+  `;
+
+  const printBtn = document.getElementById('printExecBtn');
+  if (printBtn && !printBtn.dataset.wired) {
+    printBtn.dataset.wired = '1';
+    printBtn.onclick = () => window.print();
+  }
+}
+
 function renderNotificationsPage() {
   const el = document.getElementById('notifListFull');
   if (!el) return;
@@ -6783,6 +6910,7 @@ renderWATemplates();
 renderStaffPerformance();
 renderVendorStock();
 renderNotificationsPage();
+renderExecutiveReport();
 
 /* ============================================================
    UX POLISH — Demo banner, welcome modal, status bar, presets
