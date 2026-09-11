@@ -1097,6 +1097,44 @@
   .date-range-bar .dr-preset.active { background: var(--accent); color: #fff; border-color: var(--accent); }
   .date-range-bar .dr-info { margin-left: auto; font-size: 11px; color: var(--text-3); font-family: 'JetBrains Mono', monospace; }
   .date-range-bar .dr-info strong { color: var(--accent); }
+
+  /* ============================================================
+     INVOICE GENERATOR
+     ============================================================ */
+  .invoice-card {
+    background: #fff; color: #1a1a1a; border-radius: 12px; padding: 32px;
+    max-width: 800px; margin: 0 auto; box-shadow: 0 8px 32px rgba(0,0,0,.3);
+    font-family: 'Inter', sans-serif;
+  }
+  .invoice-card .inv-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #e10600; padding-bottom: 18px; margin-bottom: 18px; }
+  .invoice-card .inv-logo { font-size: 24px; font-weight: 900; color: #e10600; }
+  .invoice-card .inv-logo small { display: block; font-size: 11px; color: #666; font-weight: 500; margin-top: 2px; }
+  .invoice-card .inv-meta { text-align: right; }
+  .invoice-card .inv-meta .inv-label { font-size: 10px; text-transform: uppercase; color: #888; letter-spacing: .5px; }
+  .invoice-card .inv-meta .inv-value { font-size: 14px; font-weight: 700; color: #1a1a1a; }
+  .invoice-card .inv-parties { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  .invoice-card .inv-party { padding: 12px; background: #f5f5f5; border-radius: 8px; }
+  .invoice-card .inv-party .ip-label { font-size: 10px; text-transform: uppercase; color: #888; letter-spacing: .5px; margin-bottom: 6px; font-weight: 700; }
+  .invoice-card .inv-party .ip-name { font-size: 14px; font-weight: 800; color: #1a1a1a; }
+  .invoice-card .inv-party .ip-detail { font-size: 11px; color: #555; margin-top: 4px; line-height: 1.5; }
+  .invoice-card table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+  .invoice-card thead th { background: #1a1a1a; color: #fff; padding: 10px 12px; font-size: 11px; text-align: left; font-weight: 700; text-transform: uppercase; letter-spacing:4px; }
+  .invoice-card tbody td { padding: 10px 12px; border-bottom: 1px solid #e5e5e5; font-size: 12px; color: #1a1a1a; }
+  .invoice-card .inv-totals { display: flex; justify-content: flex-end; }
+  .invoice-card .inv-totals-box { width: 280px; }
+  .invoice-card .inv-totals-box .it-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 12px; }
+  .invoice-card .inv-totals-box .it-row.grand { border-top: 2px solid #e10600; margin-top: 6px; padding-top: 10px; font-size: 16px; font-weight: 900; color: #e10600; }
+  .invoice-card .inv-footer { margin-top: 22px; padding-top: 18px; border-top: 1px solid #e5e5e5; text-align: center; font-size: 11px; color: #888; line-height: 1.7; }
+  .invoice-card .inv-paid-stamp { display: inline-block; padding: 6px 18px; border: 3px solid #00d68f; color: #00d68f; font-weight: 900; font-size: 16px; letter-spacing: 2px; border-radius: 8px; transform: rotate(-8deg); }
+  .invoice-card .inv-unpaid-stamp { display: inline-block; padding: 6px 18px; border: 3px solid #e10600; color: #e10600; font-weight: 900; font-size: 16px; letter-spacing: 2px; border-radius: 8px; transform: rotate(-8deg); }
+
+  @media print {
+    .sidebar, .bottom-nav, .modal-foot, .modal-close, .page-head, .breadcrumb, .no-print { display: none !important; }
+    body { background: #fff !important; padding: 0 !important; }
+    .invoice-card { box-shadow: none; max-width: 100%; padding: 20px; }
+    .page-view { display: none !important; }
+    .page-view.active { display: block !important; background: #fff !important; }
+  }
 </style>
 </head>
 <body>
@@ -1130,6 +1168,9 @@
       <span class="si-ico">📋</span><span class="si-label">Orders</span>
       <span class="si-badge" id="ordersBadge">70</span>
     </button>
+    <button class="sidebar-item" data-page="invoice">
+      <span class="si-ico">🧾</span><span class="si-label">Invoices</span>
+    </button></old_text>
     <button class="sidebar-item" data-page="courier">
       <span class="si-ico">🚚</span><span class="si-label">Courier</span>
     </button>
@@ -1225,7 +1266,22 @@
     </div>
   </div>
 
-  <div class="card" style="margin-bottom:14px">
+  <!-- INVOICE PAGE -->
+  <div class="invoice-page-marker"></div>
+  <div class="page-head no-print">
+    <div>
+      <h1>Invoice Generator · ইনভয়েস জেনারেটর</h1>
+      <p>Orders → auto-generated PDF-ready invoice with branding. Print or Save as PDF.</p>
+    </div>
+    <div class="actions">
+      <select id="invoiceOrderSelect" style="background:var(--bg-2);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px"></select>
+      <button class="btn" id="printInvoiceBtn">🖨️ Print / Save PDF</button>
+    </div>
+  </div>
+
+  <div id="invoiceContainer" class="invoice-card-wrap no-print">
+    <div id="invoiceRenderArea"></div>
+  </div>  <div class="card" style="margin-bottom:14px">
     <div class="upload-zone" id="uploadZone">
       <div class="uz-icon">📂</div>
       <div class="uz-title">CSV / Excel file drag-drop করুন</div>
@@ -1261,7 +1317,7 @@
     <div id="importHistoryList"></div>
   </div>
 
-  <!-- SALES GOAL PAGE -->
+    <!-- SALES GOAL PAGE -->
   <div class="sales-goal-page-marker"></div>
   <div class="page-head">
     <div>
@@ -4119,6 +4175,7 @@ function wrapPages() {
       const txt = el.textContent;
       if (txt.includes('Inventory Dashboard')) mode = 'dashboard';
       else if (txt.includes('Bulk Inventory Import')) mode = 'bulkimport';
+      else if (txt.includes('Invoice Generator')) mode = 'invoice';
       else if (txt.includes('Sales Goal Tracking')) mode = 'goals';
       else if (txt.includes('Vendor Contacts')) mode = 'vendors';
       else if (txt.includes('Courier Tracking')) mode = 'courier';
@@ -5624,6 +5681,126 @@ function monthName(m) {
   return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][m];
 }
 
+/* ============================================================
+   ROUND 3: AUTO INVOICE GENERATOR
+   ============================================================ */
+function renderInvoicePage() {
+  const sel = document.getElementById('invoiceOrderSelect');
+  const area = document.getElementById('invoiceRenderArea');
+  if (!sel || !area) return;
+
+  // Populate select
+  if (!sel.dataset.wired) {
+    sel.dataset.wired = '1';
+    sel.innerHTML = ORDERS_DATA.map(o => `<option value="${o.id}">${o.id} — ${o.customer} (${formatCurrency(o.grandTotal)})</option>`).join('');
+    sel.onchange = () => renderInvoice(ORDERS_DATA.find(o => o.id === sel.value));
+  }
+
+  // Print button
+  const printBtn = document.getElementById('printInvoiceBtn');
+  if (printBtn && !printBtn.dataset.wired) {
+    printBtn.dataset.wired = '1';
+    printBtn.onclick = () => window.print();
+  }
+
+  // Default: show first order
+  if (!sel.value) sel.value = ORDERS_DATA[0].id;
+  renderInvoice(ORDERS_DATA.find(o => o.id === sel.value));
+}
+
+function renderInvoice(order) {
+  if (!order) return;
+  const area = document.getElementById('invoiceRenderArea');
+  if (!area) return;
+
+  const subtotal = order.items.reduce((s, it) => s + (it.qty * it.price), 0);
+  const shipping = order.shipping || 0;
+  const total = order.grandTotal;
+  const isPaid = order.status === 'Order Confirmed' || order.status === 'Order Completed';
+  const date = new Date(order.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+  const dueDate = new Date(new Date(order.date).getTime() + 7 * 86400000).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+
+  area.innerHTML = `
+    <div class="invoice-card">
+      <div class="inv-header">
+        <div class="inv-logo">
+          🚴 BikePartsBD.net
+          <small>Kayi Corporation · Jashore, Bangladesh</small>
+        </div>
+        <div class="inv-meta">
+          <div class="inv-label">Invoice</div>
+          <div class="inv-value">${order.id}</div>
+          <div style="margin-top:8px;font-size:11px;color:#666">📅 ${date}</div>
+        </div>
+      </div>
+
+      <div class="inv-parties">
+        <div class="inv-party">
+          <div class="ip-label">From · বিক্রেতা</div>
+          <div class="ip-name">BikePartsBD.net</div>
+          <div class="ip-detail">
+            Kayi Corporation<br>
+            123 Main Road, Jashore<br>
+            Phone: +880-1XXX-XXXXXX<br>
+            Email: sales@bikepartsbd.net
+          </div>
+        </div>
+        <div class="inv-party">
+          <div class="ip-label">Bill To · ক্রেতা</div>
+          <div class="ip-name">${order.customer}</div>
+          <div class="ip-detail">
+            Phone: ${order.phone || '—'}<br>
+            Address: ${order.address || 'Jashore'}<br>
+            Courier: ${order.courier || 'Pathao'}
+          </div>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Item Description</th>
+            <th style="text-align:center">Qty</th>
+            <th style="text-align:right">Unit Price</th>
+            <th style="text-align:right">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${order.items.map((it, i) => `
+            <tr>
+              <td>${i + 1}</td>
+              <td>${it.name}</td>
+              <td style="text-align:center">${it.qty}</td>
+              <td style="text-align:right">${formatCurrency(it.price)}</td>
+              <td style="text-align:right;font-weight:700">${formatCurrency(it.qty * it.price)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+
+      <div class="inv-totals">
+        <div class="inv-totals-box">
+          <div class="it-row"><span>Subtotal · মোট</span><span>${formatCurrency(subtotal)}</span></div>
+          <div class="it-row"><span>Shipping · ডেলিভারি</span><span>${formatCurrency(shipping)}</span></div>
+          ${order.discount ? `<div class="it-row"><span>Discount · ছাড়</span><span style="color:#00d68f">-${formatCurrency(order.discount)}</span></div>` : ''}
+          <div class="it-row grand"><span>TOTAL · সর্বমোট</span><span>${formatCurrency(total)}</span></div>
+          <div style="text-align:right;margin-top:10px">
+            <span class="${isPaid ? 'inv-paid-stamp' : 'inv-unpaid-stamp'}">${isPaid ? '✓ PAID' : '⏳ DUE'}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="inv-footer">
+        <strong>Payment Terms:</strong> Due within 7 days of invoice date<br>
+        <strong>Due Date · শেষ তারিখ:</strong> ${dueDate}<br>
+        <strong>Thank you for your business! · ব্যবসার জন্য ধন্যবাদ!</strong><br>
+        <span style="font-size:10px;margin-top:8px;display:block">Generated by BikePartsBD.net Inventory OS · Kayi Corporation · 2026</span>
+      </div>
+    </div>
+  `;
+}
+
 // Build all pages
 wrapPages();
 // Re-render everything for the new pages
@@ -5632,6 +5809,7 @@ renderAssets(); renderCapitalTable(); renderBalanceSheet();
 renderApiConfig(); updateApiStatusBar(); updateDemoBanner();
 renderBulkImportPage();
 renderSalesGoalPage();
+renderInvoicePage();
 
 /* ============================================================
    UX POLISH — Demo banner, welcome modal, status bar, presets
