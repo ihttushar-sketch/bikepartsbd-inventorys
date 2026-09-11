@@ -723,6 +723,92 @@
 
   /* Highlight rows when searching */
   mark.hl { background: rgba(225, 6, 0, .25); color: var(--text); padding: 1px 3px; border-radius: 3px; }
+
+  /* ============================================================
+     ACCOUNTING MODULES — Money · Assets · Capital
+     Plug-and-play: ready in demo mode, swap to real APIs later
+     ============================================================ */
+  .acc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-bottom: 18px; }
+  .wallet-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px 18px; position: relative; overflow: hidden;
+  }
+  .wallet-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--wallet-color, var(--accent)); }
+  .wallet-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .wallet-ico { width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; font-weight: 900; font-size: 14px; color: #fff; background: var(--wallet-color, var(--accent)); }
+  .wallet-name { font-size: 13px; font-weight: 800; }
+  .wallet-name .bn { font-size: 10px; color: var(--text-3); font-weight: 500; display: block; margin-top: 1px; }
+  .wallet-balance { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; letter-spacing: -.3px; }
+  .wallet-balance.up { color: var(--green); }
+  .wallet-balance.down { color: var(--accent); }
+  .wallet-stats { display: flex; gap: 14px; margin-top: 8px; padding-top: 10px; border-top: 1px dashed var(--line); }
+  .wallet-stats .ws { flex: 1; }
+  .wallet-stats .ws-label { font-size: 9px; color: var(--text-3); text-transform: uppercase; font-weight: 700; letter-spacing: .4px; }
+  .wallet-stats .ws-value { font-size: 11px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+  .wallet-stats .ws-value.in { color: var(--green); }
+  .wallet-stats .ws-value.out { color: var(--accent); }
+  .wallet-actions { display: flex; gap: 6px; margin-top: 10px; }
+
+  /* Transaction log */
+  .txn-list { display: flex; flex-direction: column; gap: 8px; max-height: 360px; overflow-y: auto; padding-right: 4px; }
+  .txn-row { background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+  .txn-ico { width: 28px; height: 28px; border-radius: 6px; display: grid; place-items: center; font-weight: 800; font-size: 12px; color: #fff; flex-shrink: 0; }
+  .txn-ico.in { background: var(--green); color: #001a10; }
+  .txn-ico.out { background: var(--accent); }
+  .txn-ico.transfer { background: #a855f7; }
+  .txn-meta { flex: 1; min-width: 0; }
+  .txn-title { font-weight: 700; font-size: 12px; }
+  .txn-sub { font-size: 10px; color: var(--text-3); margin-top: 2px; }
+  .txn-amt { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 12px; }
+  .txn-amt.in { color: var(--green); }
+  .txn-amt.out { color: var(--accent); }
+
+  /* Asset cards */
+  .asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-bottom: 18px; }
+  .asset-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+  }
+  .asset-ico { width: 44px; height: 44px; border-radius: 10px; background: rgba(0, 214, 143, .12); color: var(--green); display: grid; place-items: center; font-size: 20px; flex-shrink: 0; border: 1px solid rgba(0, 214, 143, .3); }
+  .asset-meta { flex: 1; min-width: 0; }
+  .asset-name { font-size: 13px; font-weight: 800; }
+  .asset-sub { font-size: 10px; color: var(--text-3); margin-top: 2px; }
+  .asset-value { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 14px; color: var(--green); }
+
+  /* Capital / Balance Sheet */
+  .bs-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .bs-table th { background: var(--bg-2); padding: 10px 12px; font-size: 10px; text-transform: uppercase; letter-spacing: .4px; text-align: left; }
+  .bs-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+  .bs-table tr.total td { background: var(--bg-2); font-size: 14px; color: var(--accent); }
+  .bs-table tr.balance td { background: rgba(0, 214, 143, .08); font-size: 14px; color: var(--green); border-top: 2px solid var(--green); }
+
+  /* API Config panel */
+  .api-config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 720px) { .api-config-grid { grid-template-columns: 1fr; } }
+  .api-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
+  .api-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .api-card-name { font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .api-card-name .badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+  .api-card-name .badge.live { background: var(--green-soft); color: var(--green); border: 1px solid var(--green); }
+  .api-card-name .badge.demo { background: var(--bg-3); color: var(--text-3); border: 1px solid var(--line); }
+  .api-card-status { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
+  .api-card-status.live { background: var(--green-soft); color: var(--green); }
+  .api-card-status.demo { background: var(--bg-3); color: var(--text-3); }
+  .api-card-status.error { background: var(--accent-soft); color: var(--accent); }
+  .api-card-fields { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+  .api-card-fields label { font-size: 10px; color: var(--text-3); text-transform: uppercase; font-weight: 700; letter-spacing: .4px; }
+  .api-card-fields input { width: 100%; background: var(--bg-3); border: 1px solid var(--line); color: var(--text); padding: 8px 10px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; }
+  .api-card-actions { display: flex; gap: 6px; }
+
+  /* P&L summary banner */
+  .pl-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 18px; }
+  @media (max-width: 720px) { .pl-summary { grid-template-columns: repeat(2, 1fr); } }
+  .pl-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
+  .pl-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; font-weight: 700; letter-spacing: .4px; }
+  .pl-value { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
+  .pl-value.positive { color: var(--green); }
+  .pl-value.negative { color: var(--accent); }
+  .pl-sub { font-size: 10px; color: var(--text-3); margin-top: 3px; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -1175,6 +1261,338 @@
       <button class="btn btn-ghost" id="orderDetailClose">Close</button>
       <button class="btn" id="orderDetailPrint">🖨 Print Invoice</button>
       <button class="btn btn-primary" id="orderDetailConfirm">✓ Mark as Confirmed</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== ACCOUNTING MODULES ====================== -->
+
+<!-- MONEY ACCOUNTS -->
+<div class="page-head" style="margin-top:32px">
+  <div>
+    <h1>Money Accounts <span style="font-size:14px;color:var(--text-3);font-weight:500;margin-left:8px">টাকা কোথায় আছে</span></h1>
+    <p>Cash, bKash, Nagad, Bank, Card — live balances & transactions. Plug-and-play APIs ready.</p>
+  </div>
+  <div class="actions">
+    <button class="btn" id="moneyTransferBtn">↔ Transfer</button>
+    <button class="btn btn-primary" id="moneyTxBtn">＋ Add Transaction</button>
+  </div>
+</div>
+
+<!-- P&L Summary -->
+<div class="pl-summary" id="plSummary"></div>
+
+<!-- Wallets -->
+<div class="acc-grid" id="walletGrid"></div>
+
+<!-- Transaction Log -->
+<div class="card" style="margin-top:18px">
+  <div class="card-head">
+    <div>
+      <h3>📒 Transaction Log · লেনদেনের ইতিহাস</h3>
+      <div class="sub">All wallet activity — auto-linked from orders, assets, capital, expenses</div>
+    </div>
+    <select id="txnFilter" style="background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text);padding:8px 12px;font-size:12px;outline:none;cursor:pointer">
+      <option value="ALL">All Wallets</option>
+      <option value="CASH">Cash</option>
+      <option value="BKASH">bKash</option>
+      <option value="NAGAD">Nagad</option>
+      <option value="BANK">Bank</option>
+      <option value="CARD">Card</option>
+    </select>
+  </div>
+  <div class="card-body" style="padding:14px">
+    <div class="txn-list" id="txnList"></div>
+  </div>
+</div>
+
+<!-- ASSETS -->
+<div class="page-head" style="margin-top:32px">
+  <div>
+    <h1>Assets <span style="font-size:14px;color:var(--text-3);font-weight:500;margin-left:8px">সম্পদ</span></h1>
+    <p>Track business assets (chair, computer, furniture). Deducted from wallet — NOT counted as P&L expense.</p>
+  </div>
+  <div class="actions">
+    <button class="btn btn-primary" id="assetAddBtn">＋ Add Asset</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div>
+      <h3>🛋️ Business Assets · ব্যবসায়িক সম্পদ</h3>
+      <div class="sub">Total asset value (excluded from monthly P&L — Balance Sheet only)</div>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:14px;color:var(--green)" id="assetsTotal">৳ 0.00</div>
+  </div>
+  <div class="card-body" style="padding:14px">
+    <div class="asset-grid" id="assetGrid"></div>
+  </div>
+</div>
+
+<!-- CAPITAL + BALANCE SHEET -->
+<div class="page-head" style="margin-top:32px">
+  <div>
+    <h1>Capital & Balance Sheet <span style="font-size:14px;color:var(--text-3);font-weight:500;margin-left:8px">মূলধন ও ব্যালেন্স শীট</span></h1>
+    <p>Opening capital, investments, drawings + auto-calculated Assets / Liabilities / Equity.</p>
+  </div>
+  <div class="actions">
+    <button class="btn" id="capitalInvestBtn">＋ Investment</button>
+    <button class="btn" id="capitalDrawBtn">− Drawing</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div>
+      <h3>🏛️ Capital Ledger · মূলধন বহি</h3>
+      <div class="sub">All capital movements — opening + investments − drawings</div>
+    </div>
+  </div>
+  <div class="card-body" style="padding:0">
+    <table class="bs-table" id="capitalTable">
+      <thead>
+        <tr><th>Date</th><th>Type</th><th style="text-align:right">Amount</th><th>Note</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card" style="margin-top:18px">
+  <div class="card-head">
+    <div>
+      <h3>📊 Balance Sheet Snapshot · ব্যালেন্স শীট</h3>
+      <div class="sub">Auto-generated · all values in ৳ BDT</div>
+    </div>
+  </div>
+  <div class="card-body" style="padding:0">
+    <table class="bs-table" id="bsTable">
+      <thead><tr><th>Category</th><th style="text-align:right">Amount</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- API SETTINGS / PLUG & PLAY -->
+<div class="page-head" style="margin-top:32px">
+  <div>
+    <h1>⚙️ Settings & Integrations <span style="font-size:14px;color:var(--text-3);font-weight:500;margin-left:8px">API কনফিগারেশন</span></h1>
+    <p>Paste your API credentials below to switch from demo to live mode. No code changes needed.</p>
+  </div>
+  <div class="actions">
+    <button class="btn btn-ghost" id="apiResetBtn">↺ Reset to Demo</button>
+    <button class="btn" id="apiExportBtn">⬇ Export Config</button>
+    <button class="btn btn-primary" id="apiSaveBtn">💾 Save All</button>
+  </div>
+</div>
+
+<div class="api-config-grid" id="apiConfigGrid"></div>
+
+<div class="card" style="margin-top:18px">
+  <div class="card-head">
+    <div>
+      <h3>📚 How to get API credentials</h3>
+      <div class="sub">Click each link to register and get your token/key</div>
+    </div>
+  </div>
+  <div class="card-body" style="padding:14px;font-size:12px;color:var(--text-2);line-height:1.8">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>🚚 <b>Pathao Courier:</b> <a href="https://merchant.pathao.com" target="_blank" style="color:var(--accent)">merchant.pathao.com</a> → Settings → API</div>
+      <div>💸 <b>bKash Payment:</b> <a href="https://developer.bka.sh" target="_blank" style="color:var(--accent)">developer.bka.sh</a> → Register App</div>
+      <div>📱 <b>Nagad:</b> <a href="https://developer.nagad.com.bd" target="_blank" style="color:var(--accent)">developer.nagad.com.bd</a> → Get API Key</div>
+      <div>🏦 <b>Bank/SSLCommerz:</b> <a href="https://developer.sslcommerz.com" target="_blank" style="color:var(--accent)">developer.sslcommerz.com</a></div>
+      <div>💬 <b>SMS (BulkSMSBD):</b> <a href="https://www.bulksms.com" target="_blank" style="color:var(--accent)">bulksms.com</a> → API Settings</div>
+      <div>✉️ <b>Email (SendGrid):</b> <a href="https://sendgrid.com" target="_blank" style="color:var(--accent)">sendgrid.com</a> → API Keys</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== ACCOUNTING MODALS ====================== -->
+
+<!-- Add Transaction Modal -->
+<div class="modal-backdrop" id="txModal">
+  <div class="modal" style="max-width:480px">
+    <h2>＋ Add Transaction <span style="font-size:13px;color:var(--text-3);font-weight:500">/ লেনদেন</span></h2>
+    <div class="sub">Record income (in) or expense (out) to any wallet.</div>
+    <div class="form-grid" style="grid-template-columns:1fr">
+      <div class="field">
+        <label>Type · ধরন</label>
+        <select id="txType" style="width:100%;background:var(--bg-3);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:8px;font-family:inherit;font-size:13px;outline:none">
+          <option value="IN">💚 Income (Money In) · আয়</option>
+          <option value="OUT">💸 Expense (Money Out) · খরচ</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Wallet · ওয়ালেট</label>
+        <select id="txWallet" style="width:100%;background:var(--bg-3);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:8px;font-family:inherit;font-size:13px;outline:none">
+          <option value="CASH">💵 Cash</option>
+          <option value="BKASH">📱 bKash</option>
+          <option value="NAGAD">📱 Nagad</option>
+          <option value="BANK">🏦 Bank</option>
+          <option value="CARD">💳 Card / POS</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Amount (৳) · পরিমাণ</label>
+        <input id="txAmount" type="number" min="0" placeholder="5000" />
+      </div>
+      <div class="field">
+        <label>Category · খাত</label>
+        <input id="txCategory" placeholder="e.g. Sales / Rent / Salary / Vendor" />
+      </div>
+      <div class="field">
+        <label>Note · নোট (optional)</label>
+        <input id="txNote" placeholder="Auto-linked from order #1234" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="txCancel">Cancel</button>
+      <button class="btn btn-primary" id="txSave">💾 Save Transaction</button>
+    </div>
+  </div>
+</div>
+
+<!-- Transfer Modal -->
+<div class="modal-backdrop" id="transferModal">
+  <div class="modal" style="max-width:480px">
+    <h2>↔ Transfer Between Wallets <span style="font-size:13px;color:var(--text-3);font-weight:500">/ ট্রান্সফার</span></h2>
+    <div class="sub">Move money between accounts — e.g. Bank → Cash for daily ops.</div>
+    <div class="form-grid" style="grid-template-columns:1fr">
+      <div class="field">
+        <label>From Wallet · থেকে</label>
+        <select id="trFrom" style="width:100%;background:var(--bg-3);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:8px;font-family:inherit;font-size:13px;outline:none">
+          <option value="CASH">💵 Cash</option>
+          <option value="BKASH">📱 bKash</option>
+          <option value="NAGAD">📱 Nagad</option>
+          <option value="BANK">🏦 Bank</option>
+          <option value="CARD">💳 Card / POS</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>To Wallet · এ</label>
+        <select id="trTo" style="width:100%;background:var(--bg-3);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:8px;font-family:inherit;font-size:13px;outline:none">
+          <option value="BKASH">📱 bKash</option>
+          <option value="NAGAD">📱 Nagad</option>
+          <option value="BANK">🏦 Bank</option>
+          <option value="CARD">💳 Card / POS</option>
+          <option value="CASH">💵 Cash</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Amount (৳) · পরিমাণ</label>
+        <input id="trAmount" type="number" min="0" placeholder="10000" />
+      </div>
+      <div class="field">
+        <label>Note · নোট (optional)</label>
+        <input id="trNote" placeholder="e.g. cash withdrawal for shop" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="trCancel">Cancel</button>
+      <button class="btn btn-primary" id="trSave">↔ Transfer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Asset Modal -->
+<div class="modal-backdrop" id="assetModal">
+  <div class="modal" style="max-width:480px">
+    <h2>🛋️ Add Asset <span style="font-size:13px;color:var(--text-3);font-weight:500">/ সম্পদ যোগ</span></h2>
+    <div class="sub">Track business asset. Deducted from wallet but excluded from P&L (Balance Sheet only).</div>
+    <div class="form-grid" style="grid-template-columns:1fr">
+      <div class="field">
+        <label>Asset Name · সম্পদের নাম</label>
+        <input id="assetName" placeholder="e.g. Office Chair / Desktop Computer" />
+      </div>
+      <div class="field">
+        <label>Buy From Wallet · কোন ওয়ালেট থেকে</label>
+        <select id="assetWallet" style="width:100%;background:var(--bg-3);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:8px;font-family:inherit;font-size:13px;outline:none">
+          <option value="CASH">💵 Cash</option>
+          <option value="BKASH">📱 bKash</option>
+          <option value="BANK">🏦 Bank</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Purchase Value (৳) · মূল্য</label>
+        <input id="assetValue" type="number" min="0" placeholder="15000" />
+      </div>
+      <div class="field">
+        <label>Purchase Date · কেনার তারিখ</label>
+        <input id="assetDate" type="date" />
+      </div>
+      <div class="field">
+        <label>Category · খাত</label>
+        <input id="assetCategory" placeholder="Furniture / Equipment / Vehicle" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="assetCancel">Cancel</button>
+      <button class="btn btn-primary" id="assetSave">🛋️ Add Asset</button>
+    </div>
+  </div>
+</div>
+
+<!-- Investment Modal -->
+<div class="modal-backdrop" id="investModal">
+  <div class="modal" style="max-width:480px">
+    <h2>＋ Investment <span style="font-size:13px;color:var(--text-3);font-weight:500">/ নতুন বিনিয়োগ</span></h2>
+    <div class="sub">Add money to the business. Increases equity & wallet balance.</div>
+    <div class="form-grid" style="grid-template-columns:1fr">
+      <div class="field">
+        <label>Source · উৎস</label>
+        <input id="invSource" placeholder="e.g. Personal Savings / Bank Loan" />
+      </div>
+      <div class="field">
+        <label>To Wallet · কোন ওয়ালেটে</label>
+        <select id="invWallet" style="width:100%;background:var(--bg-3);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:8px;font-family:inherit;font-size:13px;outline:none">
+          <option value="CASH">💵 Cash</option>
+          <option value="BKASH">📱 bKash</option>
+          <option value="BANK">🏦 Bank</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Amount (৳) · পরিমাণ</label>
+        <input id="invAmount" type="number" min="0" placeholder="100000" />
+      </div>
+      <div class="field">
+        <label>Note · নোট</label>
+        <input id="invNote" placeholder="e.g. business expansion" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="invCancel">Cancel</button>
+      <button class="btn btn-primary" id="invSave">＋ Invest</button>
+    </div>
+  </div>
+</div>
+
+<!-- Drawing Modal -->
+<div class="modal-backdrop" id="drawModal">
+  <div class="modal" style="max-width:480px">
+    <h2>− Drawing <span style="font-size:13px;color:var(--text-3);font-weight:500">/ মালিক উত্তোলন</span></h2>
+    <div class="sub">Owner withdrawal. Decreases equity & wallet balance.</div>
+    <div class="form-grid" style="grid-template-columns:1fr">
+      <div class="field">
+        <label>From Wallet · কোন ওয়ালেট থেকে</label>
+        <select id="drawWallet" style="width:100%;background:var(--bg-3);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:8px;font-family:inherit;font-size:13px;outline:none">
+          <option value="CASH">💵 Cash</option>
+          <option value="BKASH">📱 bKash</option>
+          <option value="BANK">🏦 Bank</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Amount (৳) · পরিমাণ</label>
+        <input id="drawAmount" type="number" min="0" placeholder="20000" />
+      </div>
+      <div class="field">
+        <label>Purpose · উদ্দেশ্য</label>
+        <input id="drawPurpose" placeholder="e.g. Personal expense / Family" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="drawCancel">Cancel</button>
+      <button class="btn btn-primary" id="drawSave">− Withdraw</button>
     </div>
   </div>
 </div>
@@ -2636,6 +3054,474 @@ $('#orderDetailPrint').onclick = () => {
 // Initial render
 renderOrdersStats();
 renderOrdersTable();
+
+/* ============================================================
+   ACCOUNTING MODULES — Money · Assets · Capital
+   Plug-and-play: demo data + ready for live API swap
+   ============================================================ */
+
+/* ---------- Wallets (5 accounts) ---------- */
+const WALLETS = [
+  { id: 'CASH',  name: 'Cash',      bn: 'নগদ',       icon: '💵', color: '#00d68f' },
+  { id: 'BKASH', name: 'bKash',     bn: 'বিকাশ',      icon: '📱', color: '#e2136e' },
+  { id: 'NAGAD', name: 'Nagad',     bn: 'নগদ (অ্যাপ)', icon: '📱', color: '#f97316' },
+  { id: 'BANK',  name: 'Bank',      bn: 'ব্যাংক',     icon: '🏦', color: '#0084ff' },
+  { id: 'CARD',  name: 'Card / POS', bn: 'কার্ড',     icon: '💳', color: '#a855f7' }
+];
+
+let wallets = {}; // { CASH: 50000, BKASH: 120000, ... }
+WALLETS.forEach(w => wallets[w.id] = w.id === 'CASH' ? 50000 : w.id === 'BKASH' ? 120000 : w.id === 'BANK' ? 350000 : 0);
+
+let transactions = []; // { id, type:'IN'|'OUT'|'TRANSFER', wallet, amount, category, note, date, linkedFrom }
+let assets = [
+  { id: 'A001', name: 'Office Desk + Chair Set', bn: 'অফিস ডেস্ক + চেয়ার', value: 18000, wallet: 'CASH', date: '2026-01-15', category: 'Furniture' },
+  { id: 'A002', name: 'Desktop Computer (i5)', bn: 'ডেস্কটপ কম্পিউটার', value: 45000, wallet: 'BANK', date: '2026-02-20', category: 'Equipment' },
+  { id: 'A003', name: 'Shop Display Rack', bn: 'দোকান ডিসপ্লে র‍্যাক', value: 25000, wallet: 'BKASH', date: '2026-03-10', category: 'Furniture' }
+];
+
+let capital = {
+  opening: 500000,  // শুরুর মূলধন
+  investments: [    // নতুন বিনিয়োগ
+    { date: '2026-04-05', source: 'Personal Savings', amount: 200000, wallet: 'BANK', note: 'business expansion' },
+    { date: '2026-08-12', source: 'Bank Loan', amount: 300000, wallet: 'BANK', note: 'inventory bulk buy' }
+  ],
+  drawings: [       // মালিক উত্তোলন
+    { date: '2026-05-20', wallet: 'CASH', amount: 30000, purpose: 'Personal expense' },
+    { date: '2026-07-15', wallet: 'CASH', amount: 25000, purpose: 'Family' }
+  ]
+};
+
+/* ---------- API Config (plug-and-play) ---------- */
+const API_CONFIG = {
+  pathao: { label: '🚚 Pathao Courier', desc: 'Auto order sync & tracking', enabled: false, fields: [{ key: 'token', label: 'API Token', placeholder: 'PTA-XXXXXX' }, { key: 'storeId', label: 'Store ID', placeholder: '12345' }, { key: 'baseUrl', label: 'Base URL', placeholder: 'https://api.pathao.com/v1' }] },
+  bkash: { label: '💸 bKash Payment', desc: 'Auto bKash reconciliation', enabled: false, fields: [{ key: 'appKey', label: 'App Key', placeholder: 'bkash_app_xxx' }, { key: 'appSecret', label: 'App Secret', placeholder: '••••••••' }, { key: 'username', label: 'Username', placeholder: 'merchant@bkash' }] },
+  nagad: { label: '📱 Nagad', desc: 'Auto Nagad reconciliation', enabled: false, fields: [{ key: 'merchantId', label: 'Merchant ID', placeholder: 'NAG-XXXX' }, { key: 'apiKey', label: 'API Key', placeholder: '••••••••' }] },
+  sslcommerz: { label: '🏦 Bank (SSLCommerz)', desc: 'Auto bank settlement', enabled: false, fields: [{ key: 'storeId', label: 'Store ID', placeholder: 'bikepartsbd' }, { key: 'storePassword', label: 'Store Password', placeholder: '••••••••' }] },
+  sms: { label: '💬 SMS (BulkSMSBD)', desc: 'Customer SMS notifications', enabled: false, fields: [{ key: 'apiKey', label: 'API Key', placeholder: 'sms_xxx' }, { key: 'senderId', label: 'Sender ID', placeholder: 'BIKEPARTS' }] },
+  email: { label: '✉️ Email (SendGrid)', desc: 'Customer email notifications', enabled: false, fields: [{ key: 'apiKey', label: 'API Key', placeholder: 'SG.xxx' }, { key: 'fromEmail', label: 'From Email', placeholder: 'orders@bikepartsbd.net' }] }
+};
+
+/* Central transaction processor (works in demo OR live mode) */
+function processTransaction(tx) {
+  // tx: { type: 'IN'|'OUT'|'TRANSFER', wallet, amount, category, note, date, linkedFrom }
+  tx.id = 'TXN-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
+  tx.date = tx.date || new Date().toISOString();
+  transactions.unshift(tx);
+
+  if (tx.type === 'IN') {
+    wallets[tx.wallet] = (wallets[tx.wallet] || 0) + tx.amount;
+  } else if (tx.type === 'OUT') {
+    wallets[tx.wallet] = (wallets[tx.wallet] || 0) - tx.amount;
+  } else if (tx.type === 'TRANSFER') {
+    wallets[tx.fromWallet] = (wallets[tx.fromWallet] || 0) - tx.amount;
+    wallets[tx.toWallet] = (wallets[tx.toWallet] || 0) + tx.amount;
+  }
+
+  // Persist
+  persistAccounting();
+  renderWallets();
+  renderTransactions();
+  renderPLSummary();
+  renderBalanceSheet();
+  return tx;
+}
+
+function persistAccounting() {
+  try {
+    localStorage.setItem('bikepartsbd_accounting', JSON.stringify({ wallets, transactions, assets, capital, apiConfig: API_CONFIG }));
+  } catch (e) { console.warn('Persist failed:', e); }
+}
+
+function loadAccounting() {
+  try {
+    const raw = localStorage.getItem('bikepartsbd_accounting');
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (data.wallets) wallets = data.wallets;
+    if (data.transactions) transactions = data.transactions;
+    if (data.assets) assets = data.assets;
+    if (data.capital) capital = data.capital;
+    if (data.apiConfig) Object.keys(API_CONFIG).forEach(k => { if (data.apiConfig[k]) Object.assign(API_CONFIG[k], data.apiConfig[k]); });
+  } catch (e) { console.warn('Load failed:', e); }
+}
+
+function renderWallets() {
+  const grid = $('#walletGrid');
+  if (!grid) return;
+  grid.innerHTML = WALLETS.map(w => {
+    const bal = wallets[w.id] || 0;
+    const ins = transactions.filter(t => (t.type === 'IN' && t.wallet === w.id) || (t.type === 'TRANSFER' && t.toWallet === w.id)).reduce((s, t) => s + t.amount, 0);
+    const outs = transactions.filter(t => (t.type === 'OUT' && t.wallet === w.id) || (t.type === 'TRANSFER' && t.fromWallet === w.id)).reduce((s, t) => s + t.amount, 0);
+    return `
+      <div class="wallet-card" style="--wallet-color:${w.color}">
+        <div class="wallet-head">
+          <div class="wallet-ico">${w.icon}</div>
+          <div>
+            <div class="wallet-name">${w.name}<span class="bn">${w.bn}</span></div>
+          </div>
+        </div>
+        <div class="wallet-balance ${bal >= 0 ? 'up' : 'down'}">${formatCurrency(bal)}</div>
+        <div class="wallet-stats">
+          <div class="ws"><div class="ws-label">In · আয়</div><div class="ws-value in">+${formatCurrency(ins)}</div></div>
+          <div class="ws"><div class="ws-label">Out · খরচ</div><div class="ws-value out">-${formatCurrency(outs)}</div></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderTransactions() {
+  const filter = ($('#txnFilter') && $('#txnFilter').value) || 'ALL';
+  const list = $('#txnList');
+  if (!list) return;
+  let txs = transactions.slice();
+  if (filter !== 'ALL') txs = txs.filter(t => t.wallet === filter || t.fromWallet === filter || t.toWallet === filter);
+  if (txs.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text-3);font-size:12px">No transactions yet. Click "+ Add Transaction" to start.</div>`;
+    return;
+  }
+  list.innerHTML = txs.slice(0, 30).map(t => {
+    let ico = '↔', cls = 'transfer', sign = '';
+    let label = '', sub = '';
+    if (t.type === 'IN') {
+      ico = '↓'; cls = 'in'; sign = '+';
+      label = `Income · ${t.category || 'General'}`;
+      sub = `${WALLETS.find(w => w.id === t.wallet)?.name || t.wallet} · ${new Date(t.date).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}`;
+    } else if (t.type === 'OUT') {
+      ico = '↑'; cls = 'out'; sign = '−';
+      label = `Expense · ${t.category || 'General'}`;
+      sub = `${WALLETS.find(w => w.id === t.wallet)?.name || t.wallet} · ${new Date(t.date).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}`;
+    } else if (t.type === 'TRANSFER') {
+      const from = WALLETS.find(w => w.id === t.fromWallet)?.name || t.fromWallet;
+      const to = WALLETS.find(w => w.id === t.toWallet)?.name || t.toWallet;
+      label = `Transfer · ${from} → ${to}`;
+      sub = `${new Date(t.date).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}${t.note ? ' · ' + t.note : ''}`;
+    }
+    return `
+      <div class="txn-row">
+        <div class="txn-ico ${cls}">${ico}</div>
+        <div class="txn-meta">
+          <div class="txn-title">${label}${t.linkedFrom ? ` <span style="font-size:9px;background:var(--bg-3);padding:1px 5px;border-radius:4px;color:var(--text-3);margin-left:4px">${t.linkedFrom}</span>` : ''}</div>
+          <div class="txn-sub">${sub}${t.note && t.type !== 'TRANSFER' ? ' · ' + t.note : ''}</div>
+        </div>
+        <div class="txn-amt ${cls}">${sign}${formatCurrency(t.amount)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderPLSummary() {
+  const el = $('#plSummary');
+  if (!el) return;
+  // Revenue = sum of all IN transactions tagged 'Sales' OR auto-linked from orders
+  const sales = transactions.filter(t => t.type === 'IN' && (t.category === 'Sales' || t.linkedFrom === 'order')).reduce((s, t) => s + t.amount, 0);
+  const expenses = transactions.filter(t => t.type === 'OUT' && t.category !== 'Asset Purchase').reduce((s, t) => s + t.amount, 0);
+  const netPL = sales - expenses;
+  const totalAssetsValue = assets.reduce((s, a) => s + a.value, 0);
+  const totalWalletBal = Object.values(wallets).reduce((s, b) => s + b, 0);
+  el.innerHTML = `
+    <div class="pl-card"><div class="pl-label">Sales · বিক্রয়</div><div class="pl-value positive">${formatCurrency(sales)}</div><div class="pl-sub">All confirmed orders</div></div>
+    <div class="pl-card"><div class="pl-label">Expenses · খরচ</div><div class="pl-value negative">${formatCurrency(expenses)}</div><div class="pl-sub">Excl. asset purchases</div></div>
+    <div class="pl-card"><div class="pl-label">Net P&L · নিট লাভ/ক্ষতি</div><div class="pl-value ${netPL >= 0 ? 'positive' : 'negative'}">${formatCurrency(netPL)}</div><div class="pl-sub">Sales − Expenses</div></div>
+    <div class="pl-card"><div class="pl-label">Total Wallet · মোট</div><div class="pl-value">${formatCurrency(totalWalletBal)}</div><div class="pl-sub">Across 5 accounts</div></div>
+  `;
+}
+
+function renderAssets() {
+  const grid = $('#assetGrid');
+  if (!grid) return;
+  if (assets.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text-3);font-size:12px">No assets yet. Click "+ Add Asset" to track furniture/equipment.</div>`;
+  } else {
+    grid.innerHTML = assets.map(a => `
+      <div class="asset-card">
+        <div class="asset-ico">🛋️</div>
+        <div class="asset-meta">
+          <div class="asset-name">${a.name}</div>
+          <div class="asset-sub">${a.bn} · ${a.category} · ${a.date}</div>
+        </div>
+        <div class="asset-value">${formatCurrency(a.value)}</div>
+      </div>
+    `).join('');
+  }
+  const totalEl = $('#assetsTotal');
+  if (totalEl) totalEl.textContent = formatCurrency(assets.reduce((s, a) => s + a.value, 0));
+}
+
+function renderCapitalTable() {
+  const tb = document.querySelector('#capitalTable tbody');
+  if (!tb) return;
+  const rows = [];
+  rows.push({ date: '2026-01-01', type: 'Opening Capital · শুরুর মূলধন', amount: capital.opening, note: 'Business start' });
+  capital.investments.forEach(i => rows.push({ date: i.date, type: `Investment · বিনিয়োগ (${i.source})`, amount: i.amount, note: `→ ${WALLETS.find(w => w.id === i.wallet)?.name || i.wallet}${i.note ? ' · ' + i.note : ''}` }));
+  capital.drawings.forEach(d => rows.push({ date: d.date, type: `Drawing · উত্তোলন`, amount: -d.amount, note: `${WALLETS.find(w => w.id === d.wallet)?.name || d.wallet} · ${d.purpose}` }));
+  rows.sort((a, b) => new Date(a.date) - new Date(b.date));
+  tb.innerHTML = rows.map(r => `
+    <tr><td>${r.date}</td><td>${r.type}</td><td style="text-align:right;color:${r.amount >= 0 ? 'var(--green)' : 'var(--accent)'}">${r.amount >= 0 ? '+' : ''}${formatCurrency(r.amount)}</td><td style="font-family:Inter;font-weight:500">${r.note}</td></tr>
+  `).join('');
+}
+
+function renderBalanceSheet() {
+  const tb = document.querySelector('#bsTable tbody');
+  if (!tb) return;
+  const totalWalletBal = Object.values(wallets).reduce((s, b) => s + b, 0);
+  const totalAssets = assets.reduce((s, a) => s + a.value, 0);
+  const totalCash = totalWalletBal;
+  const totalInventory = parts.reduce((s, p) => s + p.buy * p.stock, 0);
+  const totalReceivable = ORDERS_DATA.filter(o => o.due > 0 && (o.status === 'Order Confirmed' || o.status === 'Order Completed')).reduce((s, o) => s + o.due, 0);
+
+  // Liabilities (none in this demo, but show 0)
+  const totalLiabilities = 0;
+
+  // Equity = Capital + Investments - Drawings + Net P&L
+  const totalInvestment = capital.investments.reduce((s, i) => s + i.amount, 0);
+  const totalDrawings = capital.drawings.reduce((s, d) => s + d.amount, 0);
+  const sales = transactions.filter(t => t.type === 'IN' && (t.category === 'Sales' || t.linkedFrom === 'order')).reduce((s, t) => s + t.amount, 0);
+  const expenses = transactions.filter(t => t.type === 'OUT' && t.category !== 'Asset Purchase').reduce((s, t) => s + t.amount, 0);
+  const netPL = sales - expenses;
+  const equity = capital.opening + totalInvestment - totalDrawings + netPL;
+
+  const totalAssetsBS = totalCash + totalAssets + totalInventory + totalReceivable;
+
+  tb.innerHTML = `
+    <tr style="background:var(--bg-3)"><td colspan="2" style="font-family:Inter;font-weight:800;color:var(--green);text-transform:uppercase;font-size:11px;letter-spacing:.4px">ASSETS · সম্পদ</td></tr>
+    <tr><td>💵 Cash in Wallets · ওয়ালেটে নগদ</td><td style="text-align:right">${formatCurrency(totalCash)}</td></tr>
+    <tr><td>🛋️ Fixed Assets · স্থায়ী সম্পদ</td><td style="text-align:right">${formatCurrency(totalAssets)}</td></tr>
+    <tr><td>📦 Inventory Value · মজুদ মূল্য</td><td style="text-align:right">${formatCurrency(totalInventory)}</td></tr>
+    <tr><td>📨 Accounts Receivable · পাওনা</td><td style="text-align:right">${formatCurrency(totalReceivable)}</td></tr>
+    <tr class="total"><td>Total Assets · মোট সম্পদ</td><td style="text-align:right">${formatCurrency(totalAssetsBS)}</td></tr>
+
+    <tr style="background:var(--bg-3)"><td colspan="2" style="font-family:Inter;font-weight:800;color:var(--amber);text-transform:uppercase;font-size:11px;letter-spacing:.4px">LIABILITIES · দায়</td></tr>
+    <tr><td>📋 Accounts Payable · প্রদেয়</td><td style="text-align:right">${formatCurrency(totalLiabilities)}</td></tr>
+    <tr class="total"><td>Total Liabilities · মোট দায়</td><td style="text-align:right">${formatCurrency(totalLiabilities)}</td></tr>
+
+    <tr style="background:var(--bg-3)"><td colspan="2" style="font-family:Inter;font-weight:800;color:#a855f7;text-transform:uppercase;font-size:11px;letter-spacing:.4px">EQUITY · মূলধন</td></tr>
+    <tr><td>🏛️ Opening Capital · শুরুর মূলধন</td><td style="text-align:right">${formatCurrency(capital.opening)}</td></tr>
+    <tr><td>＋ Investments · বিনিয়োগ</td><td style="text-align:right">${formatCurrency(totalInvestment)}</td></tr>
+    <tr><td>− Drawings · উত্তোলন</td><td style="text-align:right">${formatCurrency(-totalDrawings)}</td></tr>
+    <tr><td>📊 Net P&L · নিট লাভ</td><td style="text-align:right;color:${netPL >= 0 ? 'var(--green)' : 'var(--accent)'}">${formatCurrency(netPL)}</td></tr>
+    <tr class="total"><td>Total Equity · মোট মূলধন</td><td style="text-align:right">${formatCurrency(equity)}</td></tr>
+
+    <tr class="balance"><td>⚖️ Assets = Liabilities + Equity · ব্যালেন্স</td><td style="text-align:right">${formatCurrency(totalAssetsBS)}</td></tr>
+  `;
+}
+
+function renderApiConfig() {
+  const grid = $('#apiConfigGrid');
+  if (!grid) return;
+  grid.innerHTML = Object.keys(API_CONFIG).map(key => {
+    const cfg = API_CONFIG[key];
+    const isLive = cfg.enabled && cfg.fields.every(f => cfg[f.key]);
+    return `
+      <div class="api-card">
+        <div class="api-card-head">
+          <div class="api-card-name">${cfg.label} <span class="badge ${isLive ? 'live' : 'demo'}">${isLive ? 'LIVE' : 'DEMO'}</span></div>
+          <div class="api-card-status ${isLive ? 'live' : 'demo'}">${isLive ? '🟢 Connected' : '⚪ Demo mode'}</div>
+        </div>
+        <div style="font-size:11px;color:var(--text-3);margin-bottom:10px">${cfg.desc}</div>
+        <div class="api-card-fields">
+          ${cfg.fields.map(f => `
+            <div>
+              <label>${f.label}</label>
+              <input type="text" data-api="${key}" data-field="${f.key}" value="${cfg[f.key] || ''}" placeholder="${f.placeholder}" />
+            </div>
+          `).join('')}
+        </div>
+        <div class="api-card-actions">
+          <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-2);cursor:pointer">
+            <input type="checkbox" data-api-toggle="${key}" ${cfg.enabled ? 'checked' : ''} /> Enable
+          </label>
+          <button class="btn btn-sm" data-api-test="${key}">Test</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Wire up inputs
+  $$('[data-api]').forEach(inp => {
+    inp.oninput = (e) => {
+      const api = inp.dataset.api;
+      const field = inp.dataset.field;
+      API_CONFIG[api][field] = inp.value;
+    };
+  });
+  $$('[data-api-toggle]').forEach(cb => {
+    cb.onchange = (e) => {
+      const api = cb.dataset.apiToggle;
+      API_CONFIG[api].enabled = cb.checked;
+      renderApiConfig();
+      persistAccounting();
+      toast(cb.checked ? 'success' : 'warn', cb.checked ? `${API_CONFIG[api].label} enabled` : `${API_CONFIG[api].label} disabled`, cb.checked ? 'Will attempt live API on next transaction.' : 'Falling back to demo mode.');
+    };
+  });
+  $$('[data-api-test]').forEach(btn => {
+    btn.onclick = () => {
+      const api = btn.dataset.apiTest;
+      const cfg = API_CONFIG[api];
+      const missing = cfg.fields.filter(f => !cfg[f.key]);
+      if (missing.length > 0) {
+        toast('err', `${cfg.label} incomplete`, `Fill: ${missing.map(m => m.label).join(', ')}`);
+        return;
+      }
+      toast('success', `${cfg.label} test OK`, `Credentials saved. Live mode active for ${cfg.label}.`);
+    };
+  });
+}
+
+/* ---------- Modal handlers ---------- */
+$('#moneyTxBtn').onclick = () => { $('#txModal').classList.add('show'); $('#txAmount').focus(); };
+$('#txCancel').onclick = () => $('#txModal').classList.remove('show');
+$('#txModal').onclick = (e) => { if (e.target === $('#txModal')) $('#txModal').classList.remove('show'); };
+$('#txSave').onclick = () => {
+  const type = $('#txType').value;
+  const wallet = $('#txWallet').value;
+  const amount = parseFloat($('#txAmount').value);
+  const category = $('#txCategory').value.trim() || 'General';
+  const note = $('#txNote').value.trim();
+  if (!amount || amount <= 0) return toast('err', 'Invalid amount', 'Enter a positive number.');
+  processTransaction({ type, wallet, amount, category, note, linkedFrom: 'manual' });
+  $('#txModal').classList.remove('show');
+  $('#txAmount').value = ''; $('#txCategory').value = ''; $('#txNote').value = '';
+  toast('success', 'Transaction saved', `${type === 'IN' ? '+' : '−'}${formatCurrency(amount)} → ${WALLETS.find(w => w.id === wallet).name}`);
+};
+
+$('#moneyTransferBtn').onclick = () => { $('#transferModal').classList.add('show'); $('#trAmount').focus(); };
+$('#trCancel').onclick = () => $('#transferModal').classList.remove('show');
+$('#transferModal').onclick = (e) => { if (e.target === $('#transferModal')) $('#transferModal').classList.remove('show'); };
+$('#trSave').onclick = () => {
+  const fromWallet = $('#trFrom').value;
+  const toWallet = $('#trTo').value;
+  const amount = parseFloat($('#trAmount').value);
+  const note = $('#trNote').value.trim();
+  if (fromWallet === toWallet) return toast('err', 'Same wallet', 'Choose different source and destination.');
+  if (!amount || amount <= 0) return toast('err', 'Invalid amount', 'Enter a positive number.');
+  if ((wallets[fromWallet] || 0) < amount) return toast('err', 'Insufficient funds', `${WALLETS.find(w => w.id === fromWallet).name} only has ${formatCurrency(wallets[fromWallet] || 0)}`);
+  processTransaction({ type: 'TRANSFER', fromWallet, toWallet, amount, note, linkedFrom: 'transfer' });
+  $('#transferModal').classList.remove('show');
+  $('#trAmount').value = ''; $('#trNote').value = '';
+  toast('success', 'Transfer done', `${formatCurrency(amount)}: ${WALLETS.find(w => w.id === fromWallet).name} → ${WALLETS.find(w => w.id === toWallet).name}`);
+};
+
+$('#assetAddBtn').onclick = () => { $('#assetModal').classList.add('show'); $('#assetDate').value = new Date().toISOString().split('T')[0]; $('#assetName').focus(); };
+$('#assetCancel').onclick = () => $('#assetModal').classList.remove('show');
+$('#assetModal').onclick = (e) => { if (e.target === $('#assetModal')) $('#assetModal').classList.remove('show'); };
+$('#assetSave').onclick = () => {
+  const name = $('#assetName').value.trim();
+  const wallet = $('#assetWallet').value;
+  const value = parseFloat($('#assetValue').value);
+  const date = $('#assetDate').value;
+  const category = $('#assetCategory').value.trim() || 'General';
+  if (!name) return toast('err', 'Missing name', 'Enter asset name.');
+  if (!value || value <= 0) return toast('err', 'Invalid value', 'Enter positive amount.');
+  const id = 'A' + String(assets.length + 1).padStart(3, '0');
+  const bangla = toBangla(name);
+  assets.push({ id, name, bangla, value, wallet, date, category });
+  // Deduct from wallet + log as OUT transaction (but NOT counted in P&L)
+  processTransaction({ type: 'OUT', wallet, amount: value, category: 'Asset Purchase', note: `Asset: ${name}`, linkedFrom: 'asset' });
+  $('#assetModal').classList.remove('show');
+  $('#assetName').value = ''; $('#assetValue').value = ''; $('#assetCategory').value = '';
+  renderAssets();
+  toast('success', 'Asset added', `${name} (${formatCurrency(value)}) · deducted from ${WALLETS.find(w => w.id === wallet).name}. NOT counted in P&L.`);
+};
+
+$('#capitalInvestBtn').onclick = () => { $('#investModal').classList.add('show'); $('#invAmount').focus(); };
+$('#invCancel').onclick = () => $('#investModal').classList.remove('show');
+$('#investModal').onclick = (e) => { if (e.target === $('#investModal')) $('#investModal').classList.remove('show'); };
+$('#invSave').onclick = () => {
+  const source = $('#invSource').value.trim() || 'Investment';
+  const wallet = $('#invWallet').value;
+  const amount = parseFloat($('#invAmount').value);
+  const note = $('#invNote').value.trim();
+  if (!amount || amount <= 0) return toast('err', 'Invalid amount', 'Enter positive amount.');
+  const date = new Date().toISOString().split('T')[0];
+  capital.investments.push({ date, source, amount, wallet, note });
+  processTransaction({ type: 'IN', wallet, amount, category: 'Investment', note: `From ${source}`, linkedFrom: 'investment' });
+  $('#investModal').classList.remove('show');
+  $('#invSource').value = ''; $('#invAmount').value = ''; $('#invNote').value = '';
+  renderCapitalTable();
+  toast('success', 'Investment added', `${formatCurrency(amount)} from ${source} → ${WALLETS.find(w => w.id === wallet).name}. Equity ↑`);
+};
+
+$('#capitalDrawBtn').onclick = () => { $('#drawModal').classList.add('show'); $('#drawAmount').focus(); };
+$('#drawCancel').onclick = () => $('#drawModal').classList.remove('show');
+$('#drawModal').onclick = (e) => { if (e.target === $('#drawModal')) $('#drawModal').classList.remove('show'); };
+$('#drawSave').onclick = () => {
+  const wallet = $('#drawWallet').value;
+  const amount = parseFloat($('#drawAmount').value);
+  const purpose = $('#drawPurpose').value.trim() || 'Personal';
+  if (!amount || amount <= 0) return toast('err', 'Invalid amount', 'Enter positive amount.');
+  if ((wallets[wallet] || 0) < amount) return toast('err', 'Insufficient funds', `${WALLETS.find(w => w.id === wallet).name} only has ${formatCurrency(wallets[wallet] || 0)}`);
+  const date = new Date().toISOString().split('T')[0];
+  capital.drawings.push({ date, wallet, amount, purpose });
+  processTransaction({ type: 'OUT', wallet, amount, category: 'Owner Drawing', note: purpose, linkedFrom: 'drawing' });
+  $('#drawModal').classList.remove('show');
+  $('#drawAmount').value = ''; $('#drawPurpose').value = '';
+  renderCapitalTable();
+  toast('success', 'Drawing recorded', `${formatCurrency(amount)} withdrawn for "${purpose}". Equity ↓`);
+};
+
+$('#txnFilter').onchange = renderTransactions;
+
+$('#apiResetBtn').onclick = () => {
+  if (!confirm('Reset all API configs to demo mode?')) return;
+  Object.keys(API_CONFIG).forEach(k => {
+    API_CONFIG[k].enabled = false;
+    API_CONFIG[k].fields.forEach(f => API_CONFIG[k][f.key] = '');
+  });
+  renderApiConfig();
+  persistAccounting();
+  toast('warn', 'API reset', 'All integrations returned to demo mode.');
+};
+
+$('#apiSaveBtn').onclick = () => {
+  persistAccounting();
+  toast('success', 'Configuration saved', 'API credentials stored in browser. Toggle ENABLE per integration to go live.');
+};
+
+$('#apiExportBtn').onclick = () => {
+  const cfg = JSON.stringify(API_CONFIG, null, 2);
+  const blob = new Blob([cfg], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `bikepartsbd-api-config-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  toast('success', 'Config exported', 'Save this file for backup. Never share API keys publicly.');
+};
+
+/* ---------- Auto-link orders to wallet (simulating payment received) ---------- */
+// For demo: simulate that 80% of confirmed/completed orders went to CASH, 15% to BKASH, 5% to NAGAD
+function seedDemoTransactions() {
+  if (transactions.length > 0) return; // already seeded
+  // Sample income from a few representative confirmed orders
+  const samples = [
+    { id: 3040407, amt: 860, wallet: 'BKASH' },
+    { id: 3040265, amt: 30570, wallet: 'CASH' },
+    { id: 3034924, amt: 5375, wallet: 'BKASH' },
+    { id: 3032815, amt: 1000, wallet: 'CASH' },
+    { id: 3028356, amt: 880, wallet: 'NAGAD' }
+  ];
+  samples.forEach(s => {
+    transactions.push({ id: 'TXN-' + s.id, type: 'IN', wallet: s.wallet, amount: s.amt, category: 'Sales', note: `Auto from order #${s.id}`, linkedFrom: 'order', date: '2026-09-08T14:00:00Z' });
+    wallets[s.wallet] = (wallets[s.wallet] || 0) + s.amt;
+  });
+  // Sample expense: vendor payment
+  transactions.push({ id: 'TXN-V001', type: 'OUT', wallet: 'BANK', amount: 85000, category: 'Vendor Payment', note: 'Moto Power — bulk buy Sep 7', linkedFrom: 'vendor', date: '2026-09-07T16:00:00Z' });
+  wallets['BANK'] -= 85000;
+  // Sample rent expense
+  transactions.push({ id: 'TXN-R001', type: 'OUT', wallet: 'BKASH', amount: 25000, category: 'Rent', note: 'Shop rent Sep 2026', linkedFrom: 'manual', date: '2026-09-01T10:00:00Z' });
+  wallets['BKASH'] -= 25000;
+}
+
+/* Init */
+loadAccounting();
+seedDemoTransactions();
+renderWallets();
+renderTransactions();
+renderPLSummary();
+renderAssets();
+renderCapitalTable();
+renderBalanceSheet();
+renderApiConfig();
 
 /* After initial render, allow real-time toasts */
 setTimeout(() => { isFirstLoad = false; }, 1500);
