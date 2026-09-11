@@ -1246,7 +1246,7 @@
     <button class="sidebar-item" data-page="notifications">
       <span class="si-ico">🔔</span><span class="si-label">Notifications</span>
       <span class="si-badge" id="notifBadgeCount">0</span>
-    </button></old_text></old_text>
+    </button>
     <button class="sidebar-item" data-page="courier">
       <span class="si-ico">🚚</span><span class="si-label">Courier</span>
     </button>
@@ -1545,7 +1545,7 @@
         <button class="btn btn-primary" id="saveGoalBtn">💾 Save Goal</button>
       </div>
     </div>
-  </div></new_text>
+  </div>
 
   <div class="page-head">
     <div>
@@ -2170,7 +2170,7 @@
   </div>
 </div>
 
-<!-- ====================== ACCOUNTING MODALS ====================== --></old_text>
+<!-- ====================== ACCOUNTING MODALS ====================== -->
 
 <!-- Add Transaction Modal -->
 <div class="modal-backdrop" id="txModal">
@@ -4333,7 +4333,7 @@ function wrapPages() {
       else if (txt.includes('WhatsApp Auto-Reply')) mode = 'whatsapp';
       else if (txt.includes('Staff Performance')) mode = 'staff';
       else if (txt.includes('Vendor Stock')) mode = 'vendorstock';
-      else if (txt.includes('Notifications')) mode = 'notifications';</old_text>
+      else if (txt.includes('Notifications')) mode = 'notifications';
       else if (txt.includes('Sales Goal Tracking')) mode = 'goals';
       else if (txt.includes('Vendor Contacts')) mode = 'vendors';
       else if (txt.includes('Courier Tracking')) mode = 'courier';
@@ -5163,7 +5163,7 @@ function renderReportsCharts() {
   renderSalesForecast();
   renderCohortRetention();
 
-  // Top stats</old_text></old_text>
+  // Top stats
   const sales = transactions.filter(t => t.type === 'IN' && (t.category === 'Sales' || t.linkedFrom === 'order')).reduce((s, t) => s + t.amount, 0);
   const expenses = transactions.filter(t => t.type === 'OUT' && t.category !== 'Asset Purchase').reduce((s, t) => s + t.amount, 0);
   const net = sales - expenses;
