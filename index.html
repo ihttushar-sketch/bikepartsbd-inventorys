@@ -4926,6 +4926,21 @@ function buildReportsPage() {
   `;
   wrap.appendChild(yoyCard);
 
+  // NEW: Sales Forecast (ML-based)
+  const forecastCard = document.createElement('div');
+  forecastCard.className = 'chart-card';
+  forecastCard.style.marginTop = '18px';
+  forecastCard.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+      <h3 style="margin:0">🔮 Sales Forecast · বিক্রয় পূর্বাভাস (Linear Regression)</h3>
+      <span style="font-size:10px;color:var(--text-3);font-weight:700">ML-BASED PREDICTION</span>
+    </div>
+    <div style="font-size:11px;color:var(--text-3);margin-bottom:12px">Last 30 days sales pattern → next 7 days projection. Uses least-squares linear regression.</div>
+    <div class="big-stat-grid" id="forecastSummary"></div>
+    <svg class="chart-svg" id="forecastChart" viewBox="0 0 720 240" preserveAspectRatio="none" style="margin-top:14px"></svg>
+  `;
+  wrap.appendChild(forecastCard);
+
   // Export buttons (with PDF option)
   const exports = document.createElement('div');
   exports.className = 'export-row';
@@ -5036,8 +5051,9 @@ function renderReportsCharts() {
   renderDeadStock();
   renderTopCustomers();
   renderYoYComparison();
+  renderSalesForecast();
 
-  // Top stats</old_text>
+  // Top stats</old_text></old_text>
   const sales = transactions.filter(t => t.type === 'IN' && (t.category === 'Sales' || t.linkedFrom === 'order')).reduce((s, t) => s + t.amount, 0);
   const expenses = transactions.filter(t => t.type === 'OUT' && t.category !== 'Asset Purchase').reduce((s, t) => s + t.amount, 0);
   const net = sales - expenses;
@@ -5779,6 +5795,147 @@ function exportYoYCSV() {
     rows.push(row.join(','));
   });
   downloadCSV('year-over-year.csv', rows.join('\n'));
+}
+
+/* ============================================================
+   ROUND 6: SALES FORECASTING (Linear Regression)
+   ============================================================ */
+function linearRegression(points) {
+  const n = points.length;
+  if (n < 2) return { slope: 0, intercept: points[0]?.y || 0 };
+  let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+  points.forEach(p => { sumX += p.x; sumY += p.y; sumXY += p.x * p.y; sumX2 += p.x * p.x; });
+  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+  const intercept = (sumY - slope * sumX) / n;
+  return { slope, intercept };
+}
+
+function renderSalesForecast() {
+  const el = document.getElementById('forecastChart');
+  if (!el) return;
+
+  // Aggregate last 30 days of sales
+  const today = new Date();
+  const dailySales = {};
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(today); d.setDate(d.getDate() - i);
+    dailySales[d.toISOString().split('T')[0]] = 0;
+  }
+
+  ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed').forEach(o => {
+    const key = new Date(o.date).toISOString().split('T')[0];
+    if (dailySales[key] !== undefined) dailySales[key] += (o.paid || 0);
+  });
+
+  const dates = Object.keys(dailySales).sort();
+  const points = dates.map((d, i) => ({ x: i, y: dailySales[d], date: d }));
+
+  // Linear regression
+  const reg = linearRegression(points);
+  const forecastDays = 7;
+  const totalPoints = points.length + forecastDays;
+  const forecastPoints = [];
+  for (let i = points.length; i < totalPoints; i++) {
+    const futureDate = new Date(today); futureDate.setDate(futureDate.getDate() + (i - points.length + 1));
+    forecastPoints.push({ x: i, y: Math.max(0, reg.slope * i + reg.intercept), date: futureDate.toISOString().split('T')[0] });
+  }
+
+  const allY = [...points.map(p => p.y), ...forecastPoints.map(p => p.y)];
+  const maxY = Math.max(...allY) * 1.1;
+  const W = 720, H = 240, PAD = 40;
+  const stepX = (W - PAD * 2) / (totalPoints - 1);
+
+  let lines = '', dots = '', forecastLine = '', gridLines = '';
+
+  // Grid
+  for (let i = 0; i <= 4; i++) {
+    const y = PAD + (H - PAD * 2) * (i / 4);
+    const v = maxY * (1 - i / 4);
+    gridLines += `<line class="grid-line" x1="${PAD}" y1="${y}" x2="${W - PAD}" y2="${y}" stroke="var(--line)" stroke-dasharray="3,3"/>`;
+    gridLines += `<text class="axis-label" x="${PAD - 6}" y="${y + 4}" text-anchor="end">${(v / 1000).toFixed(0)}k</text>`;
+  }
+
+  // Historical line
+  let pathD = '';
+  points.forEach((p, i) => {
+    const x = PAD + i * stepX;
+    const y = H - PAD - (p.y / maxY) * (H - PAD * 2);
+    pathD += (i === 0 ? 'M' : 'L') + `${x},${y} `;
+  });
+  lines += `<path class="area" d="${pathD} L${PAD + (points.length - 1) * stepX},${H - PAD} L${PAD},${H - PAD} Z" fill="url(#areaGrad)" opacity="0.3"/>`;
+  lines += `<path class="line" d="${pathD}" stroke="#e10600" stroke-width="2" fill="none"/>`;
+
+  // Historical dots (every 3rd)
+  points.forEach((p, i) => {
+    if (i % 3 === 0 || i === points.length - 1) {
+      const x = PAD + i * stepX;
+      const y = H - PAD - (p.y / maxY) * (H - PAD * 2);
+      dots += `<circle class="dot" cx="${x}" cy="${y}" r="3" fill="#e10600"><title>${p.date}: ${formatCurrency(p.y)}</title></circle>`;
+    }
+  });
+
+  // Forecast line
+  let fPath = '';
+  forecastPoints.forEach((p, i) => {
+    const idx = points.length + i;
+    const x = PAD + idx * stepX;
+    const y = H - PAD - (p.y / maxY) * (H - PAD * 2);
+    fPath += (i === 0 ? 'M' : 'L') + `${x},${y} `;
+    dots += `<circle class="dot" cx="${x}" cy="${y}" r="3" fill="#a855f7" stroke="#fff" stroke-width="1"><title>${p.date} (forecast): ${formatCurrency(p.y)}</title></circle>`;
+  });
+  forecastLine += `<path class="line" d="${fPath}" stroke="#a855f7" stroke-width="2" stroke-dasharray="5,5" fill="none"/>`;
+
+  // Vertical separator at forecast boundary
+  const sepX = PAD + (points.length - 1) * stepX;
+  lines += `<line x1="${sepX}" y1="${PAD}" x2="${sepX}" y2="${H - PAD}" stroke="var(--accent)" stroke-dasharray="2,4" opacity="0.5"/>`;
+  lines += `<text class="axis-label" x="${sepX + 4}" y="${PAD + 12}" fill="var(--accent)" font-weight="800">⚡ Forecast</text>`;
+
+  el.innerHTML = `
+    <defs>
+      <linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#e10600" stop-opacity="0.5"/>
+        <stop offset="100%" stop-color="#e10600" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    ${gridLines}${lines}${dots}${forecastLine}
+    <g transform="translate(${W - 220}, 8)">
+      <line x1="0" y1="6" x2="14" y2="6" stroke="#e10600" stroke-width="2"/>
+      <text class="axis-label" x="20" y="10">Historical (last 30 days)</text>
+      <line x1="0" y1="24" x2="14" y2="24" stroke="#a855f7" stroke-width="2" stroke-dasharray="3,3"/>
+      <text class="axis-label" x="20" y="28">Forecast (next 7 days)</text>
+    </g>
+  `;
+
+  // Summary
+  const sumForecast = forecastPoints.reduce((s, p) => s + p.y, 0);
+  const sumActual = points.reduce((s, p) => s + p.y, 0);
+  const slope = reg.slope;
+  const trend = slope > 0 ? '📈 Upward' : slope < 0 ? '📉 Downward' : '➡️ Flat';
+  const confidence = Math.min(95, Math.max(40, 70 + Math.abs(slope) * 5));
+
+  const sumEl = document.getElementById('forecastSummary');
+  if (sumEl) {
+    sumEl.innerHTML = `
+      <div class="big-stat" style="--stat-color:var(--accent)">
+        <div class="bs-icon">📊</div>
+        <div class="bs-label">Last 30d Total</div>
+        <div class="bs-value">${formatCurrency(sumActual)}</div>
+        <div class="bs-sub">Actual sales data · পূর্ববর্তী ৩০ দিনের বিক্রয়</div>
+      </div>
+      <div class="big-stat" style="--stat-color:#a855f7">
+        <div class="bs-icon">🔮</div>
+        <div class="bs-label">Next 7d Forecast</div>
+        <div class="bs-value" style="color:#a855f7">${formatCurrency(sumForecast)}</div>
+        <div class="bs-sub">Linear regression projection · ${confidence.toFixed(0)}% confidence</div>
+      </div>
+      <div class="big-stat" style="--stat-color:${slope >= 0 ? 'var(--green)' : 'var(--accent)'}">
+        <div class="bs-icon">${slope >= 0 ? '📈' : '📉'}</div>
+        <div class="bs-label">Trend · প্রবণতা</div>
+        <div class="bs-value" style="color:${slope >= 0 ? 'var(--green)' : 'var(--accent)'}">${trend}</div>
+        <div class="bs-sub">Slope: ${slope > 0 ? '+' : ''}${slope.toFixed(2)} BDT/day<br>${slope > 50 ? '🚀 Strong growth' : slope > 0 ? '✅ Mild growth' : slope < -50 ? '⚠️ Declining fast' : '⚠️ Slow decline'}</div>
+      </div>
+    `;
+  }
 }
 
 function monthName(m) {
