@@ -1008,6 +1008,72 @@
     box-shadow: 0 4px 12px rgba(225, 6, 0, .25); transition: all .15s;
   }
   .pdf-export-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(225, 6, 0, .35); }
+
+  /* ============================================================
+     BULK INVENTORY IMPORT (CSV/Excel)
+     ============================================================ */
+  .upload-zone {
+    border: 2px dashed var(--line); border-radius: var(--radius);
+    padding: 40px 20px; text-align: center; background: var(--bg-2);
+    transition: all .2s; cursor: pointer; margin-bottom: 16px;
+  }
+  .upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--accent); background: var(--accent-soft);
+    transform: scale(1.01);
+  }
+  .upload-zone .uz-icon { font-size: 48px; margin-bottom: 12px; opacity: .7; }
+  .upload-zone .uz-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .upload-zone .uz-sub { font-size: 12px; color: var(--text-3); margin-bottom: 12px; }
+  .upload-zone .uz-input { display: none; }
+  .upload-zone .uz-browse {
+    display: inline-block; padding: 8px 18px; background: var(--accent);
+    color: #fff; border-radius: 8px; font-weight: 700; font-size: 12px;
+    cursor: pointer; transition: all .15s;
+  }
+  .upload-zone .uz-browse:hover { background: var(--accent-2); transform: translateY(-1px); }
+
+  .import-preview-table { width: 100%; border-collapse: collapse; font-size: 11px; max-height: 280px; overflow-y: auto; display: block; }
+  .import-preview-table th { background: var(--bg-2); padding: 6px 8px; font-size: 9px; text-transform: uppercase; letter-spacing: .3px; color: var(--text-3); position: sticky; top: 0; z-index: 1; }
+  .import-preview-table td { padding: 6px 8px; border-bottom: 1px solid var(--line); font-family: 'JetBrains Mono', monospace; }
+  .import-preview-table tr.dup td { background: rgba(255, 176, 32, .1); }
+  .import-preview-table tr.invalid td { background: rgba(225, 6, 0, .08); color: var(--text-3); }
+
+  .import-summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 14px 0; }
+  @media (max-width: 600px) { .import-summary-grid { grid-template-columns: repeat(2, 1fr); } }
+  .is-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; }
+  .is-card .is-label { font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: .4px; font-weight: 700; }
+  .is-card .is-value { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
+  .is-card.ok .is-value { color: var(--green); }
+  .is-card.warn .is-value { color: var(--amber); }
+  .is-card.err .is-value { color: var(--accent); }
+
+  .import-history-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--bg-2); border-radius: 6px; margin-bottom: 6px; font-size: 12px; }
+  .import-history-item .ih-icon { font-size: 18px; }
+  .import-history-item .ih-meta { flex: 1; }
+  .import-history-item .ih-title { font-weight: 700; }
+  .import-history-item .ih-sub { font-size: 10px; color: var(--text-3); }
+
+  /* ============================================================
+     SALES GOAL TRACKING
+     ============================================================ */
+  .goal-card { background: linear-gradient(135deg, var(--bg-2), var(--surface)); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; position: relative; overflow: hidden; }
+  .goal-card::after { content: ''; position: absolute; top: -50%; right: -10%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(225,6,0,.08), transparent 70%); }
+  .goal-card .gc-title { font-size: 12px; color: var(--text-3); text-transform: uppercase; letter-spacing: .4px; font-weight: 800; margin-bottom: 8px; }
+  .goal-card .gc-amounts { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+  .goal-card .gc-current { font-size: 32px; font-weight: 800; font-family: 'JetBrains Mono', monospace; letter-spacing: -.5px; color: var(--text); }
+  .goal-card .gc-target { font-size: 14px; color: var(--text-3); font-family: 'JetBrains Mono', monospace; }
+  .goal-card .gc-progress-bar { height: 12px; background: var(--bg-3); border-radius: 6px; overflow: hidden; position: relative; }
+  .goal-card .gc-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 6px; transition: width .8s cubic-bezier(.4, 0, .2, 1); position: relative; overflow: hidden; }
+  .goal-card .gc-progress-fill::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent); animation: shimmer 2s infinite; }
+  @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+  .goal-card .gc-stats { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .goal-card .gc-stat { font-size: 11px; }
+  .goal-card .gc-stat strong { display: block; font-size: 18px; font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+  .goal-card .gc-stat .label { color: var(--text-3); }
+  .goal-card .gc-stat .value { font-weight: 800; }
+  .goal-card .gc-stat .value.green { color: var(--green); }
+  .goal-card .gc-stat .value.amber { color: var(--amber); }
+  .goal-card .gc-stat .value.accent { color: var(--accent); }
 </style>
 </head>
 <body>
@@ -1030,6 +1096,12 @@
     </button>
     <button class="sidebar-item" data-page="inventory">
       <span class="si-ico">📦</span><span class="si-label">Inventory</span>
+    </button>
+    <button class="sidebar-item" data-page="bulkimport">
+      <span class="si-ico">📥</span><span class="si-label">Bulk Import</span>
+    </button>
+    <button class="sidebar-item" data-page="goals">
+      <span class="si-ico">🎯</span><span class="si-label">Sales Goals</span>
     </button>
     <button class="sidebar-item" data-page="orders">
       <span class="si-ico">📋</span><span class="si-label">Orders</span>
@@ -1116,7 +1188,131 @@
 </div>
 
 <!-- ====================== PAGE ====================== -->
-<div class="page" id="mainPage"></new_text>
+<div class="page" id="mainPage">
+
+  <!-- BULK IMPORT PAGE -->
+  <div class="bulk-import-page-marker"></div>
+  <div class="page-head">
+    <div>
+      <h1>Bulk Inventory Import · বাল্ক ইনভেন্টরি ইমপোর্ট</h1>
+      <p>CSV / Excel upload — 50-100 products একসাথে import করুন। Drag-drop বা file picker ব্যবহার করুন।</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="dlTemplateBtn">📥 Download CSV Template</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="upload-zone" id="uploadZone">
+      <div class="uz-icon">📂</div>
+      <div class="uz-title">CSV / Excel file drag-drop করুন</div>
+      <div class="uz-sub">অথবা click করে select করুন · Max 500 rows · UTF-8 encoded</div>
+      <label class="uz-browse" for="csvFileInput">📁 Browse Files</label>
+      <input type="file" id="csvFileInput" class="uz-input" accept=".csv,.txt,.xlsx,.xls" />
+    </div>
+
+    <div style="font-size:11px;color:var(--text-3);line-height:1.7">
+      <strong style="color:var(--text-2)">📋 Expected columns (case-insensitive, any order):</strong><br>
+      <code>sku</code>, <code>name</code>, <code>bangla</code> (optional), <code>category</code> (optional), <code>stock</code> (initial), <code>buy</code> (buying price BDT), <code>sell</code> (selling price BDT), <code>vendor</code> (optional)<br>
+      <strong style="color:var(--accent)">⚠️ Required:</strong> sku, name, buy, sell. Auto-generated if missing.
+    </div>
+  </div>
+
+  <div class="card" id="importPreviewCard" style="display:none;margin-bottom:14px">
+    <h3 style="margin:0 0 8px">📋 Import Preview · প্রিভিউ</h3>
+    <div class="import-summary-grid" id="importSummary"></div>
+    <div style="max-height:280px;overflow:auto;border:1px solid var(--line);border-radius:8px">
+      <table class="import-preview-table" id="importPreviewTable">
+        <thead id="importPreviewHead"></thead>
+        <tbody id="importPreviewBody"></tbody>
+      </table>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+      <button class="btn btn-primary" id="confirmImportBtn">✅ Confirm Import (valid rows only)</button>
+      <button class="btn" id="cancelImportBtn">❌ Cancel</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin:0 0 12px">📜 Import History · ইমপোর্ট ইতিহাস</h3>
+    <div id="importHistoryList"></div>
+  </div>
+
+  <!-- SALES GOAL PAGE -->
+  <div class="sales-goal-page-marker"></div>
+  <div class="page-head">
+    <div>
+      <h1>Sales Goal Tracking · বিক্রয় লক্ষ্য</h1>
+      <p>মাসিক লক্ষ্য সেট করুন → real-time progress দেখুন → projection পান।</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="setGoalBtn">🎯 Set New Goal</button>
+    </div>
+  </div>
+
+  <div class="goal-card" id="currentGoalCard">
+    <div class="gc-title">🎯 Current Month Goal · এই মাসের লক্ষ্য</div>
+    <div class="gc-amounts">
+      <div class="gc-current" id="goalCurrent">৳0</div>
+      <div class="gc-target">of <strong id="goalTarget">৳0</strong></div>
+    </div>
+    <div class="gc-progress-bar">
+      <div class="gc-progress-fill" id="goalProgressFill" style="width:0%"></div>
+    </div>
+    <div class="gc-stats">
+      <div class="gc-stat"><span class="label">Progress · অগ্রগতি</span><span class="value" id="goalPct">0%</span></div>
+      <div class="gc-stat"><span class="label">Remaining · বাকি</span><span class="value amber" id="goalRemaining">৳0</span></div>
+      <div class="gc-stat"><span class="label">Days Left · বাকি দিন</span><span class="value" id="goalDaysLeft">0</span></div>
+      <div class="gc-stat"><span class="label">Daily Need · দৈনিক লক্ষ্য</span><span class="value" id="goalDailyNeed">৳0</span></div>
+      <div class="gc-stat"><span class="label">Pace · গতি</span><span class="value green" id="goalPace">On Track</span></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h3 style="margin:0 0 12px">📊 Goal History · লক্ষ্যের ইতিহাস</h3>
+    <div id="goalHistoryList"></div>
+  </div>
+
+  <!-- Set Goal Modal -->
+  <div class="modal" id="goalModal" style="display:none">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>🎯 Set Monthly Sales Goal · মাসিক লক্ষ্য নির্ধারণ</h3>
+        <button class="modal-close" data-close="goalModal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label>Target Amount (BDT) · লক্ষ্য পরিমাণ</label>
+          <input type="number" id="goalAmountInput" placeholder="e.g. 500000" />
+        </div>
+        <div class="form-row">
+          <label>Month · মাস</label>
+          <select id="goalMonthInput">
+            <option value="0">January · জানুয়ারি</option>
+            <option value="1">February · ফেব্রুয়ারি</option>
+            <option value="2">March · মার্চ</option>
+            <option value="3">April · এপ্রিল</option>
+            <option value="4">May · মে</option>
+            <option value="5">June · জুন</option>
+            <option value="6">July · জুলাই</option>
+            <option value="7">August · আগস্ট</option>
+            <option value="8">September · সেপ্টেম্বর</option>
+            <option value="9">October · অক্টোবর</option>
+            <option value="10">November · নভেম্বর</option>
+            <option value="11">December · ডিসেম্বর</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Year · বছর</label>
+          <input type="number" id="goalYearInput" value="2026" />
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" data-close="goalModal">Cancel</button>
+        <button class="btn btn-primary" id="saveGoalBtn">💾 Save Goal</button>
+      </div>
+    </div>
+  </div></new_text>
 
   <div class="page-head">
     <div>
@@ -3899,6 +4095,8 @@ function wrapPages() {
     if (el.classList && el.classList.contains('page-head')) {
       const txt = el.textContent;
       if (txt.includes('Inventory Dashboard')) mode = 'dashboard';
+      else if (txt.includes('Bulk Inventory Import')) mode = 'bulkimport';
+      else if (txt.includes('Sales Goal Tracking')) mode = 'goals';
       else if (txt.includes('Vendor Contacts')) mode = 'vendors';
       else if (txt.includes('Courier Tracking')) mode = 'courier';
       else if (txt.includes('Orders') && txt.includes('অর্ডার')) mode = 'orders';
@@ -3912,6 +4110,10 @@ function wrapPages() {
       if (el.classList && (el.classList.contains('page-head') || el.classList.contains('kpis') || el.classList.contains('how-to-card'))) {
         groups.dashboard.push(el);
       }
+    } else if (mode === 'bulkimport') {
+      groups.bulkimport.push(el);
+    } else if (mode === 'goals') {
+      groups.goals.push(el);
     } else if (mode === 'orders') {
       // Orders: page-head + orders-stats + card (filter + table)
       groups.orders.push(el);
@@ -4884,12 +5086,385 @@ function downloadCSV(filename, content) {
   toast('success', 'Exported', filename);
 }
 
+function persistParts() {
+  try {
+    localStorage.setItem('bikepartsbd_parts', JSON.stringify(parts));
+  } catch (e) { console.warn('persistParts failed', e); }
+}
+
+/* ============================================================
+   ROUND 1: BULK INVENTORY IMPORT (CSV/Excel)
+   ============================================================ */
+const IMPORT_HISTORY_KEY = 'bikepartsbd_import_history';
+let pendingImport = null;
+
+function getImportHistory() {
+  try { return JSON.parse(localStorage.getItem(IMPORT_HISTORY_KEY) || '[]'); } catch { return []; }
+}
+function saveImportHistory(history) {
+  localStorage.setItem(IMPORT_HISTORY_KEY, JSON.stringify(history));
+}
+
+function parseCSV(text) {
+  // Simple CSV parser — handles quoted fields with commas
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  if (lines.length === 0) return { headers: [], rows: [] };
+
+  const parseRow = (line) => {
+    const out = []; let cur = ''; let inQuote = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (c === '"') { inQuote = !inQuote; }
+      else if (c === ',' && !inQuote) { out.push(cur.trim()); cur = ''; }
+      else cur += c;
+    }
+    out.push(cur.trim());
+    return out;
+  };
+
+  const headers = parseRow(lines[0]).map(h => h.toLowerCase().replace(/\s+/g, ''));
+  const rows = lines.slice(1).map(parseRow).map(arr => {
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = arr[i] || '');
+    return obj;
+  });
+  return { headers, rows };
+}
+
+function downloadCSVTemplate() {
+  const template = 'sku,name,bangla,category,stock,buy,sell,vendor\nBP-001,LED Headlight H4,এলইডি হেডলাইট,Lighting,15,450,850,Karim Auto\nBP-002,Motorcycle Battery 12V,মোটরসাইকেল ব্যাটারি,Electrical,8,1200,2200,Tech Supply BD\nBP-003,Engine Oil 10W-40,ইঞ্জিন তেল,Lubricants,30,180,380,Rahman Trading\n';
+  downloadCSV('inventory-template.csv', template);
+  toast('info', 'Template downloaded', 'Use same column order');
+}
+
+function renderImportPreview(parsed) {
+  const card = document.getElementById('importPreviewCard');
+  const head = document.getElementById('importPreviewHead');
+  const body = document.getElementById('importPreviewBody');
+  const sum = document.getElementById('importSummary');
+  if (!card) return;
+
+  const rows = parsed.rows;
+  const valid = []; const invalid = []; const duplicates = [];
+  const existingSKUs = new Set(parts.map(p => p.sku));
+
+  rows.forEach(r => {
+    const sku = (r.sku || '').trim();
+    const name = (r.name || '').trim();
+    const buy = parseFloat(r.buy) || 0;
+    const sell = parseFloat(r.sell) || 0;
+    const stock = parseInt(r.stock) || 0;
+    const dup = sku && existingSKUs.has(sku);
+    const isValid = name && buy > 0 && sell > 0;
+    if (dup) duplicates.push(r);
+    if (!isValid) invalid.push(r);
+    else valid.push({ ...r, sku, name, buy, sell, stock, isDup: dup });
+  });
+
+  pendingImport = { parsed, valid, invalid, duplicates };
+
+  // Summary cards
+  sum.innerHTML = `
+    <div class="is-card ok"><div class="is-label">✅ Valid · ভ্যালিড</div><div class="is-value">${valid.filter(v => !v.isDup).length}</div></div>
+    <div class="is-card warn"><div class="is-label">⚠️ Duplicate · ডুপ্লিকেট</div><div class="is-value">${duplicates.length}</div></div>
+    <div class="is-card err"><div class="is-label">❌ Invalid · অবৈধ</div><div class="is-value">${invalid.length}</div></div>
+    <div class="is-card"><div class="is-label">📊 Total Rows</div><div class="is-value">${rows.length}</div></div>
+  `;
+
+  // Table head — show detected columns
+  const cols = parsed.headers.slice(0, 8);
+  head.innerHTML = `<tr>${cols.map(c => `<th>${c}</th>`).join('')}<th>Status</th></tr>`;
+
+  // Show first 50 rows
+  body.innerHTML = rows.slice(0, 50).map(r => {
+    const sku = (r.sku || '').trim();
+    const dup = sku && existingSKUs.has(sku);
+    const isValid = (r.name || '').trim() && parseFloat(r.buy) > 0 && parseFloat(r.sell) > 0;
+    const cls = dup ? 'dup' : (isValid ? '' : 'invalid');
+    const status = dup ? '⚠️ DUP' : (isValid ? '✅ OK' : '❌ ERR');
+    return `<tr class="${cls}">${cols.map(c => `<td>${(r[c] || '').substring(0, 30)}</td>`).join('')}<td>${status}</td></tr>`;
+  }).join('') + (rows.length > 50 ? `<tr><td colspan="${cols.length + 1}" style="text-align:center;color:var(--text-3);padding:10px">... ${rows.length - 50} more rows ...</td></tr>` : '');
+
+  card.style.display = 'block';
+}
+
+function confirmImport() {
+  if (!pendingImport || !pendingImport.valid.length) {
+    toast('error', 'Nothing to import', 'No valid rows found');
+    return;
+  }
+
+  // Filter out duplicates (skip them — user can choose update later)
+  const newParts = pendingImport.valid.filter(v => !v.isDup);
+  if (!newParts.length) {
+    toast('warn', 'All duplicates', 'No new items to add');
+    return;
+  }
+
+  const before = parts.length;
+  newParts.forEach(v => {
+    parts.push({
+      sku: v.sku || ('BP-' + Math.random().toString(36).slice(2, 8).toUpperCase()),
+      name: v.name,
+      bangla: v.bangla || v.name,
+      category: v.category || 'Imported',
+      stock: v.stock,
+      buy: v.buy,
+      sell: v.sell,
+      vendor: v.vendor || '',
+      icon: '📦'
+    });
+  });
+
+  persistParts();
+
+  // Log to history
+  const history = getImportHistory();
+  history.unshift({
+    ts: new Date().toISOString(),
+    filename: pendingImport.filename || 'import.csv',
+    added: newParts.length,
+    skipped: pendingImport.duplicates.length + pendingImport.invalid.length,
+    total: pendingImport.parsed.rows.length
+  });
+  saveImportHistory(history.slice(0, 10));
+
+  toast('success', `✅ Imported ${newParts.length} products`, `Skipped ${pendingImport.duplicates.length + pendingImport.invalid.length} duplicates/invalid`);
+  pendingImport = null;
+  document.getElementById('importPreviewCard').style.display = 'none';
+  document.getElementById('csvFileInput').value = '';
+  renderBulkImportPage();
+  renderInventory();
+}
+
+function renderBulkImportPage() {
+  // History
+  const historyEl = document.getElementById('importHistoryList');
+  if (historyEl) {
+    const history = getImportHistory();
+    if (!history.length) {
+      historyEl.innerHTML = `<div class="empty-state"><div class="es-ico">📂</div><div class="es-t">No imports yet</div><div class="es-sub">Upload a CSV file above to get started</div></div>`;
+    } else {
+      historyEl.innerHTML = history.map(h => `
+        <div class="import-history-item">
+          <div class="ih-icon">📥</div>
+          <div class="ih-meta">
+            <div class="ih-title">${h.filename}</div>
+            <div class="ih-sub">${new Date(h.ts).toLocaleString('en-GB')} · Added ${h.added} · Skipped ${h.skipped} · Total ${h.total}</div>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);font-weight:800">+${h.added}</div>
+        </div>
+      `).join('');
+    }
+  }
+
+  // Wire upload zone
+  const zone = document.getElementById('uploadZone');
+  const fileInput = document.getElementById('csvFileInput');
+  if (zone && fileInput && !zone.dataset.wired) {
+    zone.dataset.wired = '1';
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const parsed = parseCSV(ev.target.result);
+          pendingImport = { ...pendingImport, filename: file.name };
+          renderImportPreview({ ...parsed, filename: file.name });
+        } catch (err) {
+          toast('error', 'Parse failed', err.message);
+        }
+      };
+      reader.readAsText(file);
+    });
+    zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const parsed = parseCSV(ev.target.result);
+        pendingImport = { ...pendingImport, filename: file.name };
+        renderImportPreview({ ...parsed, filename: file.name });
+      };
+      reader.readAsText(file);
+    });
+    zone.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'LABEL' && e.target.tagName !== 'INPUT') fileInput.click();
+    });
+  }
+
+  // Wire template download
+  const dlBtn = document.getElementById('dlTemplateBtn');
+  if (dlBtn && !dlBtn.dataset.wired) {
+    dlBtn.dataset.wired = '1';
+    dlBtn.onclick = downloadCSVTemplate;
+  }
+
+  // Wire confirm/cancel
+  const confirmBtn = document.getElementById('confirmImportBtn');
+  if (confirmBtn && !confirmBtn.dataset.wired) {
+    confirmBtn.dataset.wired = '1';
+    confirmBtn.onclick = confirmImport;
+  }
+  const cancelBtn = document.getElementById('cancelImportBtn');
+  if (cancelBtn && !cancelBtn.dataset.wired) {
+    cancelBtn.dataset.wired = '1';
+    cancelBtn.onclick = () => {
+      pendingImport = null;
+      document.getElementById('importPreviewCard').style.display = 'none';
+      document.getElementById('csvFileInput').value = '';
+      toast('info', 'Import cancelled');
+    };
+  }
+}
+
+/* ============================================================
+   ROUND 1 BONUS: SALES GOAL TRACKING
+   ============================================================ */
+const GOALS_KEY = 'bikepartsbd_sales_goals';
+
+function getGoals() {
+  try { return JSON.parse(localStorage.getItem(GOALS_KEY) || '[]'); } catch { return []; }
+}
+function saveGoals(goals) {
+  localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
+}
+
+function getMonthSalesRevenue(year, month) {
+  return ORDERS_DATA.filter(o => {
+    const d = new Date(o.date);
+    return d.getFullYear() === year && d.getMonth() === month && (o.status === 'Order Confirmed' || o.status === 'Order Completed');
+  }).reduce((sum, o) => sum + (o.paid || 0), 0);
+}
+
+function renderSalesGoalPage() {
+  const goals = getGoals();
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth();
+  const currentGoal = goals.find(g => g.year === currentYear && g.month === currentMonth);
+
+  const monthRevenue = getMonthSalesRevenue(currentYear, currentMonth);
+
+  // Current goal card
+  if (currentGoal) {
+    const pct = Math.min(100, (monthRevenue / currentGoal.target) * 100);
+    const remaining = Math.max(0, currentGoal.target - monthRevenue);
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const dayOfMonth = now.getDate();
+    const daysLeft = daysInMonth - dayOfMonth;
+    const dailyNeed = daysLeft > 0 ? remaining / daysLeft : 0;
+    const expectedPct = (dayOfMonth / daysInMonth) * 100;
+    const onTrack = pct >= expectedPct;
+
+    document.getElementById('goalCurrent').textContent = formatCurrency(monthRevenue);
+    document.getElementById('goalTarget').textContent = formatCurrency(currentGoal.target);
+    document.getElementById('goalProgressFill').style.width = pct + '%';
+    document.getElementById('goalProgressFill').style.background = onTrack ? 'linear-gradient(90deg, var(--green), #059669)' : 'linear-gradient(90deg, var(--accent), var(--accent-2))';
+    document.getElementById('goalPct').textContent = pct.toFixed(1) + '%';
+    document.getElementById('goalRemaining').textContent = formatCurrency(remaining);
+    document.getElementById('goalDaysLeft').textContent = daysLeft + ' days';
+    document.getElementById('goalDailyNeed').textContent = formatCurrency(dailyNeed);
+    document.getElementById('goalPace').textContent = onTrack ? '✅ On Track' : '⚠️ Behind';
+    document.getElementById('goalPace').className = 'value ' + (onTrack ? 'green' : 'accent');
+  } else {
+    document.getElementById('goalCurrent').textContent = formatCurrency(monthRevenue);
+    document.getElementById('goalTarget').textContent = 'Not Set';
+    document.getElementById('goalProgressFill').style.width = '0%';
+    document.getElementById('goalPct').textContent = '—';
+    document.getElementById('goalRemaining').textContent = '—';
+    document.getElementById('goalDaysLeft').textContent = '—';
+    document.getElementById('goalDailyNeed').textContent = '—';
+    document.getElementById('goalPace').textContent = '🎯 Set Goal';
+    document.getElementById('goalPace').className = 'value';
+  }
+
+  // History
+  const historyEl = document.getElementById('goalHistoryList');
+  if (historyEl) {
+    if (!goals.length) {
+      historyEl.innerHTML = `<div class="empty-state"><div class="es-ico">🎯</div><div class="es-t">No goals yet</div><div class="es-sub">Click "Set New Goal" to start tracking</div></div>`;
+    } else {
+      historyEl.innerHTML = goals.slice(0, 6).map(g => {
+        const actual = getMonthSalesRevenue(g.year, g.month);
+        const pct = Math.min(100, (actual / g.target) * 100);
+        const achieved = actual >= g.target;
+        const monthName = new Date(g.year, g.month, 1).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+        return `
+          <div style="background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+              <strong>${monthName}</strong>
+              <span class="abc-class ${achieved ? 'a' : (pct >= 50 ? 'b' : 'c')}">${achieved ? '🎉 ACHIEVED' : (pct >= 50 ? 'PROGRESS' : 'BEHIND')}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-2);margin-bottom:6px">
+              <span>${formatCurrency(actual)} of ${formatCurrency(g.target)}</span>
+              <strong style="color:${achieved ? 'var(--green)' : 'var(--amber)'}">${pct.toFixed(1)}%</strong>
+            </div>
+            <div style="height:6px;background:var(--bg-3);border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:${pct}%;background:${achieved ? 'var(--green)' : 'var(--accent)'};transition:width .5s"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  // Wire set goal modal
+  const setGoalBtn = document.getElementById('setGoalBtn');
+  if (setGoalBtn && !setGoalBtn.dataset.wired) {
+    setGoalBtn.dataset.wired = '1';
+    setGoalBtn.onclick = () => {
+      const modal = document.getElementById('goalModal');
+      modal.style.display = 'flex';
+      document.getElementById('goalAmountInput').value = currentGoal ? currentGoal.target : '';
+      document.getElementById('goalMonthInput').value = currentMonth;
+      document.getElementById('goalYearInput').value = currentYear;
+    };
+  }
+  const saveGoalBtn = document.getElementById('saveGoalBtn');
+  if (saveGoalBtn && !saveGoalBtn.dataset.wired) {
+    saveGoalBtn.dataset.wired = '1';
+    saveGoalBtn.onclick = () => {
+      const target = parseFloat(document.getElementById('goalAmountInput').value);
+      const month = parseInt(document.getElementById('goalMonthInput').value);
+      const year = parseInt(document.getElementById('goalYearInput').value);
+      if (!target || target <= 0) { toast('error', 'Invalid amount'); return; }
+
+      const goals = getGoals();
+      const existing = goals.findIndex(g => g.year === year && g.month === month);
+      const goal = { year, month, target, createdAt: new Date().toISOString() };
+      if (existing >= 0) goals[existing] = goal;
+      else goals.push(goal);
+      saveGoals(goals);
+
+      document.getElementById('goalModal').style.display = 'none';
+      toast('success', '🎯 Goal saved', `${monthName(month)} ${year}: ${formatCurrency(target)}`);
+      renderSalesGoalPage();
+    };
+  }
+  // Modal close handlers
+  document.querySelectorAll('[data-close="goalModal"]').forEach(b => {
+    if (!b.dataset.wired) { b.dataset.wired = '1'; b.onclick = () => document.getElementById('goalModal').style.display = 'none'; }
+  });
+}
+
+function monthName(m) {
+  return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][m];
+}
+
 // Build all pages
 wrapPages();
 // Re-render everything for the new pages
 renderWallets(); renderTransactions(); renderPLSummary();
 renderAssets(); renderCapitalTable(); renderBalanceSheet();
 renderApiConfig(); updateApiStatusBar(); updateDemoBanner();
+renderBulkImportPage();
+renderSalesGoalPage();
 
 /* ============================================================
    UX POLISH — Demo banner, welcome modal, status bar, presets
