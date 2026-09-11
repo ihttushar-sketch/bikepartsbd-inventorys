@@ -1135,6 +1135,31 @@
     .page-view { display: none !important; }
     .page-view.active { display: block !important; background: #fff !important; }
   }
+
+  /* ============================================================
+     WHATSAPP TEMPLATES
+     ============================================================ */
+  .wa-template-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px; margin-bottom: 12px; transition: all .2s;
+  }
+  .wa-template-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(225,6,0,.1); }
+  .wa-template-card .wtc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .wa-template-card .wtc-title { font-size: 14px; font-weight: 800; }
+  .wa-template-card .wtc-icon { font-size: 22px; }
+  .wa-template-card .wtc-message {
+    background: #dcf8c6; color: #075e54; padding: 12px 14px; border-radius: 8px;
+    font-size: 13px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word;
+    margin-bottom: 10px; position: relative; border: 1px solid #b8d99c;
+  }
+  .wa-template-card .wtc-message::before { content: ''; position: absolute; top: 0; right: -8px; width: 0; height: 0; border-style: solid; border-width: 0 8px 8px 0; border-color: transparent #b8d99c transparent transparent; }
+  .wa-template-card .wtc-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .wa-template-card .wtc-tag {
+    display: inline-block; padding: 2px 8px; font-size: 10px; font-weight: 700; border-radius: 4px;
+    background: var(--bg-2); color: var(--text-3); margin-right: 4px;
+  }
+  .wa-template-card .wtc-vars { margin-top: 8px; font-size: 10px; color: var(--text-3); line-height: 1.6; }
+  .wa-template-card .wtc-vars code { background: var(--bg-2); padding: 1px 5px; border-radius: 3px; font-size: 10px; }
 </style>
 </head>
 <body>
@@ -1170,7 +1195,10 @@
     </button>
     <button class="sidebar-item" data-page="invoice">
       <span class="si-ico">🧾</span><span class="si-label">Invoices</span>
-    </button></old_text>
+    </button>
+    <button class="sidebar-item" data-page="whatsapp">
+      <span class="si-ico">📲</span><span class="si-label">WhatsApp</span>
+    </button></old_text></old_text>
     <button class="sidebar-item" data-page="courier">
       <span class="si-ico">🚚</span><span class="si-label">Courier</span>
     </button>
@@ -1281,6 +1309,40 @@
 
   <div id="invoiceContainer" class="invoice-card-wrap no-print">
     <div id="invoiceRenderArea"></div>
+  </div>
+
+  <!-- WHATSAPP TEMPLATES PAGE -->
+  <div class="whatsapp-page-marker"></div>
+  <div class="page-head">
+    <div>
+      <h1>WhatsApp Auto-Reply · হোয়াটসঅ্যাপ টেমপ্লেট</h1>
+      <p>Pre-built message templates — click to copy, edit variables, send via WhatsApp.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="addWaTemplateBtn">➕ Add Template</button>
+    </div>
+  </div>
+
+  <div id="waTemplatesGrid"></div>
+
+  <!-- WA Template Edit Modal -->
+  <div class="modal" id="waModal" style="display:none">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="waModalTitle">📲 Edit WhatsApp Template</h3>
+        <button class="modal-close" data-close="waModal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row"><label>Title · শিরোনাম</label><input type="text" id="waTitle" placeholder="e.g. Order Confirmed" /></div>
+        <div class="form-row"><label>Icon · আইকন</label><input type="text" id="waIcon" placeholder="📦" /></div>
+        <div class="form-row"><label>Tags (comma-separated)</label><input type="text" id="waTags" placeholder="confirmation, shipping" /></div>
+        <div class="form-row"><label>Message · বার্তা (use {customer_name}, {order_id}, {amount}, {tracking})</label><textarea id="waMessage" rows="6" placeholder="Hi {customer_name}! Your order {order_id} is confirmed. Total: {amount} BDT. Track: {tracking}"></textarea></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" data-close="waModal">Cancel</button>
+        <button class="btn btn-primary" id="saveWaTemplateBtn">💾 Save</button>
+      </div>
+    </div>
   </div>  <div class="card" style="margin-bottom:14px">
     <div class="upload-zone" id="uploadZone">
       <div class="uz-icon">📂</div>
@@ -4176,6 +4238,7 @@ function wrapPages() {
       if (txt.includes('Inventory Dashboard')) mode = 'dashboard';
       else if (txt.includes('Bulk Inventory Import')) mode = 'bulkimport';
       else if (txt.includes('Invoice Generator')) mode = 'invoice';
+      else if (txt.includes('WhatsApp Auto-Reply')) mode = 'whatsapp';
       else if (txt.includes('Sales Goal Tracking')) mode = 'goals';
       else if (txt.includes('Vendor Contacts')) mode = 'vendors';
       else if (txt.includes('Courier Tracking')) mode = 'courier';
@@ -5682,6 +5745,136 @@ function monthName(m) {
 }
 
 /* ============================================================
+   ROUND 4: WHATSAPP AUTO-REPLY TEMPLATES
+   ============================================================ */
+const WA_TEMPLATES_KEY = 'bikepartsbd_wa_templates';
+const DEFAULT_WA_TEMPLATES = [
+  { id: 1, title: 'Order Confirmed', icon: '✅', tags: 'confirmation, payment', message: 'আসসালামু আলাইকুম {customer_name}!\n\nআপনার অর্ডার #{order_id} কনফার্ম হয়েছে ✅\n\n💰 মোট: ৳{amount}\n🚚 কুরিয়ার: Pathao\n📦 ট্র্যাকিং: {tracking}\n\nধন্যবাদ!\n— BikePartsBD.net' },
+  { id: 2, title: 'Order Shipped', icon: '🚚', tags: 'shipping, delivery', message: '{customer_name}, আপনার অর্ডার #{order_id} শিপমেন্ট হয়েছে! 🚚\n\n📦 ট্র্যাকিং ID: {tracking}\n⏰ আনুমানিক ডেলিভারি: ২৪-৪৮ ঘণ্টা\n\nলাইভ ট্র্যাকিং লিংক পাঠাচ্ছি।\n— BikePartsBD' },
+  { id: 3, title: 'Payment Reminder', icon: '💰', tags: 'payment, due', message: 'প্রিয় {customer_name},\n\nআপনার #{order_id} অর্ডারের পেমেন্ট এখনো pending।\n\n💰 মোট: ৳{amount}\n📅 পেমেন্ট তারিখ: ৭ দিনের মধ্যে\n\nbKash/Nagad/Cash — যেকোনো মাধ্যমে পেমেন্ট করতে পারবেন।\n— BikePartsBD.net' },
+  { id: 4, title: 'Restock Alert', icon: '📦', tags: 'restock, vendor', message: 'সুপ্রিয় {customer_name},\n\nআপনার চাওয়া পণ্য আবার stock এ এসেছে!\n\n📦 পণ্য: {product_name}\n💰 দাম: ৳{amount}\n\nএখনই অর্ডার করুন — stock সীমিত!\n— BikePartsBD.net' },
+  { id: 5, title: 'Thank You', icon: '❤️', tags: 'appreciation, retention', message: '{customer_name}, ধন্যবাদ আপনার কেনাকাটার জন্য! ❤️\n\nআপনার মতামত আমাদের কাছে গুরুত্বপূর্ণ।\n⭐ Google Review দিন: bit.ly/bikepartsbd-review\n\nপরবর্তী অর্ডারে ৫% ছাড় পেতে কোড ব্যবহার করুন: COMEBACK5\n— BikePartsBD.net' },
+  { id: 6, title: 'Delivery Failed', icon: '❌', tags: 'failed, retry', message: '{customer_name},\n\nআপনার #{order_id} অর্ডার ডেলিভারি দেওয়া যায়নি ❌\n📞 কারণ: ফোন বন্ধ / ভুল ঠিকানা\n\n📦 ট্র্যাকিং: {tracking}\n\nঅনুগ্রহ করে সঠিক ঠিকানা + সময় জানান — আবার পাঠাব।\n— BikePartsBD.net' }
+];
+
+function getWATemplates() {
+  try {
+    const stored = localStorage.getItem(WA_TEMPLATES_KEY);
+    if (stored) return JSON.parse(stored);
+    saveWATemplates(DEFAULT_WA_TEMPLATES);
+    return DEFAULT_WA_TEMPLATES;
+  } catch { return DEFAULT_WA_TEMPLATES; }
+}
+function saveWATemplates(t) { localStorage.setItem(WA_TEMPLATES_KEY, JSON.stringify(t)); }
+
+let editingWATemplate = null;
+
+function renderWATemplates() {
+  const grid = document.getElementById('waTemplatesGrid');
+  if (!grid) return;
+  const templates = getWATemplates();
+
+  grid.innerHTML = templates.map(t => `
+    <div class="wa-template-card">
+      <div class="wtc-head">
+        <div class="wtc-title">${t.icon} ${t.title}</div>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-sm" onclick="editWATemplate(${t.id})">✏️ Edit</button>
+          <button class="btn btn-sm" onclick="deleteWATemplate(${t.id})" style="color:var(--accent)">🗑️</button>
+        </div>
+      </div>
+      <div>${(t.tags || '').split(',').map(tag => `<span class="wtc-tag">${tag.trim()}</span>`).join('')}</div>
+      <div class="wtc-message">${escapeHtml(t.message)}</div>
+      <div class="wtc-actions">
+        <button class="btn btn-sm" onclick="copyWATemplate(${t.id})">📋 Copy Message</button>
+        <button class="btn btn-sm" onclick="sendWATemplate(${t.id})">📲 Send via WhatsApp</button>
+      </div>
+      <div class="wtc-vars">
+        <strong>Variables:</strong>
+        ${['customer_name', 'order_id', 'amount', 'tracking', 'product_name'].map(v => `<code>{${v}}</code>`).join(' ')}
+      </div>
+    </div>
+  `).join('');
+
+  // Wire add button
+  const addBtn = document.getElementById('addWaTemplateBtn');
+  if (addBtn && !addBtn.dataset.wired) {
+    addBtn.dataset.wired = '1';
+    addBtn.onclick = () => {
+      editingWATemplate = { id: Date.now(), title: '', icon: '📱', tags: '', message: '' };
+      document.getElementById('waModalTitle').textContent = '➕ Add WhatsApp Template';
+      document.getElementById('waTitle').value = '';
+      document.getElementById('waIcon').value = '📱';
+      document.getElementById('waTags').value = '';
+      document.getElementById('waMessage').value = '';
+      document.getElementById('waModal').style.display = 'flex';
+    };
+  }
+  // Wire save
+  const saveBtn = document.getElementById('saveWaTemplateBtn');
+  if (saveBtn && !saveBtn.dataset.wired) {
+    saveBtn.dataset.wired = '1';
+    saveBtn.onclick = () => {
+      const title = document.getElementById('waTitle').value.trim();
+      const icon = document.getElementById('waIcon').value.trim() || '📱';
+      const tags = document.getElementById('waTags').value.trim();
+      const message = document.getElementById('waMessage').value.trim();
+      if (!title || !message) { toast('error', 'Title + Message required'); return; }
+
+      const templates = getWATemplates();
+      const idx = templates.findIndex(t => t.id === editingWATemplate.id);
+      if (idx >= 0) templates[idx] = { ...templates[idx], title, icon, tags, message };
+      else templates.unshift({ id: editingWATemplate.id, title, icon, tags, message });
+      saveWATemplates(templates);
+      document.getElementById('waModal').style.display = 'none';
+      toast('success', 'Template saved');
+      renderWATemplates();
+    };
+  }
+  // Modal close
+  document.querySelectorAll('[data-close="waModal"]').forEach(b => {
+    if (!b.dataset.wired) { b.dataset.wired = '1'; b.onclick = () => document.getElementById('waModal').style.display = 'none'; }
+  });
+}
+
+function editWATemplate(id) {
+  const t = getWATemplates().find(x => x.id === id);
+  if (!t) return;
+  editingWATemplate = t;
+  document.getElementById('waModalTitle').textContent = '✏️ Edit WhatsApp Template';
+  document.getElementById('waTitle').value = t.title;
+  document.getElementById('waIcon').value = t.icon;
+  document.getElementById('waTags').value = t.tags;
+  document.getElementById('waMessage').value = t.message;
+  document.getElementById('waModal').style.display = 'flex';
+}
+
+function deleteWATemplate(id) {
+  if (!confirm('Delete this template?')) return;
+  const templates = getWATemplates().filter(t => t.id !== id);
+  saveWATemplates(templates);
+  toast('success', 'Template deleted');
+  renderWATemplates();
+}
+
+function copyWATemplate(id) {
+  const t = getWATemplates().find(x => x.id === id);
+  if (!t) return;
+  navigator.clipboard.writeText(t.message).then(() => toast('success', '📋 Copied!', 'Paste in WhatsApp')).catch(() => toast('error', 'Copy failed'));
+}
+
+function sendWATemplate(id) {
+  const t = getWATemplates().find(x => x.id === id);
+  if (!t) return;
+  const phone = prompt('📲 Customer phone number (with country code, e.g. 8801712345678):');
+  if (!phone) return;
+  const url = `https://wa.me/${phone.replace(/\D/g, '')}?text=${encodeURIComponent(t.message)}`;
+  window.open(url, '_blank');
+}
+
+function escapeHtml(s) { return (s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+/* ============================================================
    ROUND 3: AUTO INVOICE GENERATOR
    ============================================================ */
 function renderInvoicePage() {
@@ -5810,6 +6003,7 @@ renderApiConfig(); updateApiStatusBar(); updateDemoBanner();
 renderBulkImportPage();
 renderSalesGoalPage();
 renderInvoicePage();
+renderWATemplates();
 
 /* ============================================================
    UX POLISH — Demo banner, welcome modal, status bar, presets
