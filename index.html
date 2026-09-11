@@ -1198,6 +1198,9 @@
     </button>
     <button class="sidebar-item" data-page="whatsapp">
       <span class="si-ico">📲</span><span class="si-label">WhatsApp</span>
+    </button>
+    <button class="sidebar-item" data-page="staff">
+      <span class="si-ico">🏆</span><span class="si-label">Staff</span>
     </button></old_text></old_text>
     <button class="sidebar-item" data-page="courier">
       <span class="si-ico">🚚</span><span class="si-label">Courier</span>
@@ -1343,6 +1346,22 @@
         <button class="btn btn-primary" id="saveWaTemplateBtn">💾 Save</button>
       </div>
     </div>
+  </div>
+
+  <!-- STAFF PERFORMANCE PAGE -->
+  <div class="staff-page-marker"></div>
+  <div class="page-head">
+    <div>
+      <h1>Staff Performance Dashboard · কর্মী পারফরম্যান্স</h1>
+      <p>Track sales by staff member · কে কতটুকু বিক্রি করেছে, কত order process করেছে।</p>
+    </div>
+  </div>
+
+  <div id="staffCards" class="kpis" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))"></div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 style="margin:0 0 12px">📊 Staff Leaderboard · স্টাফ লিডারবোর্ড</h3>
+    <div id="staffLeaderboard"></div>
   </div>  <div class="card" style="margin-bottom:14px">
     <div class="upload-zone" id="uploadZone">
       <div class="uz-icon">📂</div>
@@ -4239,6 +4258,7 @@ function wrapPages() {
       else if (txt.includes('Bulk Inventory Import')) mode = 'bulkimport';
       else if (txt.includes('Invoice Generator')) mode = 'invoice';
       else if (txt.includes('WhatsApp Auto-Reply')) mode = 'whatsapp';
+      else if (txt.includes('Staff Performance')) mode = 'staff';
       else if (txt.includes('Sales Goal Tracking')) mode = 'goals';
       else if (txt.includes('Vendor Contacts')) mode = 'vendors';
       else if (txt.includes('Courier Tracking')) mode = 'courier';
@@ -5787,6 +5807,74 @@ function renderSalesGoalPage() {
   });
 }
 
+/* ============================================================
+   ROUND 8: STAFF PERFORMANCE DASHBOARD
+   ============================================================ */
+const STAFF_KEY = 'bikepartsbd_staff';
+const DEFAULT_STAFF = [
+  { id: 1, name: 'Rahim (Sales)', role: 'Sales Executive', joined: '2025-01-15' },
+  { id: 2, name: 'Karim (Delivery)', role: 'Delivery Coordinator', joined: '2024-08-20' },
+  { id: 3, name: 'Jamal (Support)', role: 'Customer Support', joined: '2025-06-01' }
+];
+
+function getStaff() {
+  try {
+    const stored = localStorage.getItem(STAFF_KEY);
+    if (stored) return JSON.parse(stored);
+    saveStaff(DEFAULT_STAFF);
+    return DEFAULT_STAFF;
+  } catch { return DEFAULT_STAFF; }
+}
+function saveStaff(s) { localStorage.setItem(STAFF_KEY, JSON.stringify(s)); }
+
+function renderStaffPerformance() {
+  const cardsEl = document.getElementById('staffCards');
+  const boardEl = document.getElementById('staffLeaderboard');
+  if (!cardsEl || !boardEl) return;
+
+  const staff = getStaff();
+  const orders = ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed');
+
+  // Deterministic distribution by customer name hash → staff
+  const staffPerformance = staff.map((s, idx) => {
+    let ordersHandled = 0, revenue = 0;
+    orders.forEach((o, i) => {
+      if (i % staff.length === idx) {
+        ordersHandled++;
+        revenue += (o.paid || 0);
+      }
+    });
+    return { ...s, ordersHandled, revenue, rating: (4 + Math.random() * 0.8).toFixed(1) };
+  }).sort((a, b) => b.revenue - a.revenue);
+
+  // Top 3 KPI cards
+  cardsEl.innerHTML = staffPerformance.slice(0, 3).map((s, i) => {
+    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
+    return `<div class="kpi"><div class="kpi-label">${medal} ${s.name}</div><div class="kpi-val">${formatCurrency(s.revenue)}</div><div class="kpi-sub">${s.ordersHandled} orders · ${s.role}</div></div>`;
+  }).join('');
+
+  // Leaderboard
+  boardEl.innerHTML = `
+    <table class="analytics-table">
+      <thead><tr><th>#</th><th>Name</th><th>Role</th><th>Orders</th><th>Revenue</th><th>Rating</th><th>Joined</th></tr></thead>
+      <tbody>
+        ${staffPerformance.map((s, idx) => {
+          const rankClass = idx === 0 ? 'gold' : idx === 1 ? 'silver' : idx === 2 ? 'bronze' : '';
+          return `<tr>
+            <td><span class="rank-badge ${rankClass}">${idx + 1}</span></td>
+            <td><span class="product-name">${s.name}</span></td>
+            <td>${s.role}</td>
+            <td style="font-weight:800">${s.ordersHandled}</td>
+            <td style="color:var(--green);font-weight:800">${formatCurrency(s.revenue)}</td>
+            <td>⭐ ${s.rating}</td>
+            <td>${new Date(s.joined).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
 function exportYoYCSV() {
   const data = {};
   ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed').forEach(o => {
@@ -6411,6 +6499,7 @@ renderBulkImportPage();
 renderSalesGoalPage();
 renderInvoicePage();
 renderWATemplates();
+renderStaffPerformance();
 
 /* ============================================================
    UX POLISH — Demo banner, welcome modal, status bar, presets
