@@ -1198,6 +1198,33 @@
   .notif-item.warn { border-left-color: var(--amber); }
   .notif-item.success { border-left-color: var(--green); }
   .notif-item.info { border-left-color: var(--accent); }
+
+  /* ============================================================
+     CUSTOMER CRM
+     ============================================================ */
+  .crm-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; transition: all .15s;
+  }
+  .crm-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(225,6,0,.08); }
+  .crm-avatar {
+    width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: grid; place-items: center; font-weight: 900; color: #fff; font-size: 16px; flex-shrink: 0;
+  }
+  .crm-avatar.gold { background: linear-gradient(135deg, #ffd700, #ffb020); }
+  .crm-avatar.silver { background: linear-gradient(135deg, #c0c0c0, #999); }
+  .crm-meta { flex: 1; }
+  .crm-name { font-size: 14px; font-weight: 800; }
+  .crm-phone { font-size: 11px; color: var(--text-3); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+  .crm-tags { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+  .crm-tag { padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+  .crm-tag.vip { background: linear-gradient(135deg, #ffd700, #ffb020); color: #1a1a1a; }
+  .crm-tag.regular { background: var(--bg-3); color: var(--text-2); }
+  .crm-tag.new { background: var(--green-soft); color: var(--green); }
+  .crm-stats { display: flex; gap: 14px; text-align: right; }
+  .crm-stat { font-size: 11px; }
+  .crm-stat .cs-value { font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; display: block; }
+  .crm-stat .cs-label { color: var(--text-3); font-size: 9px; text-transform: uppercase; letter-spacing: .3px; }
 </style>
 </head>
 <body>
@@ -1249,6 +1276,9 @@
     </button>
     <button class="sidebar-item" data-page="execreport">
       <span class="si-ico">📊</span><span class="si-label">Executive Report</span>
+    </button>
+    <button class="sidebar-item" data-page="crm">
+      <span class="si-ico">👥</span><span class="si-label">Customers</span>
     </button>
     <button class="sidebar-item" data-page="courier">
       <span class="si-ico">🚚</span><span class="si-label">Courier</span>
@@ -1452,7 +1482,32 @@
     </div>
   </div>
 
-  <div id="execReportContent"></div>  <div class="card" style="margin-bottom:14px">
+  <div id="execReportContent"></div>
+
+  <!-- CUSTOMER CRM PAGE -->
+  <div class="crm-page-marker"></div>
+  <div class="page-head">
+    <div>
+      <h1>Customer CRM · কাস্টমার সিআরএম</h1>
+      <p>Customer database — orders, lifetime spend, contact history.</p>
+    </div>
+    <div class="actions">
+      <input type="text" id="crmSearch" placeholder="🔍 Search name or phone..." style="background:var(--bg-2);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px;width:200px" />
+    </div>
+  </div>
+
+  <div id="crmContent"></div>
+
+  <!-- Customer Detail Modal -->
+  <div class="modal" id="crmDetailModal" style="display:none">
+    <div class="modal-card" style="max-width:700px">
+      <div class="modal-head">
+        <h3 id="crmDetailTitle">👤 Customer Details</h3>
+        <button class="modal-close" data-close="crmDetailModal">×</button>
+      </div>
+      <div class="modal-body" id="crmDetailBody"></div>
+    </div>
+  </div>  <div class="card" style="margin-bottom:14px">
     <div class="upload-zone" id="uploadZone">
       <div class="uz-icon">📂</div>
       <div class="uz-title">CSV / Excel file drag-drop করুন</div>
@@ -4352,6 +4407,7 @@ function wrapPages() {
       else if (txt.includes('Vendor Stock')) mode = 'vendorstock';
       else if (txt.includes('Notifications')) mode = 'notifications';
       else if (txt.includes('Executive Report')) mode = 'execreport';
+      else if (txt.includes('Customer CRM')) mode = 'crm';
       else if (txt.includes('Sales Goal Tracking')) mode = 'goals';
       else if (txt.includes('Vendor Contacts')) mode = 'vendors';
       else if (txt.includes('Courier Tracking')) mode = 'courier';
@@ -6297,6 +6353,142 @@ function getNotifications() {
 /* ============================================================
    ROUND 11: EXECUTIVE BUSINESS REPORT
    ============================================================ */
+/* ============================================================
+   ROUND 12: CUSTOMER CRM
+   ============================================================ */
+function renderCRM() {
+  const el = document.getElementById('crmContent');
+  if (!el) return;
+
+  // Build customer database
+  const customers = {};
+  ORDERS_DATA.forEach(o => {
+    if (!customers[o.customer]) {
+      customers[o.customer] = { name: o.customer, phone: o.phone || '', address: o.address || '', orders: [], totalSpent: 0, cancelled: 0 };
+    }
+    customers[o.customer].orders.push(o);
+    if (o.status === 'Order Confirmed' || o.status === 'Order Completed') {
+      customers[o.customer].totalSpent += (o.paid || 0);
+    } else if (o.status === 'Order Cancelled') {
+      customers[o.customer].cancelled++;
+    }
+  });
+
+  // Sort by totalSpent desc
+  const list = Object.values(customers).sort((a, b) => b.totalSpent - a.totalSpent);
+
+  // Search
+  const search = (document.getElementById('crmSearch')?.value || '').toLowerCase();
+  const filtered = search ? list.filter(c => c.name.toLowerCase().includes(search) || (c.phone || '').includes(search)) : list;
+
+  if (!filtered.length) {
+    el.innerHTML = `<div class="empty-state"><div class="es-ico">👥</div><div class="es-t">No customers found</div></div>`;
+    return;
+  }
+
+  el.innerHTML = filtered.map((c, idx) => {
+    const initials = c.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+    let tag = 'new', tagLabel = '🆕 NEW';
+    if (c.orders.length >= 5) { tag = 'vip'; tagLabel = '💎 VIP'; }
+    else if (c.orders.length >= 2) { tag = 'regular'; tagLabel = '🔁 REGULAR'; }
+    const medalClass = idx === 0 ? 'gold' : idx === 1 ? 'silver' : '';
+    return `
+      <div class="crm-card" onclick="showCRMDetail('${c.name.replace(/'/g, "\\\\'")}')">
+        <div class="crm-avatar ${medalClass}">${initials}</div>
+        <div class="crm-meta">
+          <div class="crm-name">${c.name} ${cancelled > 0 ? '<span style="color:var(--accent);font-size:11px">⚠️</span>' : ''}</div>
+          <div class="crm-phone">${c.phone || '—'} · ${c.address || 'Jashore'}</div>
+          <div class="crm-tags">
+            <span class="crm-tag ${tag}">${tagLabel}</span>
+            ${c.cancelled > 0 ? `<span class="crm-tag" style="background:var(--accent-soft);color:var(--accent)">❌ ${c.cancelled} cancelled</span>` : ''}
+          </div>
+        </div>
+        <div class="crm-stats">
+          <div class="crm-stat"><span class="cs-value">${c.orders.length}</span><span class="cs-label">Orders</span></div>
+          <div class="crm-stat"><span class="cs-value" style="color:var(--green)">${formatCurrency(c.totalSpent)}</span><span class="cs-label">LTV</span></div>
+          <div class="crm-stat"><span class="cs-value">${c.orders.length > 0 ? formatCurrency(c.totalSpent / c.orders.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed').length) : '৳0'}</span><span class="cs-label">AOV</span></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Search wire
+  const searchInput = document.getElementById('crmSearch');
+  if (searchInput && !searchInput.dataset.wired) {
+    searchInput.dataset.wired = '1';
+    searchInput.addEventListener('input', renderCRM);
+  }
+
+  // Modal close
+  document.querySelectorAll('[data-close="crmDetailModal"]').forEach(b => {
+    if (!b.dataset.wired) { b.dataset.wired = '1'; b.onclick = () => document.getElementById('crmDetailModal').style.display = 'none'; }
+  });
+}
+
+function showCRMDetail(name) {
+  const orders = ORDERS_DATA.filter(o => o.customer === name);
+  if (!orders.length) return;
+  const confirmed = orders.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed');
+  const totalSpent = confirmed.reduce((s, o) => s + (o.paid || 0), 0);
+  const cancelled = orders.filter(o => o.status === 'Order Cancelled');
+
+  document.getElementById('crmDetailTitle').textContent = `👤 ${name}`;
+  document.getElementById('crmDetailBody').innerHTML = `
+    <div style="background:var(--bg-2);padding:14px;border-radius:8px;margin-bottom:14px">
+      <div style="font-size:14px"><strong>📞 Phone:</strong> ${orders[0].phone || '—'}</div>
+      <div style="font-size:13px;margin-top:6px"><strong>📍 Address:</strong> ${orders[0].address || '—'}</div>
+      <div style="font-size:13px;margin-top:6px"><strong>🚚 Preferred Courier:</strong> ${orders[0].courier || 'Pathao'}</div>
+      <div style="font-size:13px;margin-top:6px"><strong>📅 First Order:</strong> ${new Date(Math.min(...orders.map(o => new Date(o.date)))).toLocaleDateString('en-GB')}</div>
+      <div style="font-size:13px;margin-top:6px"><strong>📅 Latest Order:</strong> ${new Date(Math.max(...orders.map(o => new Date(o.date)))).toLocaleDateString('en-GB')}</div>
+    </div>
+
+    <h4 style="margin:14px 0 8px">📊 Customer Stats</h4>
+    <div class="big-stat-grid" style="grid-template-columns:repeat(3,1fr);gap:8px">
+      <div class="big-stat" style="--stat-color:var(--accent)"><div class="bs-label">Total Orders</div><div class="bs-value" style="font-size:22px">${orders.length}</div></div>
+      <div class="big-stat" style="--stat-color:var(--green)"><div class="bs-label">Lifetime Spend</div><div class="bs-value" style="font-size:22px">${formatCurrency(totalSpent)}</div></div>
+      <div class="big-stat" style="--stat-color:#a855f7"><div class="bs-label">Avg Order</div><div class="bs-value" style="font-size:22px">${formatCurrency(confirmed.length > 0 ? totalSpent / confirmed.length : 0)}</div></div>
+    </div>
+
+    <h4 style="margin:14px 0 8px">📦 Order History (${orders.length})</h4>
+    <div style="max-height:300px;overflow-y:auto">
+      <table class="analytics-table">
+        <thead><tr><th>Order ID</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th></tr></thead>
+        <tbody>
+          ${orders.slice(0, 20).map(o => `
+            <tr>
+              <td><strong>${o.id}</strong></td>
+              <td>${new Date(o.date).toLocaleDateString('en-GB')}</td>
+              <td>${o.items.length}</td>
+              <td>${formatCurrency(o.grandTotal)}</td>
+              <td><span class="crm-tag ${o.status === 'Order Confirmed' || o.status === 'Order Completed' ? 'regular' : o.status === 'Order Cancelled' ? '' : 'new'}">${o.status.replace('Order ', '')}</span></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      ${orders.length > 20 ? `<div style="text-align:center;padding:8px;color:var(--text-3);font-size:11px">... ${orders.length - 20} more orders ...</div>` : ''}
+    </div>
+
+    <h4 style="margin:14px 0 8px">🎯 Quick Actions</h4>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-sm" onclick="sendWAToCustomer('${name}')">📲 Send WhatsApp</button>
+      <button class="btn btn-sm" onclick="callCustomer('${orders[0].phone || ''}')">📞 Call</button>
+    </div>
+  `;
+
+  document.getElementById('crmDetailModal').style.display = 'flex';
+}
+
+function sendWAToCustomer(name) {
+  const phone = ORDERS_DATA.find(o => o.customer === name)?.phone || '';
+  if (!phone) { toast('error', 'No phone number'); return; }
+  window.open(`https://wa.me/${phone.replace(/\D/g, '')}`, '_blank');
+}
+
+function callCustomer(phone) {
+  if (!phone) { toast('error', 'No phone number'); return; }
+  window.location.href = `tel:${phone}`;
+}
+
 function renderExecutiveReport() {
   const el = document.getElementById('execReportContent');
   if (!el) return;
@@ -6911,6 +7103,7 @@ renderStaffPerformance();
 renderVendorStock();
 renderNotificationsPage();
 renderExecutiveReport();
+renderCRM();
 
 /* ============================================================
    UX POLISH — Demo banner, welcome modal, status bar, presets
