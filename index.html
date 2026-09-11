@@ -1160,6 +1160,44 @@
   }
   .wa-template-card .wtc-vars { margin-top: 8px; font-size: 10px; color: var(--text-3); line-height: 1.6; }
   .wa-template-card .wtc-vars code { background: var(--bg-2); padding: 1px 5px; border-radius: 3px; font-size: 10px; }
+
+  /* ============================================================
+     NOTIFICATIONS CENTER
+     ============================================================ */
+  .notif-bell {
+    position: relative; display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 8px; cursor: pointer; font-size: 16px; transition: all .15s;
+  }
+  .notif-bell:hover { background: var(--accent); border-color: var(--accent); }
+  .notif-bell .nb-count {
+    position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px;
+    background: var(--accent); color: #fff; border-radius: 9px; font-size: 10px; font-weight: 900;
+    display: grid; place-items: center; padding: 0 5px; border: 2px solid var(--bg);
+  }
+  .notif-dropdown {
+    position: absolute; top: 50px; right: 0; width: 340px; max-height: 460px; overflow-y: auto;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    box-shadow: 0 12px 36px rgba(0,0,0,.3); z-index: 100; padding: 12px;
+  }
+  .notif-dropdown .nd-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+  .notif-dropdown .nd-title { font-size: 13px; font-weight: 800; }
+  .notif-item {
+    display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px;
+    background: var(--bg-2); border-radius: 8px; margin-bottom: 6px;
+    cursor: pointer; transition: all .15s; border-left: 3px solid transparent;
+  }
+  .notif-item.unread { background: var(--accent-soft); border-left-color: var(--accent); }
+  .notif-item:hover { transform: translateX(-2px); }
+  .notif-item .ni-icon { font-size: 18px; flex-shrink: 0; }
+  .notif-item .ni-body { flex: 1; }
+  .notif-item .ni-title { font-size: 12px; font-weight: 700; }
+  .notif-item .ni-sub { font-size: 11px; color: var(--text-3); margin-top: 2px; line-height: 1.4; }
+  .notif-item .ni-time { font-size: 9px; color: var(--text-3); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+  .notif-item.critical { border-left-color: var(--accent); }
+  .notif-item.warn { border-left-color: var(--amber); }
+  .notif-item.success { border-left-color: var(--green); }
+  .notif-item.info { border-left-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -1204,6 +1242,10 @@
     </button>
     <button class="sidebar-item" data-page="vendorstock">
       <span class="si-ico">🏪</span><span class="si-label">Vendor Compare</span>
+    </button>
+    <button class="sidebar-item" data-page="notifications">
+      <span class="si-ico">🔔</span><span class="si-label">Notifications</span>
+      <span class="si-badge" id="notifBadgeCount">0</span>
     </button></old_text></old_text>
     <button class="sidebar-item" data-page="courier">
       <span class="si-ico">🚚</span><span class="si-label">Courier</span>
@@ -1376,7 +1418,24 @@
     </div>
   </div>
 
-  <div id="vendorStockContent"></div>  <div class="card" style="margin-bottom:14px">
+  <div id="vendorStockContent"></div>
+
+  <!-- NOTIFICATIONS PAGE -->
+  <div class="notifications-page-marker"></div>
+  <div class="page-head">
+    <div>
+      <h1>Notifications · নোটিফিকেশন</h1>
+      <p>Real-time alerts — low stock, payment pending, returns, goal progress.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="markAllReadBtn">✅ Mark All Read</button>
+      <button class="btn" id="clearNotifsBtn">🗑️ Clear All</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div id="notifListFull"></div>
+  </div>  <div class="card" style="margin-bottom:14px">
     <div class="upload-zone" id="uploadZone">
       <div class="uz-icon">📂</div>
       <div class="uz-title">CSV / Excel file drag-drop করুন</div>
@@ -4274,6 +4333,7 @@ function wrapPages() {
       else if (txt.includes('WhatsApp Auto-Reply')) mode = 'whatsapp';
       else if (txt.includes('Staff Performance')) mode = 'staff';
       else if (txt.includes('Vendor Stock')) mode = 'vendorstock';
+      else if (txt.includes('Notifications')) mode = 'notifications';</old_text>
       else if (txt.includes('Sales Goal Tracking')) mode = 'goals';
       else if (txt.includes('Vendor Contacts')) mode = 'vendors';
       else if (txt.includes('Courier Tracking')) mode = 'courier';
@@ -6118,6 +6178,150 @@ function renderSalesForecast() {
   }
 }
 
+/* ============================================================
+   ROUND 10: NOTIFICATIONS CENTER
+   ============================================================ */
+const NOTIFS_KEY = 'bikepartsbd_notifications';
+
+function generateNotifications() {
+  const notifs = [];
+  const now = new Date();
+
+  // 1. Low stock alerts
+  parts.forEach(p => {
+    if (p.stock <= 10) {
+      notifs.push({
+        id: 'stock-' + p.sku,
+        type: p.stock <= 5 ? 'critical' : 'warn',
+        icon: '📦',
+        title: p.stock === 0 ? `${p.name} — OUT OF STOCK!` : `Low stock: ${p.name}`,
+        sub: p.stock === 0 ? 'রিস্টক করুন এখনই — বিক্রি বন্ধ হতে পারে' : `মাত্র ${p.stock} units বাকি · Buy price ৳${p.buy}`,
+        time: 'just now',
+        action: 'inventory'
+      });
+    }
+  });
+
+  // 2. Payment pending
+  ORDERS_DATA.filter(o => o.status === 'Payment Pending' || o.status === 'Order Placed').slice(0, 5).forEach(o => {
+    notifs.push({
+      id: 'pay-' + o.id,
+      type: 'warn',
+      icon: '💰',
+      title: `Payment pending: ${o.id}`,
+      sub: `${o.customer} · ৳${o.grandTotal?.toLocaleString('en-IN') || '—'} due`,
+      time: `${Math.floor((now - new Date(o.date)) / 86400000)}d ago`,
+      action: 'orders'
+    });
+  });
+
+  // 3. Recent cancellations
+  ORDERS_DATA.filter(o => o.status === 'Order Cancelled').slice(0, 3).forEach(o => {
+    notifs.push({
+      id: 'cancel-' + o.id,
+      type: 'info',
+      icon: '↩️',
+      title: `Order cancelled: ${o.id}`,
+      sub: `${o.customer} · Refund ৳${o.paid || 0}`,
+      time: `${Math.floor((now - new Date(o.date)) / 86400000)}d ago`,
+      action: 'orders'
+    });
+  });
+
+  // 4. Goal progress
+  const goals = getGoals ? getGoals() : [];
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+  const currentGoal = goals.find(g => g.year === currentYear && g.month === currentMonth);
+  if (currentGoal) {
+    const monthRevenue = getMonthSalesRevenue(currentYear, currentMonth);
+    const pct = (monthRevenue / currentGoal.target * 100);
+    const dayOfMonth = now.getDate();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const expectedPct = (dayOfMonth / daysInMonth) * 100;
+
+    if (pct >= 100) {
+      notifs.push({ id: 'goal-ach', type: 'success', icon: '🎉', title: 'Goal ACHIEVED!', sub: `You hit ৳${monthRevenue.toLocaleString('en-IN')} this month`, time: 'today', action: 'goals' });
+    } else if (pct < expectedPct - 10) {
+      notifs.push({ id: 'goal-behind', type: 'critical', icon: '⚠️', title: 'Behind on sales goal', sub: `${pct.toFixed(0)}% vs ${expectedPct.toFixed(0)}% expected · ৳${(currentGoal.target - monthRevenue).toLocaleString('en-IN')} remaining`, time: 'today', action: 'goals' });
+    } else if (pct > expectedPct) {
+      notifs.push({ id: 'goal-ahead', type: 'success', icon: '🚀', title: 'Ahead of sales goal!', sub: `${pct.toFixed(0)}% vs ${expectedPct.toFixed(0)}% expected`, time: 'today', action: 'goals' });
+    }
+  }
+
+  // 5. Wallet low balance
+  if (typeof wallets !== 'undefined') {
+    Object.entries(wallets).forEach(([key, w]) => {
+      if (w.balance < 5000 && w.balance >= 0) {
+        notifs.push({ id: 'wallet-' + key, type: 'warn', icon: w.icon, title: `Low balance: ${key.toUpperCase()}`, sub: `৳${w.balance.toLocaleString('en-IN')} remaining · Recharge soon`, time: 'today', action: 'money' });
+      } else if (w.balance < 0) {
+        notifs.push({ id: 'wallet-neg-' + key, type: 'critical', icon: w.icon, title: `NEGATIVE balance: ${key.toUpperCase()}`, sub: `৳${w.balance.toLocaleString('en-IN')} · Reconcile immediately!`, time: 'today', action: 'money' });
+      }
+    });
+  }
+
+  // 6. High-value pending orders
+  ORDERS_DATA.filter(o => o.grandTotal > 5000 && (o.status === 'Order Confirmed' || o.status === 'Order Completed') && !o.shipped).slice(0, 2).forEach(o => {
+    notifs.push({ id: 'hval-' + o.id, type: 'info', icon: '⭐', title: `High-value order needs shipping: ${o.id}`, sub: `${o.customer} · ৳${o.grandTotal.toLocaleString('en-IN')}`, time: 'today', action: 'courier' });
+  });
+
+  return notifs.sort((a, b) => {
+    const order = { critical: 0, warn: 1, success: 2, info: 3 };
+    return order[a.type] - order[b.type];
+  });
+}
+
+function getNotifications() {
+  const fresh = generateNotifications();
+  return fresh;
+}
+
+function renderNotificationsPage() {
+  const el = document.getElementById('notifListFull');
+  if (!el) return;
+  const notifs = getNotifications();
+  updateNotifBadge(notifs);
+
+  if (!notifs.length) {
+    el.innerHTML = `<div class="empty-state"><div class="es-ico">✅</div><div class="es-t">All clear!</div><div class="es-sub">No notifications right now</div></div>`;
+    return;
+  }
+
+  el.innerHTML = notifs.map(n => `
+    <div class="notif-item ${n.type}" onclick="handleNotifClick('${n.action}')">
+      <div class="ni-icon">${n.icon}</div>
+      <div class="ni-body">
+        <div class="ni-title">${n.title}</div>
+        <div class="ni-sub">${n.sub}</div>
+        <div class="ni-time">${n.time}</div>
+      </div>
+    </div>
+  `).join('');
+
+  const markBtn = document.getElementById('markAllReadBtn');
+  if (markBtn && !markBtn.dataset.wired) {
+    markBtn.dataset.wired = '1';
+    markBtn.onclick = () => toast('success', '✅ All marked as read');
+  }
+  const clearBtn = document.getElementById('clearNotifsBtn');
+  if (clearBtn && !clearBtn.dataset.wired) {
+    clearBtn.dataset.wired = '1';
+    clearBtn.onclick = () => { el.innerHTML = `<div class="empty-state"><div class="es-ico">🗑️</div><div class="es-t">Cleared</div></div>`; updateNotifBadge([]); };
+  }
+}
+
+function updateNotifBadge(notifs) {
+  const badge = document.getElementById('notifBadgeCount');
+  if (!badge) return;
+  const count = notifs ? notifs.length : (getNotifications ? getNotifications().length : 0);
+  badge.textContent = count;
+  badge.style.display = count > 0 ? 'grid' : 'none';
+}
+
+function handleNotifClick(action) {
+  if (typeof navigateTo === 'function') navigateTo(action);
+}
+
 function monthName(m) {
   return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][m];
 }
@@ -6578,6 +6782,7 @@ renderInvoicePage();
 renderWATemplates();
 renderStaffPerformance();
 renderVendorStock();
+renderNotificationsPage();
 
 /* ============================================================
    UX POLISH — Demo banner, welcome modal, status bar, presets
