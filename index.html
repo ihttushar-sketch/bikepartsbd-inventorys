@@ -1201,6 +1201,9 @@
     </button>
     <button class="sidebar-item" data-page="staff">
       <span class="si-ico">🏆</span><span class="si-label">Staff</span>
+    </button>
+    <button class="sidebar-item" data-page="vendorstock">
+      <span class="si-ico">🏪</span><span class="si-label">Vendor Compare</span>
     </button></old_text></old_text>
     <button class="sidebar-item" data-page="courier">
       <span class="si-ico">🚚</span><span class="si-label">Courier</span>
@@ -1362,7 +1365,18 @@
   <div class="card" style="margin-top:18px">
     <h3 style="margin:0 0 12px">📊 Staff Leaderboard · স্টাফ লিডারবোর্ড</h3>
     <div id="staffLeaderboard"></div>
-  </div>  <div class="card" style="margin-bottom:14px">
+  </div>
+
+  <!-- VENDOR STOCK COMPARISON PAGE -->
+  <div class="vendorstock-page-marker"></div>
+  <div class="page-head">
+    <div>
+      <h1>Vendor Stock Comparison · ভেন্ডর মজুদ তুলনা</h1>
+      <p>Compare same products across vendors — find best price, quality, delivery time.</p>
+    </div>
+  </div>
+
+  <div id="vendorStockContent"></div>  <div class="card" style="margin-bottom:14px">
     <div class="upload-zone" id="uploadZone">
       <div class="uz-icon">📂</div>
       <div class="uz-title">CSV / Excel file drag-drop করুন</div>
@@ -4259,6 +4273,7 @@ function wrapPages() {
       else if (txt.includes('Invoice Generator')) mode = 'invoice';
       else if (txt.includes('WhatsApp Auto-Reply')) mode = 'whatsapp';
       else if (txt.includes('Staff Performance')) mode = 'staff';
+      else if (txt.includes('Vendor Stock')) mode = 'vendorstock';
       else if (txt.includes('Sales Goal Tracking')) mode = 'goals';
       else if (txt.includes('Vendor Contacts')) mode = 'vendors';
       else if (txt.includes('Courier Tracking')) mode = 'courier';
@@ -5827,6 +5842,68 @@ function getStaff() {
 }
 function saveStaff(s) { localStorage.setItem(STAFF_KEY, JSON.stringify(s)); }
 
+/* ============================================================
+   ROUND 9: VENDOR STOCK COMPARISON
+   ============================================================ */
+const VENDOR_STOCK_DATA = [
+  { vendor: 'Karim Auto', product: 'LED Headlight H4', sku: 'BP-001', buy: 450, sell: 850, stock: 15, leadDays: 3, rating: 4.5 },
+  { vendor: 'Tech Supply BD', product: 'LED Headlight H4', sku: 'BP-001', buy: 480, sell: 850, stock: 22, leadDays: 5, rating: 4.7 },
+  { vendor: 'Premium Auto Parts', product: 'LED Headlight H4', sku: 'BP-001', buy: 425, sell: 850, stock: 8, leadDays: 7, rating: 4.2 },
+  { vendor: 'Karim Auto', product: 'Engine Oil 10W-40', sku: 'BP-003', buy: 180, sell: 380, stock: 30, leadDays: 2, rating: 4.5 },
+  { vendor: 'Rahman Trading', product: 'Engine Oil 10W-40', sku: 'BP-003', buy: 175, sell: 380, stock: 45, leadDays: 4, rating: 4.6 },
+  { vendor: 'Auto Lube BD', product: 'Engine Oil 10W-40', sku: 'BP-003', buy: 195, sell: 380, stock: 60, leadDays: 6, rating: 4.4 },
+  { vendor: 'Tech Supply BD', product: 'Motorcycle Battery 12V', sku: 'BP-002', buy: 1200, sell: 2200, stock: 8, leadDays: 5, rating: 4.7 },
+  { vendor: 'Power Battery Co', product: 'Motorcycle Battery 12V', sku: 'BP-002', buy: 1150, sell: 2200, stock: 5, leadDays: 8, rating: 4.3 }
+];
+
+function renderVendorStock() {
+  const el = document.getElementById('vendorStockContent');
+  if (!el) return;
+
+  const byProduct = {};
+  VENDOR_STOCK_DATA.forEach(v => {
+    if (!byProduct[v.product]) byProduct[v.product] = [];
+    byProduct[v.product].push(v);
+  });
+
+  let html = '';
+  Object.entries(byProduct).forEach(([product, vendors]) => {
+    const cheapest = vendors.reduce((min, v) => v.buy < min.buy ? v : min, vendors[0]);
+    const bestStock = vendors.reduce((max, v) => v.stock > max.stock ? v : max, vendors[0]);
+    const bestRating = vendors.reduce((max, v) => v.rating > max.rating ? v : max, vendors[0]);
+
+    html += `
+      <div class="chart-card" style="margin-bottom:18px">
+        <h3 style="margin:0 0 10px">📦 ${product} <small style="color:var(--text-3);font-weight:500;font-size:12px">(${vendors.length} vendors)</small></h3>
+        <table class="analytics-table">
+          <thead><tr><th>Vendor</th><th>Buy Price</th><th>Sell Price</th><th>Margin</th><th>Stock</th><th>Lead Days</th><th>Rating</th><th>Best</th></tr></thead>
+          <tbody>
+            ${vendors.sort((a, b) => a.buy - b.buy).map(v => {
+              const margin = ((v.sell - v.buy) / v.buy * 100).toFixed(1);
+              const badges = [];
+              if (v === cheapest) badges.push('<span class="abc-class a" style="font-size:9px">💰 Cheapest</span>');
+              if (v === bestStock) badges.push('<span class="abc-class b" style="font-size:9px">📦 Max Stock</span>');
+              if (v === bestRating) badges.push('<span class="abc-class c" style="font-size:9px">⭐ Top Rated</span>');
+              return `<tr>
+                <td><strong>${v.vendor}</strong></td>
+                <td>${formatCurrency(v.buy)}</td>
+                <td>${formatCurrency(v.sell)}</td>
+                <td style="font-weight:800;color:var(--green)">${margin}%</td>
+                <td>${v.stock}</td>
+                <td>${v.leadDays}d</td>
+                <td>⭐ ${v.rating}</td>
+                <td>${badges.join(' ')}</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  });
+
+  el.innerHTML = html;
+}
+
 function renderStaffPerformance() {
   const cardsEl = document.getElementById('staffCards');
   const boardEl = document.getElementById('staffLeaderboard');
@@ -6500,6 +6577,7 @@ renderSalesGoalPage();
 renderInvoicePage();
 renderWATemplates();
 renderStaffPerformance();
+renderVendorStock();
 
 /* ============================================================
    UX POLISH — Demo banner, welcome modal, status bar, presets
