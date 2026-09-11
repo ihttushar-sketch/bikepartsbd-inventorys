@@ -809,6 +809,61 @@
   .pl-value.positive { color: var(--green); }
   .pl-value.negative { color: var(--accent); }
   .pl-sub { font-size: 10px; color: var(--text-3); margin-top: 3px; font-weight: 600; }
+
+  /* ============================================================
+     ONBOARDING & UX POLISH
+     ============================================================ */
+  /* Demo mode banner */
+  .demo-banner {
+    display: flex; align-items: center; gap: 12px;
+    background: linear-gradient(90deg, rgba(255, 176, 32, .14), rgba(255, 176, 32, .04));
+    border: 1px solid rgba(255, 176, 32, .35); border-radius: var(--radius);
+    padding: 12px 16px; margin-bottom: 18px; flex-wrap: wrap;
+  }
+  .demo-banner .db-ico { width: 32px; height: 32px; border-radius: 8px; background: var(--amber); color: #1a1100; display: grid; place-items: center; font-weight: 900; flex-shrink: 0; }
+  .demo-banner .db-t { font-weight: 800; font-size: 12px; }
+  .demo-banner .db-d { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+  .demo-banner .db-actions { margin-left: auto; display: flex; gap: 6px; }
+
+  /* Welcome modal */
+  .welcome-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+  @media (max-width: 600px) { .welcome-steps { grid-template-columns: 1fr; } }
+  .welcome-step { background: var(--bg-3); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+  .welcome-step .ws-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-weight: 900; font-size: 13px; }
+  .welcome-step .ws-t { font-weight: 800; font-size: 13px; margin-top: 8px; }
+  .welcome-step .ws-d { font-size: 11px; color: var(--text-2); margin-top: 4px; line-height: 1.5; }
+  .welcome-step .ws-link { display: inline-block; margin-top: 6px; font-size: 11px; color: var(--accent); text-decoration: none; font-weight: 700; }
+
+  /* Empty state */
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-3); }
+  .empty-state .es-ico { font-size: 36px; opacity: .4; margin-bottom: 10px; }
+  .empty-state .es-t { font-size: 13px; font-weight: 700; }
+  .empty-state .es-d { font-size: 11px; margin-top: 4px; }
+
+  /* API status footer */
+  .api-status-bar {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 12px 16px; margin-top: 18px; font-size: 11px;
+  }
+  .api-status-bar .as-label { font-weight: 800; color: var(--text-2); text-transform: uppercase; letter-spacing: .4px; }
+  .api-status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 6px; font-weight: 700; font-size: 10px; }
+  .api-status-pill.live { background: var(--green-soft); color: var(--green); }
+  .api-status-pill.demo { background: var(--bg-3); color: var(--text-3); }
+
+  /* Quick preset buttons */
+  .preset-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .preset-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 8px; background: var(--bg-3); border: 1px solid var(--line); font-size: 12px; font-weight: 700; cursor: pointer; transition: all .15s; }
+  .preset-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+  /* Print styles */
+  @media print {
+    .topbar, .alert, .orders-filterbar, .page-head .actions, .modal-actions, .toast-wrap, .api-status-bar, .demo-banner, .modal-backdrop:not(.show) { display: none !important; }
+    .page-head { margin-top: 0; }
+    body { background: white; color: black; }
+    .card, .wallet-card, .api-card, .asset-card { border: 1px solid #ccc; page-break-inside: avoid; }
+    .kpis, .orders-stats, .acc-grid, .asset-grid { page-break-inside: avoid; }
+  }
 </style>
 </head>
 <body>
@@ -1267,6 +1322,18 @@
 
 <!-- ====================== ACCOUNTING MODULES ====================== -->
 
+<!-- DEMO MODE BANNER (auto-hides when live APIs enabled) -->
+<div class="demo-banner" id="demoBanner">
+  <div class="db-ico">⚙️</div>
+  <div style="flex:1; min-width:0">
+    <div class="db-t">Running in DEMO mode · ডেমো মোডে চলছে</div>
+    <div class="db-d">All data is stored locally in your browser. To connect real APIs (Pathao, bKash, Bank), scroll to <b>Settings & Integrations</b> below.</div>
+  </div>
+  <div class="db-actions">
+    <button class="btn btn-sm" onclick="document.querySelectorAll('.page-head h1')['Settings & Integrations'] ? null : null; document.getElementById('apiConfigGrid').scrollIntoView({behavior:'smooth'})">⚙️ Go to Settings</button>
+  </div>
+</div>
+
 <!-- MONEY ACCOUNTS -->
 <div class="page-head" style="margin-top:32px">
   <div>
@@ -1387,7 +1454,22 @@
   </div>
 </div>
 
+<!-- Quick preset templates -->
+<div class="preset-row" id="presetRow">
+  <span style="font-size:11px;font-weight:800;color:var(--text-3);text-transform:uppercase;letter-spacing:.4px;align-self:center;margin-right:6px">Quick Setup:</span>
+  <button class="preset-btn" data-preset="courier">🚚 Courier-Only (Pathao)</button>
+  <button class="preset-btn" data-preset="payment">💸 Payment-Only (bKash + Nagad)</button>
+  <button class="preset-btn" data-preset="full">⚡ Full Setup (all 6)</button>
+  <button class="preset-btn" data-preset="docs">📚 View Docs</button>
+</div>
+
 <div class="api-config-grid" id="apiConfigGrid"></div>
+
+<!-- Status footer -->
+<div class="api-status-bar" id="apiStatusBar">
+  <span class="as-label">Integration Status:</span>
+  <span id="apiStatusList"></span>
+</div>
 
 <div class="card" style="margin-top:18px">
   <div class="card-head">
@@ -1408,7 +1490,48 @@
   </div>
 </div>
 
-<!-- ====================== ACCOUNTING MODALS ====================== -->
+<!-- ====================== WELCOME MODAL (first load only) ====================== -->
+<div class="modal-backdrop" id="welcomeModal">
+  <div class="modal" style="max-width:580px">
+    <h2>👋 Welcome to BikePartsBD OS! <span style="font-size:13px;color:var(--text-3);font-weight:500">/ স্বাগতম</span></h2>
+    <div class="sub">Your complete Inventory + Order + Accounting system is ready. Here's how to get started:</div>
+
+    <div class="welcome-steps">
+      <div class="welcome-step">
+        <div class="ws-num">1</div>
+        <div class="ws-t">📦 Explore Sample Data</div>
+        <div class="ws-d">Browse the 70 sample orders and 5 inventory items. Click any row to see full details.</div>
+      </div>
+      <div class="welcome-step">
+        <div class="ws-num">2</div>
+        <div class="ws-t">💰 Try Money Module</div>
+        <div class="ws-d">Check out 5 demo wallets with realistic balances. Click "+ Add Transaction" to test.</div>
+      </div>
+      <div class="welcome-step">
+        <div class="ws-num">3</div>
+        <div class="ws-t">📊 View Reports</div>
+        <div class="ws-d">Balance Sheet, P&L, and transaction logs are auto-generated from your data.</div>
+      </div>
+      <div class="welcome-step">
+        <div class="ws-num">4</div>
+        <div class="ws-t">⚙️ Connect Live APIs</div>
+        <div class="ws-d">When ready, scroll to Settings → paste your API credentials → toggle ENABLE → go live!</div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;padding:12px;background:var(--bg-3);border-radius:8px;border-left:3px solid var(--accent);font-size:12px;line-height:1.5">
+      💡 <b>Quick Tip:</b> Everything you do (add product, record transaction, etc.) is saved automatically in your browser.
+      To start fresh, clear browser data or click "↺ Reset to Demo" in Settings.
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="welcomeSkip">Skip — I'll explore myself</button>
+      <button class="btn btn-primary" id="welcomeStart">🚀 Let's Go!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== ACCOUNTING MODALS ====================== --></old_text>
 
 <!-- Add Transaction Modal -->
 <div class="modal-backdrop" id="txModal">
@@ -3522,6 +3645,76 @@ renderAssets();
 renderCapitalTable();
 renderBalanceSheet();
 renderApiConfig();
+updateApiStatusBar();
+updateDemoBanner();
+
+/* ============================================================
+   UX POLISH — Demo banner, welcome modal, status bar, presets
+   ============================================================ */
+
+// Welcome modal (first load only)
+const WELCOME_KEY = 'bikepartsbd_welcomed';
+if (!localStorage.getItem(WELCOME_KEY)) {
+  setTimeout(() => {
+    $('#welcomeModal').classList.add('show');
+  }, 800);
+}
+$('#welcomeStart').onclick = () => { $('#welcomeModal').classList.remove('show'); localStorage.setItem(WELCOME_KEY, '1'); };
+$('#welcomeSkip').onclick = () => { $('#welcomeModal').classList.remove('show'); localStorage.setItem(WELCOME_KEY, '1'); };
+$('#welcomeModal').onclick = (e) => { if (e.target === $('#welcomeModal')) { $('#welcomeModal').classList.remove('show'); localStorage.setItem(WELCOME_KEY, '1'); } };
+
+// Demo banner auto-hide when live APIs enabled
+function updateDemoBanner() {
+  const anyLive = Object.values(API_CONFIG).some(c => c.enabled);
+  $('#demoBanner').style.display = anyLive ? 'none' : 'flex';
+}
+
+// API status footer
+function updateApiStatusBar() {
+  const el = $('#apiStatusList');
+  if (!el) return;
+  el.innerHTML = Object.keys(API_CONFIG).map(k => {
+    const cfg = API_CONFIG[k];
+    const live = cfg.enabled && cfg.fields.every(f => cfg[f.key]);
+    const label = cfg.label.replace(/[🚚💸📱🏦💬✉️]\s*/, '');
+    return `<span class="api-status-pill ${live ? 'live' : 'demo'}">${live ? '🟢' : '⚪'} ${label}</span>`;
+  }).join('');
+}
+
+// Quick preset templates
+$$('[data-preset]').forEach(btn => {
+  btn.onclick = () => {
+    const preset = btn.dataset.preset;
+    if (preset === 'docs') {
+      document.querySelector('.api-config-grid').nextElementSibling.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    // Reset all
+    Object.keys(API_CONFIG).forEach(k => {
+      API_CONFIG[k].enabled = false;
+      API_CONFIG[k].fields.forEach(f => API_CONFIG[k][f.key] = '');
+    });
+    if (preset === 'courier') {
+      toast('info', 'Preset selected', 'Click Pathao Courier card below and paste your Pathao merchant API token.');
+    } else if (preset === 'payment') {
+      toast('info', 'Preset selected', 'Click bKash + Nagad cards below and paste your credentials.');
+    } else if (preset === 'full') {
+      toast('info', 'Full Setup', 'Fill in all 6 cards with credentials. All will switch to LIVE when ENABLE is toggled.');
+    }
+    renderApiConfig();
+    persistAccounting();
+    document.getElementById('apiConfigGrid').scrollIntoView({ behavior: 'smooth' });
+  };
+});
+
+// Make presets also reflect when settings change
+const origRenderApiConfig = renderApiConfig;
+renderApiConfig = function() { origRenderApiConfig(); updateApiStatusBar(); updateDemoBanner(); };
+
+// Empty state helpers
+function emptyState(icon, title, desc) {
+  return `<div class="empty-state"><div class="es-ico">${icon}</div><div class="es-t">${title}</div><div class="es-d">${desc}</div></div>`;
+}
 
 /* After initial render, allow real-time toasts */
 setTimeout(() => { isFirstLoad = false; }, 1500);
