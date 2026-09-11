@@ -629,6 +629,100 @@
   .ri-actions a.call { background: #0084ff; }
   .ri-actions a.wa::before { content: '💬'; }
   .ri-actions a.call::before { content: '📞'; }
+
+  /* ============================================================
+     ORDERS MODULE — from client's actual Pathao/easy.com CSV
+     ============================================================ */
+  .orders-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 18px; }
+  @media (max-width: 900px) { .orders-stats { grid-template-columns: repeat(2, 1fr); } }
+  .os-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 14px 16px; position: relative; overflow: hidden;
+  }
+  .os-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); opacity: .5; }
+  .os-card.green::before { background: var(--green); }
+  .os-card.amber::before { background: var(--amber); }
+  .os-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; font-weight: 700; letter-spacing: .4px; }
+  .os-value { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin-top: 6px; letter-spacing: -.3px; }
+  .os-sub { font-size: 10px; color: var(--text-3); margin-top: 3px; font-weight: 600; }
+
+  .orders-filterbar {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 14px 18px; border-bottom: 1px solid var(--line);
+    background: var(--bg-2);
+  }
+  .orders-filterbar input.search {
+    flex: 1; min-width: 200px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    color: var(--text); padding: 8px 12px; font-size: 13px; outline: none; font-family: inherit;
+  }
+  .orders-filterbar input.search:focus { border-color: var(--accent); }
+  .orders-filterbar select {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    color: var(--text); padding: 8px 12px; font-size: 13px; outline: none; font-family: inherit; cursor: pointer;
+  }
+  .orders-filterbar .pill-row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .orders-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .orders-table th { background: var(--bg-2); font-size: 10px; padding: 10px 12px; position: sticky; top: 0; }
+  .orders-table td { padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .orders-table tbody tr { transition: background .15s; cursor: pointer; }
+  .orders-table tbody tr:hover { background: var(--bg-2); }
+  .order-id { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-2); font-weight: 700; }
+  .order-customer { font-weight: 700; font-size: 12px; }
+  .order-phone { font-size: 10px; color: var(--text-3); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+  .order-items { font-size: 11px; color: var(--text-2); }
+  .order-items .ix { color: var(--accent); font-weight: 800; }
+  .order-amt { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 12px; }
+  .order-type-pill {
+    display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 800;
+    border: 1px solid var(--line);
+  }
+  .order-type-pill.online { background: rgba(168, 85, 247, .12); color: #a855f7; border-color: rgba(168, 85, 247, .3); }
+  .order-type-pill.offline { background: rgba(0, 132, 255, .12); color: #0084ff; border-color: rgba(0, 132, 255, .3); }
+  .order-status-pill {
+    display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 10px; font-weight: 800;
+    border: 1px solid var(--line); white-space: nowrap;
+  }
+  .order-status-pill.confirmed  { background: rgba(0, 214, 143, .12); color: var(--green); border-color: rgba(0,214,143,.3); }
+  .order-status-pill.completed  { background: rgba(0, 214, 143, .14); color: var(--green); border-color: rgba(0,214,143,.4); }
+  .order-status-pill.cancelled  { background: rgba(225, 6, 0, .12); color: var(--accent); border-color: rgba(225, 6, 0, .3); }
+  .order-status-pill.failed     { background: rgba(225, 6, 0, .10); color: var(--accent); border-color: rgba(225, 6, 0, .25); }
+  .order-status-pill.hold       { background: rgba(255, 176, 32, .12); color: var(--amber); border-color: rgba(255, 176, 32, .3); }
+
+  /* Order detail modal */
+  .order-modal-body { max-height: 70vh; overflow-y: auto; padding-right: 4px; }
+  .om-section { background: var(--bg-3); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+  .om-section h4 {
+    font-size: 10px; color: var(--text-3); text-transform: uppercase; font-weight: 800;
+    margin: 0 0 10px; letter-spacing: .6px;
+  }
+  .om-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 12px; gap: 8px; }
+  .om-row .k { color: var(--text-3); }
+  .om-row .v { font-family: 'JetBrains Mono', monospace; font-weight: 700; text-align: right; }
+  .om-row .v.bold { font-weight: 800; color: var(--text); }
+  .om-customer-name { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+  .om-customer-phone { font-size: 12px; color: var(--text-2); font-family: 'JetBrains Mono', monospace; }
+  .om-customer-email { font-size: 11px; color: var(--text-3); margin-top: 4px; word-break: break-all; }
+  .om-customer-addr { font-size: 12px; color: var(--text-2); margin-top: 8px; line-height: 1.5; padding: 8px 10px; background: var(--bg-2); border-radius: 8px; border: 1px solid var(--line); }
+  .om-items-list { display: flex; flex-direction: column; gap: 8px; }
+  .om-item { background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+  .om-item .oi-name { font-weight: 700; font-size: 12px; line-height: 1.4; }
+  .om-item .oi-part { font-size: 10px; color: var(--accent); font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
+  .om-item .oi-meta { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: var(--text-2); font-family: 'JetBrains Mono', monospace; }
+  .om-item .oi-meta .qty { font-weight: 800; color: var(--accent); }
+  .om-pricing { background: linear-gradient(135deg, var(--bg-2), var(--bg-3)); }
+  .om-pricing .om-row.total { border-top: 1px solid var(--line); padding-top: 8px; margin-top: 4px; }
+  .om-pricing .om-row.total .v { color: var(--green); font-size: 16px; }
+  .om-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .om-actions .btn { flex: 1; justify-content: center; }
+  @media (max-width: 600px) {
+    .om-actions { flex-direction: column; }
+    .om-actions .btn { width: 100%; }
+  }
+
+  /* Highlight rows when searching */
+  mark.hl { background: rgba(225, 6, 0, .25); color: var(--text); padding: 1px 3px; border-radius: 3px; }
 </style>
 </head>
 <body>
@@ -1003,6 +1097,88 @@
 <!-- Toast wrap -->
 <div class="toast-wrap" id="toasts"></div>
 
+<!-- ====================== ORDERS MODULE ====================== -->
+<div class="page-head" style="margin-top:32px">
+  <div>
+    <h1>Orders <span style="font-size:14px;color:var(--text-3);font-weight:500;margin-left:8px">অর্ডার ম্যানেজমেন্ট</span></h1>
+    <p>Real-time order inflow from Pathao, Steadfast & walk-in customers — auto-synced, error-free.</p>
+  </div>
+  <div class="actions">
+    <button class="btn" id="ordersExportBtn">⬇ Export Orders CSV</button>
+    <button class="btn btn-primary" id="ordersNewBtn">＋ Manual Order</button>
+  </div>
+</div>
+
+<!-- Orders stats -->
+<div class="orders-stats" id="ordersStats"></div>
+
+<!-- Orders filter bar + table -->
+<div class="card">
+  <div class="orders-filterbar">
+    <input type="text" class="search" id="ordersSearch" placeholder="🔍 Search by order ID, customer name, phone, or part name…" />
+    <select id="ordersTypeFilter">
+      <option value="ALL">All Types</option>
+      <option value="Online">Online</option>
+      <option value="Offline">Offline</option>
+    </select>
+    <select id="ordersStatusFilter">
+      <option value="ALL">All Statuses</option>
+      <option value="Order Confirmed">Confirmed</option>
+      <option value="Order Completed">Completed</option>
+      <option value="Order Cancelled">Cancelled</option>
+      <option value="Payment Failed">Payment Failed</option>
+      <option value="On Hold">On Hold</option>
+    </select>
+    <select id="ordersSortBy">
+      <option value="date-desc">Newest first</option>
+      <option value="date-asc">Oldest first</option>
+      <option value="total-desc">Total ↓</option>
+      <option value="total-asc">Total ↑</option>
+      <option value="id-desc">Order ID ↓</option>
+    </select>
+    <div class="pill-row">
+      <button class="btn btn-sm btn-primary" data-brand="ALL">All Brands</button>
+      <button class="btn btn-sm btn-ghost" data-brand="YAMAHA">Yamaha</button>
+      <button class="btn btn-sm btn-ghost" data-brand="SUZUKI">Suzuki</button>
+      <button class="btn btn-sm btn-ghost" data-brand="BAJAJ">Bajaj</button>
+      <button class="btn btn-sm btn-ghost" data-brand="TVS">TVS</button>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="table-wrap">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Items</th>
+            <th>Type</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="ordersTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== ORDER DETAIL MODAL ====================== -->
+<div class="modal-backdrop" id="orderDetailModal">
+  <div class="modal" style="max-width:640px">
+    <h2>📦 Order Details <span style="font-size:13px;color:var(--text-3);font-weight:500">/ অর্ডার বিস্তারিত</span></h2>
+    <div class="sub" id="orderDetailSub">Complete breakdown — items, pricing, customer info.</div>
+    <div class="order-modal-body" id="orderDetailBody"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="orderDetailClose">Close</button>
+      <button class="btn" id="orderDetailPrint">🖨 Print Invoice</button>
+      <button class="btn btn-primary" id="orderDetailConfirm">✓ Mark as Confirmed</button>
+    </div>
+  </div>
+</div>
+
 <!-- ====================== ADD VENDOR MODAL ====================== -->
 <div class="modal-backdrop" id="vendorModal">
   <div class="modal" style="max-width:520px">
@@ -1062,6 +1238,81 @@
 /* ============================================================
    BikePartsBD.net — Inventory OS (single-file, no deps)
    ============================================================ */
+
+/* ============================================================
+   ORDERS DATA — from client's actual Pathao/easy.com CSV
+   70 representative orders (Aug 31 - Sep 9, 2026)
+   ============================================================ */
+const ORDERS_DATA = [
+{ id: 3041273, date: "Wed, Sep 9, 2026 5:02 PM", type: "Online", status: "Order Cancelled", items: [{name: "Headlight Assy for Yamaha FZS V4 bike.", qty: 1, price: 12800}], subtotal: 12800, delivery: 150, discount: 0, vat: 0, grandTotal: 12950, paid: 12950, due: 0, customer: "Amrit Kumar Yadav", phone: "8.80821E+12", email: "amritkumarraj247@gmail.com", address: "PURNIA bihar", note: "Part no: BFHH430002" },
+{ id: 3041249, date: "Wed, Sep 9, 2026 4:59 PM", type: "Offline", status: "Order Completed", items: [{name: "Engine Guard for Yamaha FZS V2 Armada Blue bike.", qty: 1, price: 3050}], subtotal: 32715, delivery: 30, discount: 0, vat: 0, grandTotal: 33015, paid: 33015, due: 0, customer: "SS Moto", phone: "1622515057", email: "", address: "Modhupur, Tangail", note: "Use For: Yamaha FZS V2 Armada Blue bike." },
+{ id: 3041188, date: "Wed, Sep 9, 2026 4:50 PM", type: "Online", status: "Order Cancelled", items: [{name: "Dolnar Bush Bearing (Rear Arm) Yamaha R15 V2, R15 V3, R15 V4, R15M, MT15 V1 & MT15 V2 bike.", qty: 1, price: 1350}], subtotal: 1350, delivery: 150, discount: 0, vat: 0, grandTotal: 1500, paid: 1500, due: 0, customer: "jyotiprakash giri", phone: "8.80831E+12", email: "jprakash.giri123@gmail.com", address: "Tentuliapada Baulpur dhenkanal odisha 759025", note: "Part no: 93315-317Y4, 90387-10814 & 93106-17802" },
+{ id: 3041129, date: "Wed, Sep 9, 2026 4:38 PM", type: "Online", status: "Order Confirmed", items: [{name: "Full Set Sticker for Yamaha FZS V2 (Battle Green) bike.", qty: 1, price: 1350}], subtotal: 1350, delivery: 150, discount: 0, vat: 0, grandTotal: 1500, paid: 1500, due: 0, customer: "Rasel Hussain", phone: "8.80179E+12", email: "hussainrasel45@gmail.com", address: "মাদারীপুর সদস পাগদী ক্যাডেট মাদ্রাসার পাশে", note: "Part no: 834A" },
+{ id: 3040514, date: "Wed, Sep 9, 2026 2:53 PM", type: "Online", status: "Order Cancelled", items: [{name: "Headlight Mask (Inner-Stay 2) for Yamaha FZS V3 & FZS V3 Deluxe bike.", qty: 1, price: 310}], subtotal: 310, delivery: 150, discount: 0, vat: 0, grandTotal: 460, paid: 460, due: 0, customer: "Agustin Tigga", phone: "8.806E+12", email: "tigga0208@gmail.com", address: "Nilmoni", note: "Part no: B4GF317F00" },
+{ id: 3040478, date: "Wed, Sep 9, 2026 2:47 PM", type: "Online", status: "Order Confirmed", items: [{name: "Clutch Lever for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, Fazer V1 & Fazer V2 bike.", qty: 1, price: 325}], subtotal: 325, delivery: 150, discount: 0, vat: 0, grandTotal: 475, paid: 475, due: 0, customer: "আসাদুজ্জামান সুজন", phone: "8.80173E+12", email: "", address: "হাবিবপুর, উজিরপুর, বরিশাল", note: "Part No: 54BH391201" },
+{ id: 3040407, date: "Wed, Sep 9, 2026 2:34 PM", type: "Online", status: "Order Confirmed", items: [{name: "Looking Glass Set for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, MT15 V1, MT15 V2 bike.", qty: 1, price: 710}], subtotal: 710, delivery: 150, discount: 0, vat: 0, grandTotal: 860, paid: 860, due: 0, customer: "Md Khokon", phone: "8.80171E+12", email: "khokonmobin@gmail.com", address: "বোডমিল সফিপুর কালিয়াকৈর গাজীপুর", note: "Part: B9DF628000 & B9DF629000" },
+{ id: 3040265, date: "Wed, Sep 9, 2026 2:09 PM", type: "Offline", status: "Order Completed", items: [{name: "Metershed-Faring for Yamaha R15M (Carbon Edition BS7) Bike.", qty: 1, price: 11600}, {name: "Back Panel for R15M (Carbon Edition BS7) Bike.", qty: 1, price: 11870}, {name: "Headlight Clam (Khacha) for Yamaha R15 V4 & R15M bike.", qty: 1, price: 1650}], subtotal: 30780, delivery: 0, discount: 0, vat: 0.7, grandTotal: 30570, paid: 30570, due: 0, customer: "Eldagiz Ismayilzada", phone: "8.80194E+12", email: "", address: "House-13, Road-7,Sector-1, Uttara BAK 55383 Dhaka Dhaka 1230", note: "Multi-item R15M Carbon Edition BS7 batch" },
+{ id: 3040137, date: "Wed, Sep 9, 2026 1:48 PM", type: "Online", status: "Order Confirmed", items: [{name: "Back Light cover for Yamaha FZS V2 & Fazer V2 bike.", qty: 1, price: 320}], subtotal: 320, delivery: 150, discount: 0, vat: 0, grandTotal: 470, paid: 470, due: 0, customer: "মো শামীম হোসেন", phone: "8.80173E+12", email: "", address: "আক্কেলপুর জয়পুরহাট", note: "Part no: 2GSF163A00" },
+{ id: 3039756, date: "Wed, Sep 9, 2026 12:46 PM", type: "Online", status: "Order Confirmed", items: [{name: "Looking Glass for Yamaha R15, V3 R15 V4 & R15M bike.", qty: 1, price: 1480}], subtotal: 1480, delivery: 150, discount: 0, vat: 0, grandTotal: 1630, paid: 1630, due: 0, customer: "Mr. Saimon", phone: "8.80198E+12", email: "", address: "New Ma Mettal, Madaripur Madaripur Sadar, Madaripur, Dhaka,", note: "Part no: BK7–F6280–00 & BK7–F6290–00" },
+{ id: 3039480, date: "Wed, Sep 9, 2026 11:57 AM", type: "Online", status: "Order Cancelled", items: [{name: "Front Stop (Hand Break) Switch for Yamaha FZS V2 & Fazer V2 bike.", qty: 1, price: 160}, {name: "Clutch Plate for Yamaha FZS V1, FZS V2, FZS V3 (BS4), Fazer V1, Fazer V2 bike.", qty: 1, price: 1120}], subtotal: 1280, delivery: 150, discount: 0, vat: 0, grandTotal: 1430, paid: 1430, due: 0, customer: "Shamim Ahmmed", phone: "8.80174E+12", email: "shamimahmmed208@gmail.com", address: "ফুলবাড়িয়া বাজার, কালিকৈর গাজীপুর।", note: "Part No: 54BH398001" },
+{ id: 3039353, date: "Wed, Sep 9, 2026 11:33 AM", type: "Online", status: "Order Confirmed", items: [{name: "Sender Fuel Meter for Suzuki Gixxer SF (Old Model) & Gixxer Monotone bike.", qty: 1, price: 1090}], subtotal: 1090, delivery: 150, discount: 0, vat: 0, grandTotal: 1240, paid: 1240, due: 0, customer: "MD AFNANUR", phone: "8.80183E+12", email: "princeladeleyas@gmail.com", address: "Borga bajar, kalihati , tangail", note: "Part No: 34810-36J00-000" },
+{ id: 3039287, date: "Wed, Sep 9, 2026 11:23 AM", type: "Online", status: "Order Confirmed", items: [{name: "Side Stand for Yamaha R15 V3 & MT15 V1 bike.", qty: 1, price: 650}], subtotal: 650, delivery: 150, discount: 0, vat: 0, grandTotal: 800, paid: 650, due: 150, customer: "Taurat", phone: "8.80132E+12", email: "", address: "markuli bazar,nobigonj,hobigonj", note: "Part no: BK7F731110 / Partial payment 650/800" },
+{ id: 3039109, date: "Wed, Sep 9, 2026 10:47 AM", type: "Online", status: "Order Confirmed", items: [{name: "Tanky Box for Yamaha FAZER V1 (Red Colour) bike.", qty: 1, price: 5200}, {name: "Tanky Top (Silver Colour) for Yamaha FZS V1 & FAZER V1 bike.", qty: 1, price: 1550}], subtotal: 6750, delivery: 150, discount: 0, vat: 0, grandTotal: 6900, paid: 2000, due: 4900, customer: "Abdur Razzak", phone: "8.80172E+12", email: "", address: "heikh shorif uddin market, bogura sadar, bogura", note: "Partial payment 2000/6900 — due 4900" },
+{ id: 3038632, date: "Wed, Sep 9, 2026 9:04 AM", type: "Online", status: "Order Cancelled", items: [{name: "Headlight Glass for TVS Apache RTR 2V bike.", qty: 1, price: 780}], subtotal: 780, delivery: 150, discount: 0, vat: 0, grandTotal: 930, paid: 930, due: 0, customer: "Jitendra Kumar", phone: "8.80874E+12", email: "jitendra95332@gmail.com", address: "Achhola Achhola meja Allahabad", note: "Use For: TVS Apache RTR 2V bike." },
+{ id: 3037876, date: "Wed, Sep 9, 2026 3:13 AM", type: "Online", status: "Order Confirmed", items: [{name: "Air Filter for Royal Enfield Bullet, Hunter, Classic, Meteor bike.", qty: 1, price: 480}], subtotal: 480, delivery: 150, discount: 0, vat: 0, grandTotal: 630, paid: 630, due: 0, customer: "Raihan", phone: "8.80183E+12", email: "", address: "Meghula Bazar,Dohar,dhaka", note: "Part no: 1570250/D" },
+{ id: 3037839, date: "Wed, Sep 9, 2026 2:59 AM", type: "Online", status: "Order Confirmed", items: [{name: "Pillion Hundel Painted (Plastic Shing) for Yamaha FZS V1 & Fazer V1 bike.", qty: 1, price: 1550}], subtotal: 1550, delivery: 150, discount: 0, vat: 0, grandTotal: 1700, paid: 150, due: 1550, customer: "MH Nayem", phone: "8.8014E+12", email: "mhnayem908196@gmail.com", address: "Kulaura Moulovibazar", note: "Partial 150/1700 — due 1550" },
+{ id: 3037773, date: "Wed, Sep 9, 2026 2:31 AM", type: "Online", status: "Order Confirmed", items: [{name: "Jam Nut (Fork Nut-2 Pcs) for Yamaha bike.", qty: 1, price: 410}, {name: "Automotive Gasket for Yamaha R15 V3, R15 V4, R15M, MT15 V1, MT15 V2 bike.", qty: 1, price: 380}, {name: "Chain Rubber for Yamaha R15 V3, R15 V4, R15M, MT15 V1, MT15 V2 bike.", qty: 1, price: 360}, {name: "Clutch Cable for Yamaha R15 V3, R15 V4 & R15M bike.", qty: 1, price: 290}, {name: "Visor Glass for Yamaha R15 V4 & R15M bike.", qty: 1, price: 780}, {name: "Drum Rubber (Damper) for Yamaha FZS V2, FZS V3, FZS V4, R15 V3, R15 V4, R15M, MT15 (Double Disk All) bike.", qty: 1, price: 440}, {name: "Footrest (Front-Set) Yamaha R15 V2, R15 V3, R15 V4, R15M, MT15 V1, MT15 V2 bike.", qty: 1, price: 490}, {name: "Throttle/ACC Cable for Yamaha R15 V3, R15 V4 & R15M bike.", qty: 1, price: 620}], subtotal: 3770, delivery: 150, discount: 0, vat: 0, grandTotal: 3920, paid: 400, due: 3520, customer: "MOHAMMED OSMAN GONI", phone: "8.80181E+12", email: "mdosmngn@gmail.com", address: "Naikhongchari Sadar, Naikhongchari 4660, Bandarban.", note: "Big batch R15 V4 — partial 400/3920" },
+{ id: 3037355, date: "Wed, Sep 9, 2026 12:45 AM", type: "Online", status: "Order Cancelled", items: [{name: "Headlight Housing for TVS Apache RTR 160 4V SMART XCONNECT bike.", qty: 1, price: 1080}], subtotal: 1080, delivery: 150, discount: 0, vat: 0, grandTotal: 1230, paid: 1230, due: 0, customer: "SHAIK Imran", phone: "7799055160", email: "clashofclansnawaz@gmail.com", address: "3-7-59 Basheer bagh Old city Nalgonda", note: "Part no: NF223160" },
+{ id: 3035874, date: "Tue, Sep 8, 2026 8:38 PM", type: "Online", status: "Order Confirmed", items: [{name: "Footrest (Front-Set) Yamaha R15 V2, R15 V3, R15 V4, R15M, MT15 V1, MT15 V2 bike.", qty: 1, price: 490}, {name: "Full Set Sticker for Yamaha R15M Monster bike.", qty: 1, price: 1450}, {name: "Break Lever for Yamaha R15 V2, R15 V3, R15 V4, R15M bike.", qty: 1, price: 520}], subtotal: 2460, delivery: 150, discount: 0, vat: 0, grandTotal: 2610, paid: 2610, due: 0, customer: "Asif Mahmud", phone: "8.8017E+12", email: "70asifmahmud@gmail.com", address: "Starmor, chatmohar, pabna", note: "R15M Monster batch — 3 items" },
+{ id: 3035779, date: "Tue, Sep 8, 2026 8:18 PM", type: "Online", status: "Order Cancelled", items: [{name: "Fuel Tank for TVS Metro (Black RED Color) bike.", qty: 1, price: 12900}], subtotal: 12900, delivery: 350, discount: 0, vat: 0, grandTotal: 13250, paid: 13250, due: 0, customer: "Mujahidul Islam", phone: "8.80131E+12", email: "mujahidul.sujon@gmail.com", address: "Khalishpur Housing State, Road 212, House N/F 89, khalishpur, khulna", note: "Part no: N8140516GE" },
+{ id: 3035451, date: "Tue, Sep 8, 2026 7:17 PM", type: "Online", status: "Order Cancelled", items: [{name: "Timing Adjuster/Tensioner Assy for Yamaha R15 V3, R15 V4 & MT15 bike.", qty: 1, price: 2050}], subtotal: 2050, delivery: 150, discount: 0, vat: 0, grandTotal: 2200, paid: 2200, due: 0, customer: "Sameer Majhi", phone: "8.80935E+12", email: "sameermajhi770017@gmail.com", address: "Lamloi jampali bypass JAMPALI BYPASS B2 MOTORS", note: "Part No: 2PVE221001" },
+{ id: 3035395, date: "Tue, Sep 8, 2026 7:06 PM", type: "Online", status: "Order Confirmed", items: [{name: "Backlight Cover for Yamaha FZS V2 & Fazer V2 bike.", qty: 1, price: 225}, {name: "Cariel (After Market) for Yamaha FZS & FAZER V2 bike.", qty: 1, price: 1450}, {name: "Backlight Bulb (Halogen) for Yamaha FZS V1, FZS V2, Fazer V1, Fazer V2 & FZS V3 bike.", qty: 1, price: 130}], subtotal: 1805, delivery: 150, discount: 0, vat: 0, grandTotal: 1955, paid: 1955, due: 0, customer: "Shovo Dewan", phone: "8.80177E+12", email: "dewanshovo3988@gmail.com", address: "munshiganj fulhar", note: "FZS V2 lighting bundle" },
+{ id: 3035372, date: "Tue, Sep 8, 2026 7:02 PM", type: "Online", status: "Order Cancelled", items: [{name: "Cariel (After Market) for Yamaha FZS & FAZER V2 bike.", qty: 1, price: 1450}], subtotal: 1450, delivery: 150, discount: 0, vat: 0, grandTotal: 1600, paid: 1600, due: 0, customer: "Shovo Dewan", phone: "8.80177E+12", email: "dewanshovo3988@gmail.com", address: "FULHAR", note: "Cancelled — duplicate order" },
+{ id: 3035283, date: "Tue, Sep 8, 2026 6:48 PM", type: "Online", status: "Order Cancelled", items: [{name: "Fuel Tank for Bajaj Discover 125 Black-Red bike.", qty: 1, price: 9960}], subtotal: 9960, delivery: 350, discount: 0, vat: 0, grandTotal: 10310, paid: 10310, due: 0, customer: "ফিরোজ", phone: "8.80171E+12", email: "", address: "চন্ডিপুর বাজার জিয়ানগর পিরিজপুর", note: "emi chack korclo / Part no: 56PA0123" },
+{ id: 3035148, date: "Tue, Sep 8, 2026 6:23 PM", type: "Online", status: "Order Confirmed", items: [{name: "Headlight Glass for Suzuki Gixxer SF (New Model) bike.", qty: 1, price: 2350}], subtotal: 2350, delivery: 150, discount: 0, vat: 0, grandTotal: 2500, paid: 2500, due: 0, customer: "তিতুমীর", phone: "1678808888", email: "", address: "গ্রাম- পারুলিয়া থানা-হাতিবান্ধা জেলা-লালমনির হাট", note: "Part no: Suzuki Gixxer SF (New Model) bike." },
+{ id: 3034924, date: "Tue, Sep 8, 2026 5:44 PM", type: "Online", status: "Order Confirmed", items: [{name: "Fork Rod (2 Pcs) for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, & Fazer V1 Fazer V2 bike.", qty: 1, price: 2600}, {name: "Break Pad (Rear) Yamaha FZS V2 (Double Disk), FZS V3, MT15 V1, MT15 V2, R15 V3, R15 V4 & R15M bike.", qty: 1, price: 200}, {name: "Break Pad (Front) for Yamaha FZS V3, FZS V4, MT15 V1, MT15 V2, R15 V3, R15 V4 & R15M bike.", qty: 1, price: 550}, {name: "YAMALUBE 10W40 Full Synthetic Engine Oil.", qty: 1, price: 1150}, {name: "Oil Filter for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, Fazer V1, Fazer V2 bike", qty: 1, price: 110}, {name: "Fork Oil Seal for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, Fazer V1, Fazer V2 bike.", qty: 1, price: 375}, {name: "Royal Fork Oil 180 ml for All bike.", qty: 3, price: 390}], subtotal: 5225, delivery: 150, discount: 0, vat: 0, grandTotal: 5375, paid: 5375, due: 0, customer: "Mr. Sajib", phone: "8.80191E+12", email: "", address: "7/3, Dhaka Uddan, Mohammadpur, Dhaka", note: "Big FZS service kit — 7 items" },
+{ id: 3034914, date: "Tue, Sep 8, 2026 5:42 PM", type: "Online", status: "Order Confirmed", items: [{name: "Said Cover Top (Silver Colour) for Yamaha FZS V3 & FZS V4 bike.", qty: 1, price: 990}, {name: "Back Light cover for Yamaha FZS V3 bike.", qty: 1, price: 1}], subtotal: 990, delivery: 150, discount: 0, vat: 0, grandTotal: 1140, paid: 1140, due: 0, customer: "Ma enterprise", phone: "8.80171E+12", email: "maent61@gmail.com", address: "03 Hannan Menson, Rikabibazar", note: "1 xchaing — exchange offer" },
+{ id: 3034883, date: "Tue, Sep 8, 2026 5:37 PM", type: "Online", status: "Order Cancelled", items: [{name: "Fuel Tank for Bajaj Discover 110 & Discover 125 (Black Red) bike.", qty: 1, price: 9340}], subtotal: 9340, delivery: 350, discount: 0, vat: 0, grandTotal: 9690, paid: 9690, due: 0, customer: "Mazbah-ul Alam", phone: "8.80132E+12", email: "", address: "Magura, Mohammadpuremi", note: "Part no: 56PA0123" },
+{ id: 3034837, date: "Tue, Sep 8, 2026 5:28 PM", type: "Offline", status: "Order Completed", items: [{name: "Tanky Churi for Suzuki Gixxer Monotone & Gixxer SF (Old Model) bike", qty: 2, price: 260}, {name: "Tanky Churi for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, Fazer V1, Fazer V2 bike.", qty: 2, price: 260}, {name: "Break Pad (Front) Yamaha FZS V1, FZS V2, & Fazer V1, Fazer V2 bike.", qty: 10, price: 2250}, {name: "Break Disk Plate (Rear) for Yamaha FZS V2, FZS V3, FZS V4, FZX, R15 V3, R15 V4, R15M, MT15 V1, MT15 V2 bike.", qty: 1, price: 1350}, {name: "Break Disk Plate (Rear-Black) for Suzuki Gixxer , Gixxer SF (Old & New) bike.", qty: 1, price: 2590}, {name: "Caliper Oil Seal for Suzuki Gixxer & Gixxer SF (Old & New Model) bike.", qty: 5, price: 900}], subtotal: 7610, delivery: 0, discount: 0, vat: 0, grandTotal: 7610, paid: 7610, due: 0, customer: "মেহেরাজ মোটর্স", phone: "8.80131E+12", email: "", address: "এনাম নাহার মোড়, পুব মাথা, সন্দ্বীপ, চট্টগ্রাম", note: "Big vendor batch — bulk discount applied" },
+{ id: 3034491, date: "Tue, Sep 8, 2026 4:26 PM", type: "Online", status: "Order Confirmed", items: [{name: "Rear Fender (Short) for Yamaha FZS V2 & Fazer V2 bike.", qty: 1, price: 440}], subtotal: 440, delivery: 150, discount: 0, vat: 0, grandTotal: 590, paid: 590, due: 0, customer: "Md easin", phone: "8.80171E+12", email: "", address: "Sararchar bazer.bajitpur.kishorgong.", note: "Part no: 2GSF162900" },
+{ id: 3034459, date: "Tue, Sep 8, 2026 4:21 PM", type: "Online", status: "Order Confirmed", items: [{name: "Silencer Cap for Yamaha FZS V2 & Fazer V2 bike", qty: 1, price: 610}], subtotal: 610, delivery: 150, discount: 0, vat: 0, grandTotal: 760, paid: 760, due: 0, customer: "আরিফ তালুকদার", phone: "1922489418", email: "", address: "Reynda, Sadar Sarankhona, Bagherhat", note: "Part no: 2GSE479900" },
+{ id: 3034443, date: "Tue, Sep 8, 2026 4:19 PM", type: "Online", status: "Order Confirmed", items: [{name: "Cover-5 (Mat Black) for Yamaha FZS V2 (Armada Blue) bike.", qty: 1, price: 530}], subtotal: 530, delivery: 200, discount: 9.43, vat: 0, grandTotal: 360, paid: 360, due: 0, customer: "Jamal", phone: "8.80191E+12", email: "mdjamalbabu1995@gmail.com", address: "সাতক্ষীরা জেলা শ্যামনগর থানা", note: "Use For: Yamaha FZS V2 (Armada Blue) bike." },
+{ id: 3034329, date: "Tue, Sep 8, 2026 4:00 PM", type: "Online", status: "Order Cancelled", items: [{name: "Tanky Churi for Suzuki Gixxer Monotone & Gixxer SF (Old Model) bike", qty: 1, price: 195}], subtotal: 195, delivery: 150, discount: 0, vat: 0, grandTotal: 345, paid: 345, due: 0, customer: "Antor kundu", phone: "8.80161E+12", email: "kunduantor2003@gmail.com", address: "রাজবাডী বালিয়াকান্দি জামালপুর", note: "Customer unreachable — refund issued" },
+{ id: 3033729, date: "Tue, Sep 8, 2026 2:15 PM", type: "Online", status: "Order Confirmed", items: [{name: "15W50 Royal Enfield Liquid Gun Engine Oil, Can of 1.7L", qty: 1, price: 1940}], subtotal: 1940, delivery: 150, discount: 0, vat: 0, grandTotal: 2090, paid: 2090, due: 0, customer: "Raihan", phone: "8.80183E+12", email: "", address: "Meghula Bazar,Dohar,dhaka", note: "" },
+{ id: 3033608, date: "Tue, Sep 8, 2026 1:54 PM", type: "Online", status: "Order Confirmed", items: [{name: "Bracket License Front for Yamaha R15 V3, R15 V4 & R15M bike.", qty: 1, price: 310}], subtotal: 310, delivery: 150, discount: 0, vat: 0, grandTotal: 460, paid: 460, due: 0, customer: "Mr. Shuvro", phone: "8.80168E+12", email: "shuvrobarua2018@gmail.com", address: "New building, Road behind of union board, pachoria, patiya, Chittagong.", note: "Customer: Please give me same product as per order / Part no: BK7F168500" },
+{ id: 3033401, date: "Tue, Sep 8, 2026 1:20 PM", type: "Online", status: "Order Confirmed", items: [{name: "Cover-5 for Yamaha R15 V4 & R15M bike.", qty: 1, price: 500}, {name: "Seat Plate Yamaha R15 V4 & R15M bike.", qty: 1, price: 990}], subtotal: 1490, delivery: 150, discount: 0, vat: 0, grandTotal: 1640, paid: 1640, due: 0, customer: "LITON Liton", phone: "8.80163E+12", email: "liton7714533@gmail.com", address: "কুমিল্লা জেল বাহ্মণপাড়া থানা হরিমগল বাজার", note: "Part No: BCWF171E00 / BCWF161100" },
+{ id: 3033266, date: "Tue, Sep 8, 2026 12:57 PM", type: "Online", status: "Order Cancelled", items: [{name: "Headlight Assy for Yamaha Saluto 125 bike.", qty: 1, price: 1850}], subtotal: 1850, delivery: 150, discount: 0, vat: 0, grandTotal: 2000, paid: 2000, due: 0, customer: "Gopi Krishna", phone: "8.80918E+12", email: "gopi35303@gmail.com", address: "Addanki", note: "Part No: 2LPH43100000" },
+{ id: 3033242, date: "Tue, Sep 8, 2026 12:53 PM", type: "Online", status: "Order Confirmed", items: [{name: "Meter Bord Housing for Suzuki Gixxer (New Model) bike.", qty: 1, price: 710}, {name: "Meter Case for Suzuki Gixxer & Gixxer SF (New Model) bike.", qty: 1, price: 950}], subtotal: 1660, delivery: 150, discount: 0, vat: 0, grandTotal: 1810, paid: 1810, due: 0, customer: "Mustasim Bangladesh", phone: "8.80178E+12", email: "mustasim329@gmail.com", address: "Hili, Hakimpur, Dinajpur", note: "Part no: 51814-41KA0-000, 51815-41KA0-000 & 51816-41KA0-000 / 34150-41K50-000" },
+{ id: 3033170, date: "Tue, Sep 8, 2026 12:42 PM", type: "Online", status: "Order Confirmed", items: [{name: "Chain Rubber for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, Fazer V1, Fazer V2, FZX bike.", qty: 1, price: 385}], subtotal: 385, delivery: 150, discount: 0, vat: 0, grandTotal: 535, paid: 535, due: 0, customer: "MD ABIR ISLAM", phone: "1768881721", email: "", address: "SIRAJGONJ SADOR SIRAJGONJ. C.N.G PAM.. L.G.D MOR", note: "Part No: 2GSF215100" },
+{ id: 3033027, date: "Tue, Sep 8, 2026 12:21 PM", type: "Online", status: "Order Confirmed", items: [{name: "Handlebar for Yamaha FZS V1 & FZS V2 bike.", qty: 1, price: 850}, {name: "Cover Top (Glossy Black) for Yamaha FZS V2 (Dark Night) bike.", qty: 1, price: 1060}], subtotal: 1910, delivery: 150, discount: 0, vat: 0, grandTotal: 2060, paid: 2060, due: 0, customer: "Shariful Islam Lipu", phone: "1609807473", email: "", address: "Kodalia 8 tola,Kodalia,Tangail Sadar,Tangail", note: "Part No: 21CF61110000" },
+{ id: 3032884, date: "Tue, Sep 8, 2026 11:55 AM", type: "Offline", status: "Order Completed", items: [{name: "Drum Rubber (Damper) for Yamaha FZS V2, FZS V3, FZS V4, R15 V3, R15 V4, R15M, MT15 (Double Disk All) bike.", qty: 1, price: 250}, {name: "Head Gasket-Head Rubber for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, Fazer V1, FZX bike.", qty: 1, price: 100}, {name: "Chain Sprocket set for Yamaha FZS V2 (Double Disk), FZS V3, FZS V4 bike.", qty: 1, price: 2450}, {name: "Chain Rubber for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, Fazer V1, Fazer V2, FZX bike.", qty: 1, price: 270}, {name: "Air Scoop (Silver Color) for Yamaha FZS V3, FZS V3 (Deluxe), FZS V4 bike.", qty: 1, price: 700}, {name: "Said Cover Top (Silver Colour) for Yamaha FZS V3 & FZS V4 bike.", qty: 1, price: 750}, {name: "Break Pad (Front) Yamaha FZS V1, FZS V2, & Fazer V1, Fazer V2 bike.", qty: 1, price: 240}, {name: "Oil Filter for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, Fazer V1, Fazer V2 bike", qty: 1, price: 115}, {name: "Clutch Plate for Yamaha FZS V1, FZS V2, FZS V3 (BS4), Fazer V1, Fazer V2 bike.", qty: 1, price: 860}, {name: "Throttle/ACC Cable for Yamaha FZS V3 & V4 bike.", qty: 1, price: 360}, {name: "Lock Cover for Yamaha FZS V3 & FZS V4 bike.", qty: 1, price: 230}, {name: "Tanky Churi for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, Fazer V1, Fazer V2 bike.", qty: 1, price: 145}, {name: "Meter Case for Yamaha FZS V3 bike.", qty: 1, price: 850}], subtotal: 7320, delivery: 0, discount: 0, vat: 0, grandTotal: 7320, paid: 7320, due: 0, customer: "Zisan Munshi", phone: "1853389807", email: "", address: "Mawna chorastha, Gazipur", note: "Big FZS V3 overhaul — 13 items" },
+{ id: 3032815, date: "Tue, Sep 8, 2026 11:38 AM", type: "Online", status: "Order Confirmed", items: [{name: "Tanky Box for Yamaha FZS V2 (Armada Blue) bike.", qty: 1, price: 4150}, {name: "Signal Light (1 Pair) for Yamaha all bike.", qty: 1, price: 610}, {name: "Air filter for Yamaha FZS V2, FZS V3, FZS V4, FZX & Fazer V2 bike.", qty: 1, price: 390}, {name: "Tanky Nut for Yamaha FZS V2, FZS V4, Fazer V2 bike.", qty: 1, price: 265}, {name: "Tanky Nut Clam (10 pcs) for Yamaha FZS V1, FZS V2, FZS V4, Fazer V1, Fazer V2 bike.", qty: 1, price: 310}, {name: "Headlight Mask for Yamaha FZS V2 bike.", qty: 1, price: 350}, {name: "Headlight Kan (Past Colour) for Yamaha FZS V2 bike.", qty: 1, price: 840}, {name: "Front Stop (Hand Break) Switch for Yamaha FZS V2 & Fazer V2 bike.", qty: 1, price: 160}, {name: "Push Lock (Rivet) for Yamaha FZS V1, FZS V2, FZS V4, Fazer V1, Fazer V2 bike.", qty: 1, price: 165}, {name: "Handle Grip for Yamaha FZS V1 ,FZS V2, FZS V3, FZS V4, Fazer V1, Fazer V2, bike.", qty: 1, price: 320}, {name: "Throttle/ACC Cable for Yamaha FZS V2 & Fazer V2 bike.", qty: 1, price: 550}, {name: "Backlight Bulb (Halogen) for Yamaha FZS V1, FZS V2, Fazer V1, Fazer V2 & FZS V3 bike.", qty: 1, price: 130}], subtotal: 8240, delivery: 150, discount: 2.07, vat: 0, grandTotal: 1000, paid: 1000, due: 7240, customer: "মো হাবিবুর রহমান", phone: "8.80172E+12", email: "", address: "গ্রাম রৌহাদহ মুন্সি বাড়ি পোস্ট শুশুন্ডা মানিকগঞ্জ সদর", note: "12-item FZS V2 rebuild — partial 1000 paid" },
+{ id: 3032531, date: "Tue, Sep 8, 2026 10:48 AM", type: "Online", status: "Order Confirmed", items: [{name: "Visor Glass for Yamaha Fazer V2 bike.", qty: 1, price: 520}, {name: "Handle End Grip (Gutka-2 pcs) for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, Fazer V1, Fazer V2 biek.", qty: 1, price: 270}], subtotal: 790, delivery: 150, discount: 0, vat: 0, grandTotal: 940, paid: 940, due: 0, customer: "Md Ruman", phone: "8.80187E+12", email: "secretsearch67@gmail.com", address: "নছরতপুর - শায়েস্তাগঞ্জ - হবিগঞ্জ", note: "Part no: 2WSF838100 / 21CF620B21" },
+{ id: 3032237, date: "Tue, Sep 8, 2026 9:39 AM", type: "Online", status: "Order Cancelled", items: [{name: "Pillion Handle Painted (Shing) for Yamaha MT15 V1 & MT15 V2 bike.", qty: 1, price: 1950}], subtotal: 1950, delivery: 150, discount: 0, vat: 0, grandTotal: 2100, paid: 2100, due: 0, customer: "Fardin Farish", phone: "8.80185E+12", email: "sazidurrahman181@gmail.com", address: "Jatramura, Tarabo Powrosoba Rupganj, Narayanganj", note: "Customer unreachable — refunded" },
+{ id: 3032194, date: "Tue, Sep 8, 2026 9:25 AM", type: "Online", status: "Order Cancelled", items: [{name: "Metershed-Faring for Yamaha R15 V2 (Black Color) bike.", qty: 1, price: 2250}], subtotal: 2250, delivery: 150, discount: 0, vat: 0, grandTotal: 2400, paid: 2400, due: 0, customer: "MD Saedy", phone: "8.80172E+12", email: "", address: "Mymensingh Gafargaon petrol pump", note: "Payment issue" },
+{ id: 3032153, date: "Tue, Sep 8, 2026 9:14 AM", type: "Online", status: "Order Confirmed", items: [{name: "Air Filter Box for Suzuki Gixxer & Gixxer SF (Old Model) bike.", qty: 1, price: 2985}], subtotal: 2985, delivery: 150, discount: 0, vat: 0, grandTotal: 3135, paid: 3135, due: 0, customer: "Gazi Mazharul Islam", phone: "8.80168E+12", email: "", address: "Materbari,Notun Bazar, maheshkhali, Cox's Bazar", note: "Part no: 13700-34J10-000" },
+{ id: 3031755, date: "Tue, Sep 8, 2026 6:48 AM", type: "Online", status: "Order Cancelled", items: [{name: "Fuel Tank for BAJAJ Pulser UG7 bike.", qty: 1, price: 13450}], subtotal: 13450, delivery: 350, discount: 0, vat: 0, grandTotal: 13800, paid: 13800, due: 0, customer: "mehedi afsar", phone: "8.80198E+12", email: "mehediafsar4@gmail.com", address: "Lakshmipur jela, Ramgati Thana, Alexander bazaremi", note: "Part no: 52DJ0723" },
+{ id: 3030386, date: "Mon, Sep 7, 2026 11:33 PM", type: "Online", status: "Order Confirmed", items: [{name: "Headlight Chan (Cover Upper 1) for Yamaha FZS V2 bike.", qty: 1, price: 350}, {name: "Headlight Mask for Yamaha FZS V2 bike.", qty: 1, price: 350}, {name: "Signal Light (1 Pair) for Yamaha all bike.", qty: 1, price: 610}, {name: "Front Stop (Hand Break) Switch for Yamaha FZS V2 & Fazer V2 bike.", qty: 1, price: 160}, {name: "Headlight Kan for Yamaha FZS V2 (Armada Blue) bike.", qty: 1, price: 810}], subtotal: 2280, delivery: 150, discount: 0, vat: 0, grandTotal: 2430, paid: 2430, due: 0, customer: "Arafat", phone: "8.80193E+12", email: "", address: "Barishal mehendigonj Chorhogola", note: "FZS V2 Armada headlight bundle" },
+{ id: 3030337, date: "Mon, Sep 7, 2026 11:25 PM", type: "Online", status: "Order Confirmed", items: [{name: "Rear Fender (Short) for Yamaha FZS V2 & Fazer V2 bike.", qty: 1, price: 440}, {name: "Back Light cover for Yamaha FZS V2 & Fazer V2 bike.", qty: 1, price: 320}], subtotal: 760, delivery: 150, discount: 0, vat: 0, grandTotal: 910, paid: 910, due: 0, customer: "সুজন", phone: "8.80172E+12", email: "mdsujonranazone@gmail.com", address: "বেতিল বাজার এনায়েতপুর সিরাজগঞ্জ", note: "Part no: 2GSF162900 / 2GSF163A00" },
+{ id: 3030120, date: "Mon, Sep 7, 2026 10:58 PM", type: "Online", status: "Order Cancelled", items: [{name: "Back Light cover for Yamaha FZS V2 & Fazer V2 bike.", qty: 1, price: 320}], subtotal: 320, delivery: 150, discount: 0, vat: 0, grandTotal: 470, paid: 470, due: 0, customer: "সুজন", phone: "8.80172E+12", email: "mdsujonranazone@gmail.com", address: "বেতিল বাজার এনায়েতপুর সিরাজগঞ্জ", note: "Duplicate — already in 3030337" },
+{ id: 3029702, date: "Mon, Sep 7, 2026 9:57 PM", type: "Online", status: "Order Confirmed", items: [{name: "Said Cover for Yamaha FZS V1 & Fazer V1 bike.", qty: 1, price: 2180}], subtotal: 2180, delivery: 150, discount: 0, vat: 0, grandTotal: 2330, paid: 2330, due: 0, customer: "Md Rasel", phone: "8.80131E+12", email: "", address: "dinajpur setabgang Mobil", note: "Use For: Yamaha FZS V1 & Fazer V1 bike." },
+{ id: 3029464, date: "Mon, Sep 7, 2026 9:21 PM", type: "Online", status: "Order Cancelled", items: [{name: "Clutch Plate for Yamaha FZS V1, FZS V2, FZS V3 (BS4), Fazer V1, Fazer V2 bike.", qty: 1, price: 1120}], subtotal: 1120, delivery: 150, discount: 0, vat: 0, grandTotal: 1270, paid: 1270, due: 0, customer: "Shamim Ahmmed", phone: "8.80174E+12", email: "shamimahmmed208@gmail.com", address: "ফুলবাড়িয়া বাজার, কালিকৈর গাজীপুর।", note: "Part no: 21CE633100 & 54BE632100" },
+{ id: 3028768, date: "Mon, Sep 7, 2026 7:29 PM", type: "Offline", status: "Order Completed", items: [{name: "Lock Set for Yamaha FZS V2 & Fazer V2 Bike.", qty: 1, price: 1630}, {name: "Fuel Tank for Yamaha FZS V2 & Fazer V2 bike.", qty: 1, price: 5200}], subtotal: 6830, delivery: 0, discount: 0, vat: 0, grandTotal: 6830, paid: 6830, due: 0, customer: "হাসিবুল মটরস", phone: "1780097587", email: "", address: "বাইপেল হাব সাভার ঢাকা", note: "Walk-in customer — Dhaka outlet" },
+{ id: 3028540, date: "Mon, Sep 7, 2026 6:49 PM", type: "Online", status: "Order Cancelled", items: [{name: "Visor Glass for Yamaha FZS V2 bike.", qty: 1, price: 450}], subtotal: 450, delivery: 150, discount: 0, vat: 0, grandTotal: 600, paid: 600, due: 0, customer: "Fahim", phone: "8.80163E+12", email: "", address: "Sitakundu upazila", note: "ata lagba na" },
+{ id: 3028356, date: "Mon, Sep 7, 2026 6:19 PM", type: "Online", status: "Order Confirmed", items: [{name: "Looking Glass set for Suzuki Gixxer (Old & New Model) Fi Abs bilke.", qty: 1, price: 730}], subtotal: 730, delivery: 150, discount: 0, vat: 0, grandTotal: 880, paid: 880, due: 0, customer: "নুরুল আফছার", phone: "8.80185E+12", email: "nurulafsar5397@gmail.com", address: "ফেনী সোনা কাজী জমাদার বাজার তেলার ঘাট", note: "Part No: 56500-34J41-000 & 56600-34J41-000" },
+{ id: 3027985, date: "Mon, Sep 7, 2026 5:11 PM", type: "Online", status: "Order Confirmed", items: [{name: "Backlight Bulb (Halogen) for Yamaha FZS V1, FZS V2, Fazer V1, Fazer V2 & FZS V3 bike.", qty: 1, price: 130}, {name: "Back Panel for Yamaha Fazer V2 (Red) bike.", qty: 1, price: 1410}], subtotal: 1540, delivery: 150, discount: 0, vat: 0, grandTotal: 1690, paid: 1690, due: 0, customer: "Tawhid Rahman", phone: "8.80175E+12", email: "tawhidisme@gmail.com", address: "Dhaka Keraniganj hasnabad bosundhora white house", note: "Part no: 1GCH471400" },
+{ id: 3027528, date: "Mon, Sep 7, 2026 3:51 PM", type: "Online", status: "Order Confirmed", items: [{name: "Shed Glass (Mat black) for Suzuki Gixxer Monotone bike.", qty: 1, price: 480}, {name: "Full Set Sticker for Suzuki Gixxer Monotone (Old Model, Black Color) bike.", qty: 1, price: 1150}], subtotal: 1630, delivery: 150, discount: 0, vat: 0, grandTotal: 1780, paid: 1780, due: 0, customer: "Robi Das", phone: "8.80175E+12", email: "rdas73182@gmail.com", address: "Brahmanbaria railway station, Brahmanbaria.", note: "Part no: 51814-34J00-UKV / 926F" },
+{ id: 3027136, date: "Mon, Sep 7, 2026 2:36 PM", type: "Offline", status: "Order Completed", items: [{name: "Break Pad (Front) Yamaha FZS V1, FZS V2, & Fazer V1, Fazer V2 bike.", qty: 10, price: 230}, {name: "Ball Racer for Yamaha FZS V3 Deluxe, FZS V4 bike.", qty: 2, price: 2468}, {name: "Ball Racer For Yamaha R15 V3, R15 V4, R15M & MT15 Bike.", qty: 2, price: 2308}, {name: "Back Chassis Bush Bearing set Suzuki Gixxer, Gixxer SF (Old Model) bike.", qty: 10, price: 5770}, {name: "Dolnar Bush Bearing (Rear Arm) Yamaha R15 V2, R15 V3, R15 V4, R15M, MT15 V1 & MT15 V2 bike.", qty: 2, price: 1760}, {name: "Back Chassis Bush Bearing set for Yamaha R15 V3, R15 V4, R15M, MT15 V1, MT15 V2 bike.", qty: 5, price: 4940}], subtotal: 19546, delivery: 0, discount: 0, vat: 0, grandTotal: 19546, paid: 19546, due: 0, customer: "Moto Gadgets BD", phone: "8.80182E+12", email: "", address: "Cumilla, 01711003679", note: "Vendor bulk order — Cumilla outlet" },
+{ id: 3027090, date: "Mon, Sep 7, 2026 2:28 PM", type: "Offline", status: "Order Completed", items: [{name: "Fuel Pump Filter for Yamaha FZS V2, FZS V3 & Fazer V2 bike.", qty: 5, price: 650}, {name: "Fuel Pump Motor for Yamaha FZS V2, FZS V3 & Fazer V2 bike.", qty: 2, price: 760}, {name: "Drum Break Shoe (Rear) for Yamaha Saluto 125, FZS V1, FZS V2 (Single Disk), Fazer V1, Fazer V2 bike.", qty: 3, price: 1440}, {name: "Break Pad (Rear) Yamaha FZS V2 (Double Disk), FZS V3, MT15 V1, MT15 V2, R15 V3, R15 V4 & R15M bike.", qty: 6, price: 6492}, {name: "Backlight Cover for Yamaha FZS V2 & Fazer V2 bike.", qty: 5, price: 500}], subtotal: 9842, delivery: 0, discount: 0, vat: 0, grandTotal: 9842, paid: 9842, due: 0, customer: "Taqwa Motors", phone: "8.80188E+12", email: "", address: "Khilket Dhaka", note: "Walk-in vendor — Khilket Dhaka" },
+{ id: 3026974, date: "Mon, Sep 7, 2026 2:08 PM", type: "Offline", status: "Order Completed", items: [{name: "Back Chassis Bush Bearing set Suzuki Gixxer, Gixxer SF (Old Model) bike.", qty: 10, price: 5580}, {name: "Drum Rubber (Damper) for Yamaha FZS V2, FZS V3, FZS V4, R15 V3, R15 V4, R15M, MT15 (Double Disk All) bike.", qty: 10, price: 230}, {name: "Ball Racer for Yamaha FZS V1, FZS V2, Fazer V1, Fazer V2 bike.", qty: 10, price: 518}, {name: "Ball Racer for Suzuki Gixxer & SF (Old & New) bike.", qty: 10, price: 640}, {name: "Timing Chain-94568-G2096 for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, Fazer V1, Fazer V2 & FZX bike.", qty: 5, price: 2040}, {name: "Timing Chain for Suzuki Gixxer & Gixxer SF (Old & New Model) bike.", qty: 5, price: 2630}, {name: "Timing Chain for Yamaha R15 V3, R15 V4 & MT15 bike.", qty: 5, price: 1910}, {name: "Break Pad (Front) Yamaha FZS V1, FZS V2, & Fazer V1, Fazer V2 bike.", qty: 20, price: 450}, {name: "Break Pad (Rear-Indo) Yamaha FZS V2 (Doudle Disk), FZS V3, MT15 V1, MT15 V2, R15 V3, R15 V4 & R15M bike.", qty: 10, price: 880}, {name: "Sprocket Drive (Front Sprocket-14T) for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, Fazer V1, Fazer V2, R15 V3, R15 V4, R15M, MT15 V1, MT15 V2 bike.", qty: 20, price: 380}, {name: "Sprocket Drive (Front Sprocket) for Suzuki Gixxer & Gixxer SF (Old & New Model) bike.", qty: 20, price: 490}, {name: "Spark Plug (NGK) for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, Fazer V1, Fazer V2 bike.", qty: 20, price: 460}, {name: "Spark Plug for Suzuki Gixxer, Gixxer SF (Old & New) bike.", qty: 20, price: 402}, {name: "Air filter for Yamaha FZS V2, FZS V3, FZS V4, FZX & Fazer V2 bike.", qty: 20, price: 588}, {name: "Air filter for Yamaha FZS V3 (Deluxe), FZS V4 bike.", qty: 10, price: 320}, {name: "Air filter for Yamaha R15 V3, R15 V4, R15M, MT15 V1, MT15 V2 bike.", qty: 10, price: 314}, {name: "Break Pad (Front) for Yamaha R15 V2 & R15 V4 (Indo) bike.", qty: 5, price: 432}, {name: "Fork Oil Seal for Yamaha FZS V1, FZS V2, FZS V3, FZS V4, Fazer V1, Fazer V2 bike.", qty: 20, price: 720}, {name: "Fork Oil Seal for Suzuki Gixxer & Gixxer SF bike.", qty: 10, price: 251}, {name: "Self Carbon (Bush Terminal Set) for Suzuki Gixxer Bike.", qty: 10, price: 185}, {name: "Self Carbon for Yamaha all Bike.", qty: 20, price: 300}, {name: "Fuel Pump Motor for Yamaha FZS V4, R15 V3, R15 V4, R15M, MT15 V1, MT V2 bike.", qty: 5, price: 425}, {name: "Chain Sprocket set for Yamaha FZS V2 (Double Disk), FZS V3, FZS V4 bike.", qty: 2, price: 4700}, {name: "Chain Sprocket set for Suzuki Gixxer, Gixxer SF (Old & New) bike.", qty: 3, price: 7050}, {name: "Back Chassis Bush Bearing for Yamaha FZS V2, FZS V3, FZS V4 & Fazer V2 bike.", qty: 10, price: 852}, {name: "Fork Oil Seal (1 Pcs) for Yamaha R15 V3, R15 V4, R15M, MT15 V1, MT15 V2 bike.", qty: 20, price: 782}, {name: "Head Gasket/Head Rubber For Yamaha R15 V3, R15 V4, R15M, MT15 Bike.", qty: 10, price: 185}, {name: "Head Rubber for Suzuki Gixxer, Gixxer SF (New Model) bike.", qty: 20, price: 382}, {name: "Fuel Pump Filter for Yamaha FZS V2, FZS V3 & Fazer V2 bike.", qty: 20, price: 260}, {name: "Chain Sprocket set for Yamaha FZS V1, FZS V2 (Single Disk) & Fazer V1, Fazer V2 bike.", qty: 2, price: 4460}, {name: "Back Chassis Bush Bearing set for Yamaha R15 V3, R15 V4, R15M, MT15 V1, MT15 V2 bike.", qty: 10, price: 988}, {name: "Chain Sprocket set for Yamaha R15 V3 R15 V4 & R15M bike.", qty: 2, price: 5900}, {name: "Drum Break Shoe (Rear) for Yamaha Saluto 125, FZS V1, FZS V2 (Single Disk), Fazer V1, Fazer V2 bike.", qty: 6, price: 222}, {name: "Break Pad (Front) for Suzuki Gixxer, Gixxer SF (Old & New) bike.", qty: 10, price: 545}], subtotal: 156280, delivery: 0, discount: 0, vat: 0, grandTotal: 156280, paid: 156280, due: 0, customer: "Moto Power", phone: "8.80199E+12", email: "", address: "Banasree, Dhaka", note: "MASSIVE 34-item wholesale batch — Moto Power Banasree" }
+];
+
+// Helper to count unique orders (since multiple items share order id)
+function uniqOrderCount() {
+  const ids = new Set();
+  ORDERS_DATA.forEach(o => ids.add(o.id));
+  return ids.size;
+}
 
 /* ---------- Helpers ---------- */
 const $ = (s) => document.querySelector(s);
@@ -2049,6 +2300,342 @@ renderVendors();
 renderCouriers();
 renderCourierKpis();
 renderShipments();
+
+/* ============================================================
+   ORDERS MODULE — render, filter, search, detail modal
+   ============================================================ */
+let ordersBrandFilter = 'ALL';
+let ordersTypeFilter = 'ALL';
+let ordersStatusFilter = 'ALL';
+let ordersSortBy = 'date-desc';
+let activeOrderId = null;
+
+function detectBrand(name) {
+  const n = (name||'').toLowerCase();
+  if (n.includes('yamaha') || n.includes('r15') || n.includes('fzs') || n.includes('mt15') || n.includes('fzx') || n.includes('fz ') || n.includes('fazer') || n.includes('saluto')) return 'YAMAHA';
+  if (n.includes('suzuki') || n.includes('gixxer')) return 'SUZUKI';
+  if (n.includes('bajaj') || n.includes('pulsar') || n.includes('pulser') || n.includes('discover')) return 'BAJAJ';
+  if (n.includes('honda') || n.includes('cbr') || n.includes('cbz') || n.includes('hero') || n.includes('splendor') || n.includes('platina') || n.includes('xtreme')) return 'HONDA';
+  if (n.includes('tvs') || n.includes('apache') || n.includes('raider')) return 'TVS';
+  if (n.includes('royal enfield')) return 'ROYAL ENFIELD';
+  return 'UNIVERSAL';
+}
+
+function statusClass(s) {
+  if (s === 'Order Confirmed' || s === 'Confirmed') return 'confirmed';
+  if (s === 'Order Completed' || s === 'Completed') return 'completed';
+  if (s === 'Order Cancelled' || s === 'Cancelled') return 'cancelled';
+  if (s === 'Payment Failed') return 'failed';
+  if (s === 'On Hold') return 'hold';
+  return 'confirmed';
+}
+
+function shortDate(d) {
+  // "Wed, Sep 9, 2026 5:02 PM" -> "Sep 9, 5:02 PM"
+  const m = d.match(/(\w+ \d+),.*?(\d+:\d+ [AP]M)/);
+  return m ? `${m[1]} · ${m[2]}` : d;
+}
+
+function highlight(text, q) {
+  if (!q) return text;
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  return text.replace(re, '<mark class="hl">$1</mark>');
+}
+
+function renderOrdersStats() {
+  const total = ORDERS_DATA.length;
+  const confirmed = ORDERS_DATA.filter(o => o.status === 'Order Confirmed').length;
+  const completed = ORDERS_DATA.filter(o => o.status === 'Order Completed').length;
+  const cancelled = ORDERS_DATA.filter(o => o.status === 'Order Cancelled').length;
+  const failed = ORDERS_DATA.filter(o => o.status === 'Payment Failed').length;
+  const revenue = ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed')
+                              .reduce((s, o) => s + (o.paid || 0), 0);
+  const due = ORDERS_DATA.reduce((s, o) => s + (o.due || 0), 0);
+  const uniqueCustomers = new Set(ORDERS_DATA.map(o => o.customer)).size;
+  $('#ordersStats').innerHTML = `
+    <div class="os-card green">
+      <div class="os-label">Total Orders</div>
+      <div class="os-value">${formatInt(total)}</div>
+      <div class="os-sub">${uniqOrderCount()} unique · ${uniqueCustomers} customers</div>
+    </div>
+    <div class="os-card">
+      <div class="os-label">Revenue Realized</div>
+      <div class="os-value">${formatCurrency(revenue)}</div>
+      <div class="os-sub">Confirmed + Completed</div>
+    </div>
+    <div class="os-card amber">
+      <div class="os-label">Pending Due</div>
+      <div class="os-value">${formatCurrency(due)}</div>
+      <div class="os-sub">Customers owe this amount</div>
+    </div>
+    <div class="os-card">
+      <div class="os-label">Confirmed</div>
+      <div class="os-value">${confirmed}</div>
+      <div class="os-sub">${completed} completed offline</div>
+    </div>
+    <div class="os-card" style="--accent:var(--accent)">
+      <div class="os-label">Cancelled / Failed</div>
+      <div class="os-value">${cancelled + failed}</div>
+      <div class="os-sub">${cancelled} cancelled · ${failed} failed</div>
+    </div>
+  `;
+}
+
+function getFilteredOrders() {
+  const q = ($('#ordersSearch').value || '').toLowerCase().trim();
+  let list = ORDERS_DATA.filter(o => {
+    const matchType = ordersTypeFilter === 'ALL' || o.type === ordersTypeFilter;
+    const matchStatus = ordersStatusFilter === 'ALL' || o.status === ordersStatusFilter;
+    let matchBrand = true;
+    if (ordersBrandFilter !== 'ALL') {
+      const firstItem = (o.items && o.items[0]) ? o.items[0].name : '';
+      const itemBrand = detectBrand(firstItem);
+      matchBrand = itemBrand === ordersBrandFilter;
+    }
+    let matchQ = true;
+    if (q) {
+      const haystack = [o.id, o.customer, o.phone || '', o.email || '', o.address || '', ...(o.items || []).map(i => i.name)].join(' ').toLowerCase();
+      matchQ = haystack.includes(q);
+    }
+    return matchType && matchStatus && matchBrand && matchQ;
+  });
+
+  // Sort
+  list.sort((a, b) => {
+    if (ordersSortBy === 'date-desc') return b.id - a.id;
+    if (ordersSortBy === 'date-asc') return a.id - b.id;
+    if (ordersSortBy === 'total-desc') return (b.grandTotal || 0) - (a.grandTotal || 0);
+    if (ordersSortBy === 'total-asc') return (a.grandTotal || 0) - (b.grandTotal || 0);
+    if (ordersSortBy === 'id-desc') return b.id - a.id;
+    return 0;
+  });
+  return list;
+}
+
+function renderOrdersTable() {
+  const list = getFilteredOrders();
+  const q = ($('#ordersSearch').value || '').trim();
+  const body = $('#ordersTbody');
+  if (list.length === 0) {
+    body.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-3)">No orders match your filters. <a href="#" id="ordersReset" style="color:var(--accent)">Reset filters</a></td></tr>`;
+    const reset = $('#ordersReset');
+    if (reset) reset.onclick = (e) => { e.preventDefault(); resetOrdersFilters(); renderOrdersTable(); renderOrdersStats(); };
+    return;
+  }
+  body.innerHTML = list.map((o, idx) => {
+    const typePill = `<span class="order-type-pill ${o.type.toLowerCase()}">${o.type}</span>`;
+    const statusPill = `<span class="order-status-pill ${statusClass(o.status)}">${o.status.replace(/^Order /, '')}</span>`;
+    const itemsLabel = o.items.length === 1
+      ? `<span class="order-items">${highlight(truncate(o.items[0].name, 60), q)}</span>`
+      : `<span class="order-items"><span class="ix">${o.items.length}×</span> items — ${formatCurrency(o.subtotal)} subtotal</span>`;
+    const totalDue = o.due && o.due > 0 ? `<div style="font-size:10px;color:var(--amber);font-weight:800;margin-top:2px">+ Due ৳${o.due.toLocaleString('en-IN')}</div>` : '';
+    return `
+      <tr data-order-idx="${ORDERS_DATA.indexOf(o)}">
+        <td><span class="order-id">#${o.id}</span></td>
+        <td style="font-size:11px">${highlight(shortDate(o.date), q)}</td>
+        <td>
+          <div class="order-customer">${highlight(o.customer, q)}</div>
+          <div class="order-phone">${highlight(o.phone || '—', q)}</div>
+        </td>
+        <td>${itemsLabel}</td>
+        <td>${typePill}</td>
+        <td>
+          <div class="order-amt">${formatCurrency(o.grandTotal)}</div>
+          ${totalDue}
+        </td>
+        <td>${statusPill}</td>
+        <td><button class="btn btn-sm btn-primary" data-order-view="${ORDERS_DATA.indexOf(o)}">View</button></td>
+      </tr>
+    `;
+  }).join('');
+
+  // Wire view buttons
+  $$('[data-order-view]').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const idx = +btn.dataset.orderView;
+      openOrderDetail(ORDERS_DATA[idx]);
+    };
+  });
+  // Wire row click
+  $$('#ordersTbody tr').forEach(tr => {
+    tr.onclick = () => {
+      const idx = +tr.dataset.orderIdx;
+      openOrderDetail(ORDERS_DATA[idx]);
+    };
+  });
+}
+
+function truncate(s, n) {
+  if (!s) return '';
+  return s.length > n ? s.slice(0, n - 1) + '…' : s;
+}
+
+function openOrderDetail(order) {
+  activeOrderId = order.id;
+  const idx = ORDERS_DATA.indexOf(order);
+  $('#orderDetailSub').innerHTML = `
+    <span style="font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--accent)">#${order.id}</span> ·
+    <strong style="color:var(--text)">${shortDate(order.date)}</strong> ·
+    ${order.type} order
+  `;
+
+  const brandOfFirst = detectBrand((order.items[0] || {}).name || '');
+  const itemsHtml = order.items.map(it => {
+    const partMatch = it.name.match(/Part\s*no[:.]?\s*([A-Z0-9\- &,]+)/i);
+    const partNo = partMatch ? partMatch[1].split(/[&,]/)[0].trim() : '';
+    return `
+      <div class="om-item">
+        <div class="oi-name">${it.name}</div>
+        ${partNo ? `<div class="oi-part">Part: ${partNo}</div>` : ''}
+        <div class="oi-meta">
+          <span><span class="qty">${it.qty}×</span> @ ৳${it.price.toLocaleString('en-IN')}</span>
+          <span style="color:var(--green);font-weight:800">৳ ${(it.qty * it.price).toLocaleString('en-IN')}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const isPartial = order.due > 0;
+  const statusPill = `<span class="order-status-pill ${statusClass(order.status)}">${order.status.replace(/^Order /, '')}</span>`;
+
+  $('#orderDetailBody').innerHTML = `
+    <div class="om-section">
+      <h4>👤 Customer · কাস্টমার</h4>
+      <div class="om-customer-name">${order.customer}</div>
+      <div class="om-customer-phone">📞 ${order.phone || '—'}</div>
+      ${order.email ? `<div class="om-customer-email">✉️ ${order.email}</div>` : ''}
+      <div class="om-customer-addr">📍 ${order.address || 'No address on file'}</div>
+      <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+        ${order.phone ? `<a class="btn btn-sm" href="tel:${order.phone}">📞 Call</a>` : ''}
+        ${order.phone ? `<a class="btn btn-sm" style="background:#25d366;border-color:#25d366;color:#fff" href="https://wa.me/${String(order.phone).replace(/[^0-9]/g,'')}?text=${encodeURIComponent('Hello ' + order.customer + ', regarding your order #' + order.id + ' — BikePartsBD Jashore')}" target="_blank">💬 WhatsApp</a>` : ''}
+      </div>
+    </div>
+
+    <div class="om-section">
+      <h4>📦 Items · ${order.items.length} পার্টস</h4>
+      <div class="om-items-list">${itemsHtml}</div>
+    </div>
+
+    <div class="om-section om-pricing">
+      <h4>💰 Pricing · মূল্য</h4>
+      <div class="om-row"><span class="k">Subtotal · সাবটোটাল</span><span class="v">${formatCurrency(order.subtotal)}</span></div>
+      <div class="om-row"><span class="k">Delivery Charge · ডেলিভারি চার্জ</span><span class="v">${formatCurrency(order.delivery || 0)}</span></div>
+      <div class="om-row"><span class="k">Discount · ডিসকাউন্ট</span><span class="v">${order.discount ? formatCurrency(order.discount) : '৳ 0.00'}</span></div>
+      <div class="om-row"><span class="k">VAT · ভ্যাট</span><span class="v">${order.vat ? `${formatCurrency(order.vat)} (${order.vat}${typeof order.vat === 'number' && order.vat < 100 ? '%' : ''})` : '৳ 0.00'}</span></div>
+      <div class="om-row total"><span class="k bold">Grand Total · সর্বমোট</span><span class="v">${formatCurrency(order.grandTotal)}</span></div>
+      <div class="om-row" style="margin-top:6px"><span class="k">Paid · পরিশোধিত</span><span class="v" style="color:var(--green)">${formatCurrency(order.paid || 0)}</span></div>
+      ${isPartial ? `<div class="om-row"><span class="k">Due / বাকি</span><span class="v" style="color:var(--amber)">${formatCurrency(order.due)}</span></div>` : ''}
+    </div>
+
+    ${order.note ? `<div class="om-section"><h4>📝 Note · নোট</h4><div style="font-size:12px;color:var(--text-2);line-height:1.5">${order.note}</div></div>` : ''}
+
+    <div class="om-section">
+      <h4>🏷 Meta · তথ্য</h4>
+      <div class="om-row"><span class="k">Order Type · ধরন</span><span class="v">${order.type}</span></div>
+      <div class="om-row"><span class="k">Brand (first item) · ব্র্যান্ড</span><span class="v">${brandOfFirst}</span></div>
+      <div class="om-row"><span class="k">Status · অবস্থা</span><span class="v">${statusPill}</span></div>
+    </div>
+  `;
+
+  // Toggle confirm button
+  const confirmBtn = $('#orderDetailConfirm');
+  if (order.status === 'Order Confirmed' || order.status === 'Order Completed' || order.status === 'Order Cancelled') {
+    confirmBtn.style.display = 'none';
+  } else {
+    confirmBtn.style.display = '';
+    confirmBtn.onclick = () => {
+      ORDERS_DATA[idx].status = 'Order Confirmed';
+      closeOrderDetail();
+      renderOrdersTable();
+      renderOrdersStats();
+      toast('success', 'Order confirmed', `#${order.id} • ${order.customer} • ৳${order.grandTotal.toLocaleString('en-IN')}`);
+    };
+  }
+  $('#orderDetailModal').classList.add('show');
+}
+
+function closeOrderDetail() {
+  $('#orderDetailModal').classList.remove('show');
+  activeOrderId = null;
+}
+
+function resetOrdersFilters() {
+  ordersBrandFilter = 'ALL';
+  ordersTypeFilter = 'ALL';
+  ordersStatusFilter = 'ALL';
+  ordersSortBy = 'date-desc';
+  $('#ordersSearch').value = '';
+  $('#ordersTypeFilter').value = 'ALL';
+  $('#ordersStatusFilter').value = 'ALL';
+  $('#ordersSortBy').value = 'date-desc';
+  $$('[data-brand]').forEach(b => {
+    b.classList.toggle('btn-primary', b.dataset.brand === 'ALL');
+    b.classList.toggle('btn-ghost', b.dataset.brand !== 'ALL');
+  });
+}
+
+// Wire orders module
+$('#ordersSearch').oninput = renderOrdersTable;
+$('#ordersTypeFilter').onchange = (e) => { ordersTypeFilter = e.target.value; renderOrdersTable(); };
+$('#ordersStatusFilter').onchange = (e) => { ordersStatusFilter = e.target.value; renderOrdersTable(); };
+$('#ordersSortBy').onchange = (e) => { ordersSortBy = e.target.value; renderOrdersTable(); };
+$$('[data-brand]').forEach(b => {
+  b.onclick = () => {
+    $$('[data-brand]').forEach(x => { x.classList.remove('btn-primary'); x.classList.add('btn-ghost'); });
+    b.classList.add('btn-primary');
+    b.classList.remove('btn-ghost');
+    ordersBrandFilter = b.dataset.brand;
+    renderOrdersTable();
+  };
+});
+
+$('#ordersExportBtn').onclick = () => {
+  const rows = ['Order ID,Date,Customer,Phone,Email,Type,Status,Brand,Items,Subtotal,Delivery,Discount,VAT,Grand Total,Paid,Due'];
+  ORDERS_DATA.forEach(o => {
+    const brand = detectBrand((o.items[0] || {}).name || '');
+    const itemsStr = o.items.map(i => `${i.qty}x ${i.name}`).join(' | ');
+    rows.push([
+      o.id,
+      `"${o.date}"`,
+      `"${o.customer}"`,
+      o.phone || '',
+      o.email || '',
+      o.type,
+      o.status,
+      brand,
+      `"${itemsStr.replace(/"/g, "'")}"`,
+      o.subtotal || 0,
+      o.delivery || 0,
+      o.discount || 0,
+      o.vat || 0,
+      o.grandTotal || 0,
+      o.paid || 0,
+      o.due || 0
+    ].join(','));
+  });
+  const csv = rows.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `bikepartsbd-orders-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  toast('success', 'Orders exported', `${ORDERS_DATA.length} rows → CSV.`);
+};
+
+$('#ordersNewBtn').onclick = () => toast('warn', 'Coming soon', 'Manual order entry is the next milestone (Priority #2).');
+
+$('#orderDetailClose').onclick = closeOrderDetail;
+$('#orderDetailModal').onclick = (e) => { if (e.target === $('#orderDetailModal')) closeOrderDetail(); };
+
+$('#orderDetailPrint').onclick = () => {
+  if (!activeOrderId) return;
+  window.print();
+};
+
+// Initial render
+renderOrdersStats();
+renderOrdersTable();
 
 /* After initial render, allow real-time toasts */
 setTimeout(() => { isFirstLoad = false; }, 1500);
