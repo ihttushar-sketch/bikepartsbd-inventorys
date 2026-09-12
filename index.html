@@ -5072,61 +5072,6 @@ function wrapPages() {
   });
 }
 
-function buildReportsPage() {
-  const wrap = document.getElementById('page-reports');
-  if (!wrap) return;
-
-  // Top stats
-  const stats = document.createElement('div');
-  stats.className = 'pl-summary';
-  stats.id = 'reportsTopStats';
-  wrap.appendChild(stats);
-
-  // Charts row
-  const chartsRow = document.createElement('div');
-  chartsRow.className = 'reports-grid';
-  chartsRow.innerHTML = `
-    <div class="chart-card">
-      <h3>📈 Sales Trend · বিক্রয় প্রবণতা (Last 7 days)</h3>
-      <svg class="chart-svg" id="salesChart" viewBox="0 0 600 220" preserveAspectRatio="none"></svg>
-    </div>
-    <div class="chart-card">
-      <h3>🥧 Expense Breakdown · খরচের ভাগ</h3>
-      <div id="expenseBreakdown"></div>
-    </div>
-  `;
-  wrap.appendChild(chartsRow);
-
-  // Detail stats
-  const detail = document.createElement('div');
-  detail.className = 'reports-grid';
-  detail.innerHTML = `
-    <div class="chart-card">
-      <h3>📊 Top Products · সেরা পণ্য</h3>
-      <div id="topProductsList"></div>
-    </div>
-    <div class="chart-card">
-      <h3>💸 Top Expenses · প্রধান খরচ</h3>
-      <div id="topExpensesList"></div>
-    </div>
-  `;
-  wrap.appendChild(detail);
-
-  // Export buttons
-  const exports = document.createElement('div');
-  exports.className = 'export-row';
-  exports.style.marginTop = '18px';
-  exports.innerHTML = `
-    <button class="btn" id="expSales">⬇ Export Sales CSV</button>
-    <button class="btn" id="expExpenses">⬇ Export Expenses CSV</button>
-    <button class="btn" id="expBalance">⬇ Export Balance Sheet CSV</button>
-    <button class="btn btn-primary" id="expFull">⬇ Export Full Report (CSV)</button>
-    <button class="btn" onclick="window.print()">🖨 Print Report</button>
-  `;
-  wrap.appendChild(exports);
-
-  renderReportsCharts();
-}
 
 /* ============================================================
    ADVANCED ANALYTICS RENDERERS
