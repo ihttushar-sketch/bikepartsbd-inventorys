@@ -1225,9 +1225,216 @@
   .crm-stat { font-size: 11px; }
   .crm-stat .cs-value { font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; display: block; }
   .crm-stat .cs-label { color: var(--text-3); font-size: 9px; text-transform: uppercase; letter-spacing: .3px; }
+
+  /* ============================================================
+     TOP HEADER BAR
+     ============================================================ */
+  .top-header {
+    position: fixed; top: 0; left: 240px; right: 0; height: 56px;
+    background: var(--surface); border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; padding: 0 18px; z-index: 99;
+    backdrop-filter: blur(8px);
+  }
+  .top-header-left { display: flex; align-items: center; gap: 14px; flex: 1; }
+  .top-header-right { display: flex; align-items: center; gap: 10px; }
+  .hamburger {
+    width: 32px; height: 32px; border: 1px solid var(--line); background: var(--bg-2);
+    border-radius: 6px; cursor: pointer; color: var(--text-2); display: grid; place-items: center;
+  }
+  .hamburger:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .header-brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark-red {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff; display: grid; place-items: center; font-weight: 900; font-size: 16px;
+  }
+  .header-brand-text .a { font-weight: 900; font-size: 14px; letter-spacing: -.2px; }
+  .header-brand-text .b { font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: .8px; margin-top: 1px; }
+  .header-divider { width: 1px; height: 28px; background: var(--line); margin: 0 6px; }
+  .header-org { display: flex; align-items: center; gap: 8px; }
+  .org-mark { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #ff3838, #b71c1c); display: grid; place-items: center; font-weight: 900; color: #fff; font-size: 12px; }
+  .top-nav { display: flex; align-items: center; gap: 4px; margin: 0 16px; }
+  .top-nav-link {
+    padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--text-2);
+    border-radius: 6px; cursor: pointer; transition: all .15s;
+  }
+  .top-nav-link:hover { background: var(--bg-2); color: var(--text); }
+  .top-nav-link.active { color: var(--accent); }
+  .header-search {
+    display: flex; align-items: center; gap: 6px; background: var(--bg-2);
+    border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px;
+    width: 240px; color: var(--text-3);
+  }
+  .header-search input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-size: 12px; font-family: inherit; }
+  .header-search input::placeholder { color: var(--text-3); }
+  .header-icon-btn {
+    width: 36px; height: 36px; background: transparent; border: 1px solid var(--line);
+    border-radius: 8px; color: var(--text-2); cursor: pointer; display: grid; place-items: center;
+    position: relative; transition: all .15s;
+  }
+  .header-icon-btn:hover { background: var(--bg-2); color: var(--text); }
+  .notif-dot {
+    position: absolute; top: 6px; right: 6px; width: 8px; height: 8px;
+    background: var(--accent); border-radius: 50%; border: 2px solid var(--surface);
+  }
+  .notif-dot.hidden { display: none; }
+  .btn-logout {
+    display: flex; align-items: center; gap: 6px; padding: 7px 12px;
+    background: transparent; border: 1px solid var(--line); border-radius: 8px;
+    color: var(--text-2); font-size: 12px; font-weight: 600; cursor: pointer;
+    font-family: inherit; transition: all .15s;
+  }
+  .btn-logout:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  @media (max-width: 900px) {
+    .top-header { left: 0; padding: 0 12px; }
+    .top-nav, .header-org, .header-divider { display: none; }
+    .header-search { width: 160px; }
+  }
+  @media (max-width: 600px) {
+    .header-brand-text .b { display: none; }
+    .header-search { display: none; }
+  }
+
+  /* Body padding-top for header */
+  body { padding-top: 56px !important; }
+
+  /* ============================================================
+     KPI CARD GRID (consistent across pages)
+     ============================================================ */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px; margin-bottom: 18px;
+  }
+  .kpi-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; transition: all .15s; position: relative; overflow: hidden;
+  }
+  .kpi-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--kpi-color, var(--accent)); }
+  .kpi-card .kpi-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: .5px; font-weight: 700; }
+  .kpi-card .kpi-value { font-size: 22px; font-weight: 900; font-family: 'JetBrains Mono', monospace; margin-top: 6px; letter-spacing: -.5px; color: var(--kpi-color, var(--text)); }
+  .kpi-card .kpi-sub { font-size: 11px; color: var(--text-3); margin-top: 4px; line-height: 1.4; }
+
+  /* ============================================================
+     FILTER ROW (consistent pattern)
+     ============================================================ */
+  .filter-row {
+    display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .filter-row input[type="text"], .filter-row input[type="search"] {
+    flex: 1; min-width: 180px; background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 6px; padding: 7px 12px; color: var(--text); font-size: 12px;
+    font-family: inherit;
+  }
+  .filter-row input:focus { outline: none; border-color: var(--accent); }
+  .filter-row select {
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px;
+    padding: 7px 12px; color: var(--text); font-size: 12px; cursor: pointer;
+    font-family: inherit; min-width: 130px;
+  }
+  .filter-pills { display: flex; gap: 4px; flex-wrap: wrap; }
+  .filter-pill {
+    padding: 5px 12px; font-size: 11px; font-weight: 700; border-radius: 6px;
+    background: var(--bg-2); color: var(--text-2); border: 1px solid var(--line);
+    cursor: pointer; transition: all .15s;
+  }
+  .filter-pill:hover { background: var(--surface-2); }
+  .filter-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* ============================================================
+     ACTION BUTTONS ROW
+     ============================================================ */
+  .action-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
+  }
+  .action-row .left { display: flex; gap: 8px; flex-wrap: wrap; }
+  .action-row .right { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* ============================================================
+     DATA TABLE (clean, scannable)
+     ============================================================ */
+  .data-table {
+    width: 100%; border-collapse: collapse; background: var(--surface);
+    border-radius: 10px; overflow: hidden; border: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .data-table thead th {
+    background: var(--bg-2); padding: 12px 14px; text-align: left;
+    font-size: 10px; text-transform: uppercase; letter-spacing: .6px;
+    color: var(--text-3); font-weight: 700; border-bottom: 1px solid var(--line);
+  }
+  .data-table tbody td { padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  .data-table tbody tr:hover { background: var(--bg-2); }
+  .data-table tbody tr:last-child td { border-bottom: none; }
+
+  .status-badge {
+    display: inline-block; padding: 4px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 700;
+  }
+  .status-badge.completed, .status-badge.success { background: rgba(0, 214, 143, .15); color: var(--green); }
+  .status-badge.pending, .status-badge.warn { background: rgba(255, 176, 32, .15); color: var(--amber); }
+  .status-badge.cancelled, .status-badge.failed, .status-badge.danger { background: rgba(225, 6, 0, .15); color: var(--accent); }
+  .status-badge.info { background: rgba(168, 85, 247, .15); color: #a855f7; }
+
+  /* Page title + breadcrumb polish */
+  .page-heading { margin-bottom: 16px; }
+  .page-heading h1 { font-size: 24px; font-weight: 900; margin: 0; letter-spacing: -.5px; }
+  .page-heading .sub { font-size: 13px; color: var(--text-3); margin-top: 4px; line-height: 1.5; }
 </style>
 </head>
 <body>
+
+<!-- ====================== TOP HEADER BAR ====================== -->
+<header class="top-header" id="topHeader">
+  <div class="top-header-left">
+    <button class="hamburger" id="hamburgerBtn" title="Toggle sidebar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="header-brand">
+      <div class="brand-mark-red">BP</div>
+      <div class="header-brand-text">
+        <div class="a">BikePartsBD.net</div>
+        <div class="b">KAYI CORPORATION — INVENTORY OS</div>
+      </div>
+    </div>
+    <div class="header-divider"></div>
+    <div class="header-org">
+      <div class="org-mark">KC</div>
+      <div>
+        <div style="font-weight:800;font-size:12px">Kayi Corp.</div>
+        <div style="font-size:10px;color:var(--text-3)">Admin</div>
+      </div>
+    </div>
+  </div>
+  <nav class="top-nav">
+    <a class="top-nav-link active" data-jump="inventory">Inventory</a>
+    <a class="top-nav-link" data-jump="orders">Orders</a>
+    <a class="top-nav-link" data-jump="vendors">Suppliers</a>
+    <a class="top-nav-link" data-jump="reports">Reports</a>
+  </nav>
+  <div class="top-header-right">
+    <div class="header-search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="globalSearch" placeholder="Search SKU, name, or brand…" />
+    </div>
+    <button class="header-icon-btn" id="themeToggleBtn" title="Toggle theme">
+      <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <button class="header-icon-btn" id="notifBellBtn" title="Notifications">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="notif-dot" id="notifDot"></span>
+    </button>
+    <div class="header-divider"></div>
+    <button class="btn-logout" title="Logout">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Logout
+    </button>
+  </div>
+</header>
 
 <!-- ====================== SIDEBAR NAVIGATION ====================== -->
 <aside class="sidebar" id="sidebar">
@@ -1242,8 +1449,11 @@
   </div>
   <nav class="sidebar-nav">
     <div class="sidebar-section-label">Main · প্রধান</div>
-    <button class="sidebar-item active" data-page="dashboard">
+    <button class="sidebar-item active" data-page="execdash">
       <span class="si-ico">🏠</span><span class="si-label">Dashboard</span>
+    </button>
+    <button class="sidebar-item" data-page="dashboard">
+      <span class="si-ico">📊</span><span class="si-label">Inventory View</span>
     </button>
     <button class="sidebar-item" data-page="inventory">
       <span class="si-ico">📦</span><span class="si-label">Inventory</span>
@@ -1316,7 +1526,7 @@
 
 <!-- Mobile bottom nav -->
 <nav class="bottom-nav" id="bottomNav">
-  <button class="bottom-nav-item active" data-page="dashboard"><span class="bni-ico">🏠</span>Home</button>
+  <button class="bottom-nav-item active" data-page="execdash"><span class="bni-ico">🏠</span>Home</button>
   <button class="bottom-nav-item" data-page="inventory"><span class="bni-ico">📦</span>Stock</button>
   <button class="bottom-nav-item" data-page="orders"><span class="bni-ico">📋</span>Orders</button>
   <button class="bottom-nav-item" data-page="money"><span class="bni-ico">💰</span>Money</button>
@@ -1364,6 +1574,21 @@
 <div class="page" id="mainPage">
 
   <!-- BULK IMPORT PAGE -->
+  <!-- EXECUTIVE DASHBOARD -->
+  <div class="execdash-page-marker"></div>
+  <div class="page-head">
+    <div>
+      <h1>Executive Dashboard · নির্বাহী ড্যাশবোর্ড</h1>
+      <p>Real-time business overview — sales, expenses, low stock, recent activity.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="navigateTo('reports')">📊 Full Reports →</button>
+      <button class="btn btn-primary" onclick="navigateTo('orders')">+ New Order</button>
+    </div>
+  </div>
+
+  <div id="execdashContent"></div>
+
   <div class="bulk-import-page-marker"></div>
   <div class="page-head">
     <div>
@@ -4399,7 +4624,8 @@ function wrapPages() {
   for (const el of children) {
     if (el.classList && el.classList.contains('page-head')) {
       const txt = el.textContent;
-      if (txt.includes('Inventory Dashboard')) mode = 'dashboard';
+      if (txt.includes('Executive Dashboard')) mode = 'execdash';
+      else if (txt.includes('Inventory Dashboard')) mode = 'dashboard';
       else if (txt.includes('Bulk Inventory Import')) mode = 'bulkimport';
       else if (txt.includes('Invoice Generator')) mode = 'invoice';
       else if (txt.includes('WhatsApp Auto-Reply')) mode = 'whatsapp';
@@ -5400,6 +5626,56 @@ $$('.sidebar-item').forEach(item => {
 $$('.bottom-nav-item').forEach(item => {
   item.onclick = () => navigateTo(item.dataset.page);
 });
+
+// Wire top-nav links (Inventory / Orders / Suppliers / Reports)
+document.querySelectorAll('.top-nav-link').forEach(link => {
+  link.onclick = () => {
+    const page = link.dataset.jump;
+    if (page) navigateTo(page);
+    document.querySelectorAll('.top-nav-link').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  };
+});
+
+// Hamburger toggle
+const hamburger = document.getElementById('hamburgerBtn');
+if (hamburger) {
+  hamburger.onclick = () => {
+    document.body.classList.toggle('sidebar-collapsed');
+  };
+}
+
+// Global search (jumps to inventory + filters)
+const globalSearch = document.getElementById('globalSearch');
+if (globalSearch) {
+  let searchTimeout;
+  globalSearch.addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      const q = e.target.value.trim().toLowerCase();
+      if (!q) return;
+      navigateTo('inventory');
+      const searchInput = document.querySelector('input[data-inv-search]');
+      if (searchInput) { searchInput.value = q; searchInput.dispatchEvent(new Event('input')); }
+    }, 300);
+  });
+}
+
+// Notification bell → navigate to notifications
+const notifBell = document.getElementById('notifBellBtn');
+if (notifBell) {
+  notifBell.onclick = () => navigateTo('notifications');
+}
+
+// Update notification dot visibility
+function updateNotifDot() {
+  const dot = document.getElementById('notifDot');
+  if (!dot) return;
+  const notifs = typeof getNotifications === 'function' ? getNotifications() : [];
+  dot.classList.toggle('hidden', notifs.length === 0);
+}
+setInterval(updateNotifDot, 5000);
+updateNotifDot();
 
 // Live clock in sidebar foot
 function updateClock() {
@@ -6509,6 +6785,159 @@ function callCustomer(phone) {
   window.location.href = `tel:${phone}`;
 }
 
+/* ============================================================
+   EXECUTIVE DASHBOARD (CEO-grade, scannable)
+   ============================================================ */
+function renderExecutiveDashboard() {
+  const el = document.getElementById('execdashContent');
+  if (!el) return;
+
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const weekStart = new Date(todayStart); weekStart.setDate(weekStart.getDate() - 6);
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const orders = ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed');
+
+  const todaySales = orders.filter(o => new Date(o.date) >= todayStart).reduce((s, o) => s + (o.paid || 0), 0);
+  const todayOrders = orders.filter(o => new Date(o.date) >= todayStart).length;
+
+  const weekSales = orders.filter(o => new Date(o.date) >= weekStart).reduce((s, o) => s + (o.paid || 0), 0);
+  const weekOrders = orders.filter(o => new Date(o.date) >= weekStart).length;
+
+  const monthSales = orders.filter(o => new Date(o.date) >= monthStart).reduce((s, o) => s + (o.paid || 0), 0);
+  const monthOrders = orders.filter(o => new Date(o.date) >= monthStart).length;
+  const monthExpenses = transactions.filter(t => t.type === 'OUT' && new Date(t.date) >= monthStart).reduce((s, t) => s + t.amount, 0);
+  const monthProfit = monthSales - monthExpenses;
+
+  const lowStock = parts.filter(p => p.stock <= 10).length;
+
+  // 7-day sales chart data
+  const last7 = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(todayStart); d.setDate(d.getDate() - i);
+    const dayOrders = orders.filter(o => new Date(o.date).toDateString() === d.toDateString());
+    last7.push({ date: d, sales: dayOrders.reduce((s, o) => s + (o.paid || 0), 0), count: dayOrders.length });
+  }
+  const max7 = Math.max(...last7.map(d => d.sales), 1);
+
+  // Online vs Offline split
+  const onlineOrders = ORDERS_DATA.filter(o => o.courier && o.courier.toLowerCase().includes('pathao') && (o.status === 'Order Confirmed' || o.status === 'Order Completed'));
+  const offlineOrders = ORDERS_DATA.filter(o => !o.courier || !o.courier.toLowerCase().includes('pathao'));
+  const onlineSales = onlineOrders.reduce((s, o) => s + (o.paid || 0), 0);
+  const offlineSales = offlineOrders.reduce((s, o) => s + (o.paid || 0), 0);
+
+  // Recent sales (5 latest)
+  const recentSales = ORDERS_DATA.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+
+  // Low stock items
+  const lowStockItems = parts.filter(p => p.stock <= 10).slice(0, 5);
+
+  // SVG 7-day chart
+  const W = 600, H = 200, PAD = 30;
+  const barW = (W - PAD * 2) / 7 - 8;
+  let chartBars = '', chartLabels = '';
+  last7.forEach((d, i) => {
+    const x = PAD + i * ((W - PAD * 2) / 7) + 4;
+    const barH = (d.sales / max7) * (H - PAD * 2);
+    const y = H - PAD - barH;
+    chartBars += `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" fill="url(#barGrad)" rx="3"><title>${d.date.toLocaleDateString('en-GB')}: ${formatCurrency(d.sales)} (${d.count} orders)</title></rect>`;
+    chartBars += `<text x="${x + barW / 2}" y="${H - 10}" text-anchor="middle" font-size="9" fill="var(--text-3)">${d.date.getDate()}/${d.date.getMonth() + 1}</text>`;
+  });
+
+  el.innerHTML = `
+    <div class="kpi-grid">
+      <div class="kpi-card" style="--kpi-color:var(--accent)">
+        <div class="kpi-label">Today · আজকের</div>
+        <div class="kpi-value">${formatCurrency(todaySales)}</div>
+        <div class="kpi-sub">${todayOrders} orders · ${todayOrders > 0 ? formatCurrency(todaySales / todayOrders) : '৳0'} avg</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color:#a855f7">
+        <div class="kpi-label">This Week · এই সপ্তাহ</div>
+        <div class="kpi-value">${formatCurrency(weekSales)}</div>
+        <div class="kpi-sub">${weekOrders} orders · last 7 days</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color:var(--green)">
+        <div class="kpi-label">This Month · এই মাস</div>
+        <div class="kpi-value">${formatCurrency(monthSales)}</div>
+        <div class="kpi-sub">${monthOrders} orders · Profit ${formatCurrency(monthProfit)}</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color:var(--amber)">
+        <div class="kpi-label">Low Stock · কম স্টক</div>
+        <div class="kpi-value">${lowStock}</div>
+        <div class="kpi-sub">Products at/below threshold · need restock</div>
+      </div>
+    </div>
+
+    <div class="reports-grid">
+      <div class="chart-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <h3 style="margin:0">📊 Last 7 days sales · গত ৭ দিনের বিক্রি</h3>
+        </div>
+        <svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="barGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#e10600" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#e10600" stop-opacity="0.4"/>
+            </linearGradient>
+          </defs>
+          ${chartBars}
+        </svg>
+      </div>
+      <div class="chart-card">
+        <h3 style="margin:0 0 10px">🔀 Online vs Offline · অনলাইন বনাম অফলাইন</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:14px">
+          <div style="padding:14px 16px;background:var(--bg-2);border-radius:8px;border-left:3px solid #0084ff">
+            <div style="font-size:11px;color:var(--text-3);text-transform:uppercase;font-weight:700;letter-spacing:.4px">Online / অনলাইন</div>
+            <div style="font-size:20px;font-weight:900;font-family:'JetBrains Mono',monospace;margin-top:4px">${formatCurrency(onlineSales)}</div>
+            <div style="font-size:11px;color:var(--text-3);margin-top:2px">${onlineOrders.length} orders · Pathao</div>
+          </div>
+          <div style="padding:14px 16px;background:var(--bg-2);border-radius:8px;border-left:3px solid var(--accent)">
+            <div style="font-size:11px;color:var(--text-3);text-transform:uppercase;font-weight:700;letter-spacing:.4px">Offline POS / অফলাইন</div>
+            <div style="font-size:20px;font-weight:900;font-family:'JetBrains Mono',monospace;margin-top:4px">${formatCurrency(offlineSales)}</div>
+            <div style="font-size:11px;color:var(--text-3);margin-top:2px">${offlineOrders.length} orders · Walk-in</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reports-grid" style="margin-top:14px">
+      <div class="chart-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <h3 style="margin:0">📦 Recent Sales · সাম্প্রতিক বিক্রি</h3>
+          <button class="btn btn-sm" onclick="navigateTo('orders')">View all →</button>
+        </div>
+        ${recentSales.map(o => `
+          <div style="display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);gap:10px">
+            <div style="flex:1">
+              <div style="font-weight:800;font-size:13px">${o.id}</div>
+              <div style="font-size:11px;color:var(--text-3);margin-top:2px">${o.customer} · ${o.items.length} items · ${new Date(o.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</div>
+            </div>
+            <div style="font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--green);min-width:80px;text-align:right">${formatCurrency(o.grandTotal)}</div>
+            <span class="status-badge ${o.status.includes('Cancel') ? 'cancelled' : o.status.includes('Pending') ? 'pending' : 'completed'}">${o.status.replace('Order ', '')}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="chart-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <h3 style="margin:0">🚨 Low Stock Alerts · কম স্টক</h3>
+          <button class="btn btn-sm" onclick="navigateTo('inventory')">Inventory →</button>
+        </div>
+        ${lowStockItems.length === 0 ? '<div class="empty-state"><div class="es-ico">✅</div><div class="es-t">All stocked!</div></div>' : lowStockItems.map(p => `
+          <div style="display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);gap:10px">
+            <div style="font-size:20px">📦</div>
+            <div style="flex:1">
+              <div style="font-weight:700;font-size:12px">${p.name}</div>
+              <div style="font-size:10px;color:var(--text-3);margin-top:2px">${p.bangla || p.category || 'Part'}</div>
+            </div>
+            <span class="status-badge ${p.stock === 0 ? 'cancelled' : 'pending'}" style="font-family:'JetBrains Mono',monospace">${p.stock} / ${p.reorder || 5}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
 function renderExecutiveReport() {
   const el = document.getElementById('execReportContent');
   if (!el) return;
@@ -7123,6 +7552,7 @@ renderStaffPerformance();
 renderVendorStock();
 renderNotificationsPage();
 renderExecutiveReport();
+renderExecutiveDashboard();
 renderCRM();
 
 /* ============================================================
