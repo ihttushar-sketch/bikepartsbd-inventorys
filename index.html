@@ -322,12 +322,29 @@
   }
   .modal-backdrop.show { display: flex; animation: fadeIn .2s; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  /* Wrapper pattern: <div class="modal" id="..." style="display:none"> */
+  .modal[style*="flex"], .modal[style*="block"] {
+    position: fixed; inset: 0; background: var(--modal-backdrop); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center; z-index: 100;
+    animation: fadeIn .2s;
+  }
   .modal {
     background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
     width: 100%; max-width: 560px; padding: 24px;
     box-shadow: var(--shadow);
     animation: slideUp .25s ease-out;
   }
+  .modal-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    width: 100%; max-width: 560px; padding: 0;
+    box-shadow: var(--shadow);
+    animation: slideUp .25s ease-out;
+    max-height: 90vh; overflow-y: auto;
+  }
+  .modal-card .modal-head { padding: 18px 22px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+  .modal-card .modal-head h3 { margin: 0; font-size: 16px; font-weight: 800; }
+  .modal-card .modal-body { padding: 18px 22px; }
+  .modal-card .modal-foot { padding: 14px 22px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 8px; }
   @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   .modal h2 { margin: 0 0 4px; font-size: 20px; font-weight: 800; }
   .modal .sub { color: var(--text-3); font-size: 12px; margin-bottom: 20px; }
@@ -1553,7 +1570,7 @@
     <div class="topbar-spacer"></div>
     <div class="topbar-search">
       <span style="color:var(--text-3)">🔍</span>
-      <input type="text" placeholder="Search SKU, name, or brand…" id="searchInput" />
+      <input type="text" placeholder="Search SKU, name, or brand…" id="searchInput" data-inv-search />
     </div>
     <button class="theme-toggle" id="themeToggle" title="Toggle theme / থিম পরিবর্তন" aria-label="Toggle theme">
       <span class="theme-icon-dark">🌙</span>
@@ -5654,9 +5671,20 @@ if (globalSearch) {
     searchTimeout = setTimeout(() => {
       const q = e.target.value.trim().toLowerCase();
       if (!q) return;
-      navigateTo('inventory');
-      const searchInput = document.querySelector('input[data-inv-search]');
-      if (searchInput) { searchInput.value = q; searchInput.dispatchEvent(new Event('input')); }
+      // Smart routing — detect query type
+      if (/^#?\d{6,}$/.test(q)) {
+        navigateTo('orders');
+        const ordersSearch = document.getElementById('ordersSearch');
+        if (ordersSearch) { ordersSearch.value = q.replace(/^#/, ''); ordersSearch.dispatchEvent(new Event('input')); }
+      } else if (/^[\d+\-\s]{8,}$/.test(q)) {
+        navigateTo('crm');
+        const crmSearch = document.getElementById('crmSearch');
+        if (crmSearch) { crmSearch.value = q; crmSearch.dispatchEvent(new Event('input')); }
+      } else {
+        navigateTo('inventory');
+        const searchInput = document.querySelector('input[data-inv-search]');
+        if (searchInput) { searchInput.value = q; searchInput.dispatchEvent(new Event('input')); }
+      }
     }, 300);
   });
 }
@@ -5687,6 +5715,20 @@ function updateClock() {
 setInterval(updateClock, 1000);
 setInterval(() => { if (typeof updateNotifBadge === 'function') updateNotifBadge(); }, 30000);
 updateClock();
+
+// Global modal UX — ESC to close + backdrop click
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal[style*="flex"], .modal[style*="block"]').forEach(m => m.style.display = 'none');
+  }
+});
+
+// Wire modal backdrop click (close when clicking outside modal-card)
+document.querySelectorAll('.modal').forEach(modal => {
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.style.display = 'none';
+  });
+});
 
 // Update Mode indicator
 function updateModeIndicator() {
