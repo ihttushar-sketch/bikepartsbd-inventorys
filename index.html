@@ -1251,31 +1251,12 @@
     <button class="sidebar-item" data-page="bulkimport">
       <span class="si-ico">📥</span><span class="si-label">Bulk Import</span>
     </button>
-    <button class="sidebar-item" data-page="goals">
-      <span class="si-ico">🎯</span><span class="si-label">Sales Goals</span>
-    </button>
     <button class="sidebar-item" data-page="orders">
       <span class="si-ico">📋</span><span class="si-label">Orders</span>
       <span class="si-badge" id="ordersBadge">70</span>
     </button>
     <button class="sidebar-item" data-page="invoice">
       <span class="si-ico">🧾</span><span class="si-label">Invoices</span>
-    </button>
-    <button class="sidebar-item" data-page="whatsapp">
-      <span class="si-ico">📲</span><span class="si-label">WhatsApp</span>
-    </button>
-    <button class="sidebar-item" data-page="staff">
-      <span class="si-ico">🏆</span><span class="si-label">Staff</span>
-    </button>
-    <button class="sidebar-item" data-page="vendorstock">
-      <span class="si-ico">🏪</span><span class="si-label">Vendor Compare</span>
-    </button>
-    <button class="sidebar-item" data-page="notifications">
-      <span class="si-ico">🔔</span><span class="si-label">Notifications</span>
-      <span class="si-badge" id="notifBadgeCount">0</span>
-    </button>
-    <button class="sidebar-item" data-page="execreport">
-      <span class="si-ico">📊</span><span class="si-label">Executive Report</span>
     </button>
     <button class="sidebar-item" data-page="crm">
       <span class="si-ico">👥</span><span class="si-label">Customers</span>
@@ -1285,6 +1266,9 @@
     </button>
     <button class="sidebar-item" data-page="vendors">
       <span class="si-ico">🏪</span><span class="si-label">Vendors</span>
+    </button>
+    <button class="sidebar-item" data-page="vendorstock">
+      <span class="si-ico">⚖️</span><span class="si-label">Vendor Compare</span>
     </button>
 
     <div class="sidebar-section-label">Accounting · হিসাব</div>
@@ -1298,11 +1282,27 @@
     <button class="sidebar-item" data-page="capital">
       <span class="si-ico">🏛️</span><span class="si-label">Capital</span>
     </button>
+    <button class="sidebar-item" data-page="goals">
+      <span class="si-ico">🎯</span><span class="si-label">Sales Goals</span>
+    </button>
     <button class="sidebar-item" data-page="reports">
-      <span class="si-ico">📊</span><span class="si-label">Reports</span>
+      <span class="si-ico">📈</span><span class="si-label">Reports</span>
+    </button>
+    <button class="sidebar-item" data-page="execreport">
+      <span class="si-ico">📊</span><span class="si-label">Executive Report</span>
     </button>
 
     <div class="sidebar-section-label">System · সিস্টেম</div>
+    <button class="sidebar-item" data-page="staff">
+      <span class="si-ico">🏆</span><span class="si-label">Staff</span>
+    </button>
+    <button class="sidebar-item" data-page="whatsapp">
+      <span class="si-ico">📲</span><span class="si-label">WhatsApp</span>
+    </button>
+    <button class="sidebar-item" data-page="notifications">
+      <span class="si-ico">🔔</span><span class="si-label">Notifications</span>
+      <span class="si-badge" id="notifBadgeCount">0</span>
+    </button>
     <button class="sidebar-item" data-page="settings">
       <span class="si-ico">⚙️</span><span class="si-label">Settings & APIs</span>
     </button>
@@ -5375,14 +5375,22 @@ function navigateTo(pageKey) {
   currentPage = pageKey;
   document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
   const target = document.getElementById('page-' + pageKey);
-  if (target) target.classList.add('active');
+  if (!target) {
+    // Fallback to dashboard
+    const fallback = document.getElementById('page-dashboard');
+    if (fallback) fallback.classList.add('active');
+    return;
+  }
+  target.classList.add('active');
   // Update sidebar active state
   document.querySelectorAll('.sidebar-item').forEach(i => i.classList.toggle('active', i.dataset.page === pageKey));
   document.querySelectorAll('.bottom-nav-item').forEach(i => i.classList.toggle('active', i.dataset.page === pageKey));
   // Scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' });
   // Re-render reports if going to reports page
-  if (pageKey === 'reports') renderReportsCharts();
+  if (pageKey === 'reports' && typeof renderReportsCharts === 'function') renderReportsCharts();
+  if (pageKey === 'crm' && typeof renderCRM === 'function') renderCRM();
+  if (pageKey === 'notifications' && typeof renderNotificationsPage === 'function') renderNotificationsPage();
 }
 
 // Wire sidebar + bottom nav clicks
@@ -5395,13 +5403,13 @@ $$('.bottom-nav-item').forEach(item => {
 
 // Live clock in sidebar foot
 function updateClock() {
-  const el = document.getElementById('sfTime');
-  if (el) {
+  const el = document.getElementById('sfTime');  if (el) {
     const d = new Date();
     el.textContent = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   }
 }
 setInterval(updateClock, 1000);
+setInterval(() => { if (typeof updateNotifBadge === 'function') updateNotifBadge(); }, 30000);
 updateClock();
 
 // Update Mode indicator
@@ -5646,6 +5654,18 @@ function renderImportPreview(parsed) {
   const body = document.getElementById('importPreviewBody');
   const sum = document.getElementById('importSummary');
   if (!card) return;
+
+  // Guard: empty file
+  if (!parsed.rows || parsed.rows.length === 0) {
+    toast('error', 'Empty file', 'No rows detected. Check CSV format.');
+    return;
+  }
+
+  // Guard: too many rows
+  if (parsed.rows.length > 500) {
+    toast('error', 'Too many rows', `Max 500 allowed, found ${parsed.rows.length}. Split your file.`);
+    return;
+  }
 
   const rows = parsed.rows;
   const valid = []; const invalid = []; const duplicates = [];
