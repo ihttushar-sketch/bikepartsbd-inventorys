@@ -1735,43 +1735,6 @@
   <button class="bottom-nav-item" data-page="reports"><span class="bni-ico">📊</span>Reports</button>
 </nav>
 
-<!-- ====================== TOP BAR ====================== -->
-<div class="topbar">
-  <div class="topbar-inner">
-    <div class="brand">
-      <div class="brand-mark">BP</div>
-      <div class="brand-text">
-        <div class="a">BikePartsBD.net</div>
-        <div class="b">Kayi Corporation — Inventory OS</div>
-      </div>
-    </div>
-    <div class="topbar-nav">
-      <button class="active">Inventory</button>
-      <button>Orders</button>
-      <button>Channels</button>
-      <button>Suppliers</button>
-      <button>Reports</button>
-    </div>
-    <div class="topbar-spacer"></div>
-    <div class="topbar-search">
-      <span style="color:var(--text-3)">🔍</span>
-      <input type="text" placeholder="Search SKU, name, or brand…" id="searchInput" data-inv-search />
-    </div>
-    <button class="theme-toggle" id="themeToggle" title="Toggle theme / থিম পরিবর্তন" aria-label="Toggle theme">
-      <span class="theme-icon-dark">🌙</span>
-      <span class="theme-icon-light">☀️</span>
-    </button>
-    <div class="topbar-bell"><span>🔔</span><span class="dot"></span></div>
-    <div class="topbar-user">
-      <div class="avatar">KC</div>
-      <div class="meta">
-        <div class="n">Kayi Corp.</div>
-        <div class="r">Admin</div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- ====================== PAGE ====================== -->
 <div class="page" id="mainPage">
 
@@ -4082,7 +4045,8 @@ const initTheme = () => {
     if (studioTheme && typeof applyStudioTheme === 'function') applyStudioTheme(studioTheme);
   } catch (e) {}
 };
-$('#themeToggle').onclick = () => {
+// Theme toggle — wire to both old (#themeToggle) and new (#themeToggleBtn) IDs for backwards compat
+const themeToggleHandler = () => {
   const current = document.documentElement.getAttribute('data-theme') || 'dark';
   applyTheme(current === 'dark' ? 'light' : 'dark');
   toast('success',
@@ -4090,6 +4054,10 @@ $('#themeToggle').onclick = () => {
     current === 'dark' ? '☀️ হালকা মোড · easier on the eyes' : '🌙 ডার্ক মোড · brand-preferred'
   );
 };
+const _oldThemeBtn = document.getElementById('themeToggle');
+if (_oldThemeBtn) _oldThemeBtn.onclick = themeToggleHandler;
+const _newThemeBtn = document.getElementById('themeToggleBtn');
+if (_newThemeBtn) _newThemeBtn.onclick = themeToggleHandler;
 initTheme();
 
 /* ---------- Init ---------- */
