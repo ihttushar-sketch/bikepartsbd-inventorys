@@ -1298,6 +1298,13 @@
   .btn-logout:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
   .header-cmd-k { background: var(--bg-3); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; font-size: 10px; font-weight: 700; color: var(--text-3); cursor: pointer; font-family: 'JetBrains Mono', monospace; }
   .header-cmd-k:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .loading-spinner {
+    display: inline-block; width: 12px; height: 12px;
+    border: 2px solid rgba(255,255,255,.3); border-top-color: #fff;
+    border-radius: 50%; animation: spin 0.6s linear infinite;
+    vertical-align: middle; margin-right: 4px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   @media (max-width: 900px) {
     .top-header { left: 0; padding: 0 12px; }
@@ -3430,6 +3437,25 @@ function attachCellEditors() {
 }
 
 /* ---------- Toasts ---------- */
+/* Global loading indicator */
+function showLoading(target, text) {
+  if (!target) return;
+  target.dataset.original = target.innerHTML;
+  target.innerHTML = `<span class="loading-spinner"></span> ${text || 'Loading...'}`;
+  target.disabled = true;
+}
+function hideLoading(target) {
+  if (!target || !target.dataset.original) return;
+  target.innerHTML = target.dataset.original;
+  target.disabled = false;
+  delete target.dataset.original;
+}
+
+/* Confirm replacement — nicer than browser confirm() */
+function confirmDialog(title, message, onConfirm) {
+  if (window.confirm(message)) onConfirm();
+}
+
 function toast(type, title, desc) {
   // Suppress notification spam on first load
   if (isFirstLoad && type === 'success' && title && title.includes('updated')) return;
@@ -3971,6 +3997,11 @@ const initTheme = () => {
   let saved = 'dark';
   try { saved = localStorage.getItem(THEME_KEY) || 'dark'; } catch (e) {}
   applyTheme(saved);
+  // Apply custom theme studio theme if set
+  try {
+    const studioTheme = localStorage.getItem('bikepartsbd_studio_theme');
+    if (studioTheme && typeof applyStudioTheme === 'function') applyStudioTheme(studioTheme);
+  } catch (e) {}
 };
 $('#themeToggle').onclick = () => {
   const current = document.documentElement.getAttribute('data-theme') || 'dark';
@@ -5893,7 +5924,12 @@ if (globalSearch) {
 // Notification bell → navigate to notifications
 const notifBell = document.getElementById('notifBellBtn');
 if (notifBell) {
-  notifBell.onclick = () => navigateTo('notifications');
+  notifBell.onclick = () => {
+    navigateTo('notifications');
+    // Hide dot when viewed
+    const dot = document.getElementById('notifDot');
+    if (dot) dot.classList.add('hidden');
+  };
 }
 
 // Update notification dot visibility
@@ -5953,7 +5989,7 @@ function applyStudioTheme(key) {
   root.style.setProperty('--accent', theme.accent);
   if (key === 'light') root.setAttribute('data-theme', 'light');
   else root.setAttribute('data-theme', 'dark');
-  localStorage.setItem('bikepartsbd_theme', key);
+  localStorage.setItem('bikepartsbd_studio_theme', key); localStorage.setItem('bikepartsbd_theme', key === 'light' ? 'light' : 'dark');
 }
 
 function renderThemeStudio() {
@@ -6095,6 +6131,11 @@ function aiSendMessage() {
 
   messages.innerHTML += `<div class="ai-msg user">${escapeHtml(q)}</div>`;
   input.value = '';
+  // Limit to last 20 messages to prevent memory bloat
+  const allMsgs = messages.querySelectorAll('.ai-msg');
+  if (allMsgs.length > 20) {
+    for (let i = 0; i < allMsgs.length - 20; i++) messages.removeChild(allMsgs[0]);
+  }
   setTimeout(() => {
     const answer = aiProcessQuery(q);
     messages.innerHTML += `<div class="ai-msg bot">${answer}</div>`;
@@ -7332,8 +7373,8 @@ function renderCRM() {
       <div class="crm-card" onclick="showCRMDetail('${c.name.replace(/'/g, "\\\\'")}')">
         <div class="crm-avatar ${medalClass}">${initials}</div>
         <div class="crm-meta">
-          <div class="crm-name">${c.name} ${cancelled > 0 ? '<span style="color:var(--accent);font-size:11px">⚠️</span>' : ''}</div>
-          <div class="crm-phone">${c.phone || '—'} · ${c.address || 'Jashore'}</div>
+          <div class="crm-name">${escapeHtml(c.name)} ${cancelled > 0 ? '<span style="color:var(--accent);font-size:11px">⚠️</span>' : ''}</div>
+          <div class="crm-phone">${escapeHtml(c.phone || '—')} · ${escapeHtml(c.address || 'Jashore')}</div>
           <div class="crm-tags">
             <span class="crm-tag ${tag}">${tagLabel}</span>
             ${c.cancelled > 0 ? `<span class="crm-tag" style="background:var(--accent-soft);color:var(--accent)">❌ ${c.cancelled} cancelled</span>` : ''}
@@ -8069,7 +8110,7 @@ function renderInvoicePage() {
   // Populate select
   if (!sel.dataset.wired) {
     sel.dataset.wired = '1';
-    sel.innerHTML = ORDERS_DATA.map(o => `<option value="${o.id}">${o.id} — ${o.customer} (${formatCurrency(o.grandTotal)})</option>`).join('');
+    sel.innerHTML = ORDERS_DATA.map(o => `<option value="${escapeHtml(o.id)}">${escapeHtml(o.id)} — ${escapeHtml(o.customer)} (${formatCurrency(o.grandTotal)})</option>`).join('');
     sel.onchange = () => renderInvoice(ORDERS_DATA.find(o => o.id === sel.value));
   }
 
@@ -8203,7 +8244,7 @@ setTimeout(() => {
   const qrSel = document.getElementById('qrOrderSelect');
   if (qrSel && !qrSel.dataset.wired) {
     qrSel.dataset.wired = '1';
-    qrSel.innerHTML = ORDERS_DATA.map(o => `<option value="${o.id}">${o.id} — ${o.customer}</option>`).join('');
+    qrSel.innerHTML = ORDERS_DATA.map(o => `<option value="${escapeHtml(o.id)}">${escapeHtml(o.id)} — ${escapeHtml(o.customer)}</option>`).join('');
     qrSel.onchange = () => renderOrderQR(qrSel.value);
   }
 }, 200);
