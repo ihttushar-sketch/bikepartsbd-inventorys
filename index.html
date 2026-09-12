@@ -5418,6 +5418,8 @@ function buildReportsPage() {
   if (!wrap) return;
   // Clear existing
   wrap.innerHTML = '';
+  // Reset all wired flags so event listeners re-attach on fresh elements
+  document.querySelectorAll('[data-wired]').forEach(el => delete el.dataset.wired);
 
   // Breadcrumb
   const bc = document.createElement('div');
