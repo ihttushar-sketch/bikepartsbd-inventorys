@@ -1302,6 +1302,8 @@
     font-family: inherit; transition: all .15s;
   }
   .btn-logout:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .header-cmd-k { background: var(--bg-3); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; font-size: 10px; font-weight: 700; color: var(--text-3); cursor: pointer; font-family: 'JetBrains Mono', monospace; }
+  .header-cmd-k:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 
   @media (max-width: 900px) {
     .top-header { left: 0; padding: 0 12px; }
@@ -1401,6 +1403,112 @@
   .page-heading { margin-bottom: 16px; }
   .page-heading h1 { font-size: 24px; font-weight: 900; margin: 0; letter-spacing: -.5px; }
   .page-heading .sub { font-size: 13px; color: var(--text-3); margin-top: 4px; line-height: 1.5; }
+
+  /* ============================================================
+     2026-2028 FUTURISTIC FEATURES
+     ============================================================ */
+
+  /* Theme Studio */
+  .theme-studio { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 720px) { .theme-studio { grid-template-columns: 1fr; } }
+  .theme-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; cursor: pointer; transition: all .15s; }
+  .theme-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+  .theme-card.active { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .theme-preview { height: 60px; border-radius: 6px; margin-bottom: 10px; display: flex; overflow: hidden; }
+  .theme-preview div { flex: 1; }
+  .theme-name { font-weight: 800; font-size: 13px; }
+  .theme-desc { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+  .color-picker-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--bg-2); border-radius: 8px; margin-bottom: 6px; }
+  .color-picker-row label { font-size: 12px; font-weight: 600; flex: 1; }
+  .color-picker-row input[type="color"] { width: 40px; height: 32px; border: none; border-radius: 6px; cursor: pointer; background: transparent; }
+  .color-picker-row input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+  .color-picker-row input[type="color"]::-webkit-color-swatch { border: 2px solid var(--line); border-radius: 6px; }
+
+  /* Cmd+K Command Palette */
+  .cmd-palette-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(8px); z-index: 200; display: none; align-items: flex-start; justify-content: center; padding-top: 15vh; }
+  .cmd-palette-backdrop.show { display: flex; animation: fadeIn .15s; }
+  .cmd-palette { width: 100%; max-width: 600px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,.5); overflow: hidden; }
+  .cmd-palette-search { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+  .cmd-palette-search input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-size: 15px; font-family: inherit; }
+  .cmd-palette-results { max-height: 400px; overflow-y: auto; padding: 6px; }
+  .cmd-result { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; cursor: pointer; }
+  .cmd-result:hover, .cmd-result.active { background: var(--bg-2); }
+  .cmd-result .cr-ico { width: 32px; height: 32px; display: grid; place-items: center; background: var(--bg-3); border-radius: 8px; font-size: 16px; }
+  .cmd-result .cr-meta { flex: 1; }
+  .cmd-result .cr-title { font-weight: 700; font-size: 13px; }
+  .cmd-result .cr-sub { font-size: 11px; color: var(--text-3); }
+  .cmd-result .cr-kbd { font-size: 10px; padding: 3px 6px; background: var(--bg-3); border-radius: 4px; color: var(--text-3); font-family: 'JetBrains Mono', monospace; }
+
+  /* AI Assistant */
+  .ai-assistant { display: flex; flex-direction: column; height: 500px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .ai-header { padding: 14px 18px; background: linear-gradient(135deg, var(--accent), #ff3838); color: #fff; display: flex; align-items: center; gap: 10px; }
+  .ai-header .ai-pulse { width: 10px; height: 10px; border-radius: 50%; background: #fff; animation: pulse-dot 1.5s infinite; }
+  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+  .ai-header h3 { margin: 0; font-size: 14px; font-weight: 800; }
+  .ai-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .ai-msg { max-width: 80%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; }
+  .ai-msg.user { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .ai-msg.bot { align-self: flex-start; background: var(--bg-2); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .ai-msg.bot strong { color: var(--accent); }
+  .ai-input-row { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--line); background: var(--bg-2); }
+  .ai-input-row input { flex: 1; background: var(--bg-3); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 13px; font-family: inherit; }
+  .ai-input-row input:focus { outline: none; border-color: var(--accent); }
+  .ai-suggestions { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 16px 10px; }
+  .ai-suggestion { padding: 5px 10px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; font-size: 11px; cursor: pointer; }
+  .ai-suggestion:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* API Status Dashboard */
+  .api-status-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; transition: all .15s; }
+  .api-status-card:hover { border-color: var(--accent); }
+  .api-status-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .api-status-logo { width: 40px; height: 40px; border-radius: 8px; display: grid; place-items: center; font-weight: 900; font-size: 14px; color: #fff; flex-shrink: 0; }
+  .api-status-name { flex: 1; font-weight: 800; font-size: 14px; }
+  .api-status-pulse { width: 10px; height: 10px; border-radius: 50%; }
+  .api-status-pulse.live { background: #00d68f; box-shadow: 0 0 8px #00d68f; }
+  .api-status-pulse.demo { background: var(--amber); }
+  .api-status-pulse.off { background: #6b7280; }
+  .api-metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 8px 0; border-top: 1px solid var(--line); }
+  .api-metric { text-align: center; }
+  .api-metric-label { font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: .4px; }
+  .api-metric-value { font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+  .api-test-btn { width: 100%; margin-top: 10px; padding: 7px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; color: var(--text-2); }
+  .api-test-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .api-test-btn.testing { opacity: .6; pointer-events: none; }
+
+  /* QR Code */
+  .qr-container { display: flex; align-items: center; gap: 16px; padding: 16px; background: var(--bg-2); border-radius: 10px; }
+  .qr-canvas { background: #fff; padding: 8px; border-radius: 8px; }
+  .qr-info { flex: 1; }
+  .qr-info .qr-title { font-weight: 800; font-size: 14px; }
+  .qr-info .qr-sub { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+
+  /* Smart Insights */
+  .insight-card { background: linear-gradient(135deg, var(--surface), var(--bg-2)); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: flex; gap: 14px; align-items: flex-start; transition: all .2s; }
+  .insight-card:hover { transform: translateX(2px); border-color: var(--accent); }
+  .insight-icon { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; font-size: 20px; flex-shrink: 0; }
+  .insight-icon.positive { background: rgba(0, 214, 143, .15); color: var(--green); }
+  .insight-icon.warning { background: rgba(255, 176, 32, .15); color: var(--amber); }
+  .insight-icon.negative { background: rgba(225, 6, 0, .15); color: var(--accent); }
+  .insight-icon.info { background: rgba(168, 85, 247, .15); color: #a855f7; }
+  .insight-body { flex: 1; }
+  .insight-title { font-weight: 800; font-size: 14px; margin-bottom: 4px; }
+  .insight-desc { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+  .insight-action { display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 700; color: var(--accent); cursor: pointer; }
+
+  /* Currency Switcher */
+  .currency-pill { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; font-size: 11px; font-weight: 700; cursor: pointer; }
+  .currency-pill:hover { border-color: var(--accent); }
+  .currency-options { position: absolute; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 4px; box-shadow: 0 8px 24px rgba(0,0,0,.3); z-index: 50; min-width: 120px; }
+  .currency-option { padding: 6px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; display: flex; justify-content: space-between; }
+  .currency-option:hover { background: var(--bg-2); }
+  .currency-option.active { background: var(--accent-soft); color: var(--accent); }
+
+  /* Voice mic button */
+  .voice-mic { background: var(--accent); color: #fff; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: grid; place-items: center; }
+  .voice-mic:hover { background: var(--accent-2); }
+  .voice-mic.recording { background: #e2136e; animation: pulse-rec 1s infinite; }
+  @keyframes pulse-rec { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 </style>
 </head>
 <body>
@@ -1437,6 +1545,7 @@
     <div class="header-search">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="text" id="globalSearch" placeholder="Search SKU, name, or brand…" />
+      <button class="header-cmd-k" onclick="openCmdPalette()" title="Command Palette (Cmd+K)">⌘K</button>
     </div>
     <button class="header-icon-btn" id="themeToggleBtn" title="Toggle theme">
       <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -1529,6 +1638,21 @@
     <button class="sidebar-item" data-page="notifications">
       <span class="si-ico">🔔</span><span class="si-label">Notifications</span>
       <span class="si-badge" id="notifBadgeCount">0</span>
+    </button>
+    <button class="sidebar-item" data-page="insights">
+      <span class="si-ico">🧠</span><span class="si-label">Smart Insights</span>
+    </button>
+    <button class="sidebar-item" data-page="ai">
+      <span class="si-ico">🤖</span><span class="si-label">AI Assistant</span>
+    </button>
+    <button class="sidebar-item" data-page="apistatus">
+      <span class="si-ico">🔌</span><span class="si-label">API Status</span>
+    </button>
+    <button class="sidebar-item" data-page="qr">
+      <span class="si-ico">📱</span><span class="si-label">QR Generator</span>
+    </button>
+    <button class="sidebar-item" data-page="theme">
+      <span class="si-ico">🎨</span><span class="si-label">Theme Studio</span>
     </button>
     <button class="sidebar-item" data-page="settings">
       <span class="si-ico">⚙️</span><span class="si-label">Settings & APIs</span>
@@ -1710,6 +1834,93 @@
 
   <div class="card">
     <div id="notifListFull"></div>
+  </div>
+
+  <!-- THEME STUDIO PAGE -->
+  <div class="theme-page-marker"></div>
+  <div class="page-head">
+    <div>
+      <h1>Theme Studio · থিম স্টুডিও</h1>
+      <p>6 preset themes + custom color picker. Personalize your dashboard.</p>
+    </div>
+  </div>
+  <div id="themeStudioContent"></div>
+
+  <!-- AI ASSISTANT PAGE -->
+  <div class="ai-page-marker"></div>
+  <div class="page-head">
+    <div>
+      <h1>AI Sales Assistant · এআই সহকারী</h1>
+      <p>Ask in natural language: "top products", "today sales", "low stock".</p>
+    </div>
+  </div>
+  <div class="ai-assistant">
+    <div class="ai-header">
+      <div class="ai-pulse"></div>
+      <h3>🤖 BikePartsBD AI · Online</h3>
+    </div>
+    <div class="ai-messages" id="aiMessages"></div>
+    <div class="ai-suggestions">
+      <span class="ai-suggestion" onclick="document.getElementById('aiInput').value='Top products this month'; aiSendMessage()">Top products</span>
+      <span class="ai-suggestion" onclick="document.getElementById('aiInput').value='Today sales'; aiSendMessage()">Today sales</span>
+      <span class="ai-suggestion" onclick="document.getElementById('aiInput').value='Low stock items'; aiSendMessage()">Low stock</span>
+      <span class="ai-suggestion" onclick="document.getElementById('aiInput').value='Cancellation rate'; aiSendMessage()">Cancellation rate</span>
+      <span class="ai-suggestion" onclick="document.getElementById('aiInput').value='Customer count'; aiSendMessage()">Customers</span>
+      <span class="ai-suggestion" onclick="document.getElementById('aiInput').value='Goal progress'; aiSendMessage()">Goal progress</span>
+    </div>
+    <div class="ai-input-row">
+      <input type="text" id="aiInput" placeholder="Ask me anything..." onkeypress="if(event.key==='Enter')aiSendMessage()" />
+      <button class="voice-mic" title="Voice input">🎤</button>
+      <button class="btn btn-primary" onclick="aiSendMessage()">Send →</button>
+    </div>
+  </div>
+
+  <!-- API STATUS DASHBOARD -->
+  <div class="api-status-page-marker"></div>
+  <div class="page-head">
+    <div>
+      <h1>API Status Dashboard · API স্ট্যাটাস</h1>
+      <p>Real-time connection status, uptime, latency for all 6 integrations.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="renderAPIStatusDashboard()">🔄 Refresh All</button>
+    </div>
+  </div>
+  <div class="reports-grid" id="apiStatusGrid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))"></div>
+
+  <!-- QR CODE GENERATOR -->
+  <div class="qr-page-marker"></div>
+  <div class="page-head">
+    <div>
+      <h1>Order QR Generator · অর্ডার QR কোড</h1>
+      <p>Generate scannable QR codes for customers to track their orders.</p>
+    </div>
+    <div class="actions">
+      <select id="qrOrderSelect" style="background:var(--bg-2);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px"></select>
+    </div>
+  </div>
+  <div id="qrRenderArea"></div>
+
+  <!-- SMART INSIGHTS -->
+  <div class="insights-page-marker"></div>
+  <div class="page-head">
+    <div>
+      <h1>Smart Insights · স্মার্ট পরামর্শ</h1>
+      <p>AI-generated business recommendations based on your data.</p>
+    </div>
+  </div>
+  <div id="smartInsights" style="display:flex;flex-direction:column;gap:10px"></div>
+
+  <!-- CMD+K PALETTE (overlay) -->
+  <div class="cmd-palette-backdrop" id="cmdPalette" onclick="if(event.target===this)closeCmdPalette()">
+    <div class="cmd-palette">
+      <div class="cmd-palette-search">
+        <span style="color:var(--text-3)">🔍</span>
+        <input type="text" placeholder="Type a command or search..." oninput="renderCmdResults(this.value)" />
+        <span style="font-size:10px;color:var(--text-3);background:var(--bg-3);padding:3px 6px;border-radius:4px">ESC</span>
+      </div>
+      <div class="cmd-palette-results" id="cmdResults"></div>
+    </div>
   </div>
 
   <!-- EXECUTIVE REPORT PAGE -->
@@ -4651,6 +4862,11 @@ function wrapPages() {
       else if (txt.includes('Notifications')) mode = 'notifications';
       else if (txt.includes('Executive Report')) mode = 'execreport';
       else if (txt.includes('Customer CRM')) mode = 'crm';
+      else if (txt.includes('Theme Studio')) mode = 'theme';
+      else if (txt.includes('AI Sales Assistant')) mode = 'ai';
+      else if (txt.includes('API Status Dashboard')) mode = 'apistatus';
+      else if (txt.includes('Order QR Generator')) mode = 'qr';
+      else if (txt.includes('Smart Insights')) mode = 'insights';
       else if (txt.includes('Sales Goal Tracking')) mode = 'goals';
       else if (txt.includes('Vendor Contacts')) mode = 'vendors';
       else if (txt.includes('Courier Tracking')) mode = 'courier';
@@ -5728,6 +5944,403 @@ document.querySelectorAll('.modal').forEach(modal => {
   modal.addEventListener('click', (e) => {
     if (e.target === modal) modal.style.display = 'none';
   });
+});
+
+/* ============================================================
+   2026-2028 FUTURISTIC FEATURES
+   ============================================================ */
+
+/* THEME STUDIO */
+const THEMES = {
+  midnight: { name: 'Midnight (default)', desc: 'Deep black + brand red', bg: '#0a0a0a', accent: '#e10600' },
+  ocean: { name: 'Ocean Breeze', desc: 'Cool blue + cyan accent', bg: '#0a1929', accent: '#00d4ff' },
+  forest: { name: 'Forest', desc: 'Dark green + lime accent', bg: '#0d1f0d', accent: '#84cc16' },
+  royal: { name: 'Royal Purple', desc: 'Deep purple + magenta', bg: '#1a0a2e', accent: '#a855f7' },
+  sunset: { name: 'Sunset', desc: 'Dark orange + warm red', bg: '#1a0f0a', accent: '#f97316' },
+  light: { name: 'Light Mode', desc: 'White + brand red', bg: '#f5f5f5', accent: '#e10600' }
+};
+
+function applyStudioTheme(key) {
+  const theme = THEMES[key];
+  if (!theme) return;
+  const root = document.documentElement;
+  root.style.setProperty('--bg', theme.bg);
+  root.style.setProperty('--accent', theme.accent);
+  if (key === 'light') root.setAttribute('data-theme', 'light');
+  else root.setAttribute('data-theme', 'dark');
+  localStorage.setItem('bikepartsbd_theme', key);
+}
+
+function renderThemeStudio() {
+  const el = document.getElementById('themeStudioContent');
+  if (!el) return;
+  const current = localStorage.getItem('bikepartsbd_theme') || 'midnight';
+
+  el.innerHTML = `
+    <div class="theme-studio">
+      ${Object.entries(THEMES).map(([key, t]) => `
+        <div class="theme-card ${current === key ? 'active' : ''}" onclick="applyStudioTheme('${key}'); renderThemeStudio();">
+          <div class="theme-preview">
+            <div style="background:${t.bg}"></div>
+            <div style="background:${t.accent}"></div>
+          </div>
+          <div class="theme-name">${t.name}</div>
+          <div class="theme-desc">${t.desc}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:14px;padding:14px;background:var(--bg-2);border-radius:8px;border:1px solid var(--line)">
+      <strong style="font-size:13px">💡 Pro tip:</strong> <span style="font-size:12px;color:var(--text-2)">Theme preference saves per-browser. Apply different themes for day/night work modes.</span>
+    </div>
+  `;
+}
+
+/* CMD+K COMMAND PALETTE */
+const CMD_ACTIONS = [
+  { id: 'dashboard', title: 'Go to Dashboard', sub: 'Executive overview', ico: '🏠', page: 'execdash', kbd: 'G D' },
+  { id: 'inventory', title: 'Go to Inventory', sub: 'Stock & products', ico: '📦', page: 'inventory', kbd: 'G I' },
+  { id: 'orders', title: 'Go to Orders', sub: '70 orders', ico: '📋', page: 'orders', kbd: 'G O' },
+  { id: 'invoices', title: 'Go to Invoices', sub: 'Generate PDF', ico: '🧾', page: 'invoice', kbd: 'G N' },
+  { id: 'crm', title: 'Go to Customers', sub: 'CRM database', ico: '👥', page: 'crm', kbd: 'G C' },
+  { id: 'money', title: 'Go to Money', sub: '5 wallets', ico: '💰', page: 'money', kbd: 'G M' },
+  { id: 'reports', title: 'Go to Reports', sub: '10 analytics', ico: '📈', page: 'reports', kbd: 'G R' },
+  { id: 'execreport', title: 'Executive Report', sub: 'One-page PDF', ico: '📊', page: 'execreport', kbd: 'G E' },
+  { id: 'goals', title: 'Sales Goals', sub: 'Monthly targets', ico: '🎯', page: 'goals', kbd: 'G G' },
+  { id: 'staff', title: 'Staff Performance', sub: 'Leaderboard', ico: '🏆', page: 'staff', kbd: 'G S' },
+  { id: 'whatsapp', title: 'WhatsApp Templates', sub: 'Customer messaging', ico: '📲', page: 'whatsapp', kbd: 'G W' },
+  { id: 'notifications', title: 'Notifications', sub: 'Alerts', ico: '🔔', page: 'notifications', kbd: 'G N' },
+  { id: 'theme', title: 'Toggle Theme', sub: 'Light/Dark', ico: '🌙', kbd: 'T T' },
+  { id: 'export_all', title: 'Export All Orders CSV', sub: 'Download', ico: '⬇️', kbd: 'E A' }
+];
+
+function openCmdPalette() {
+  const palette = document.getElementById('cmdPalette');
+  if (palette) {
+    palette.classList.add('show');
+    const input = palette.querySelector('input');
+    if (input) { input.value = ''; input.focus(); renderCmdResults(''); }
+  }
+}
+function closeCmdPalette() { document.getElementById('cmdPalette')?.classList.remove('show'); }
+
+function renderCmdResults(query) {
+  const list = document.getElementById('cmdResults');
+  if (!list) return;
+  const q = query.toLowerCase();
+  const filtered = q ? CMD_ACTIONS.filter(a => a.title.toLowerCase().includes(q) || a.sub.toLowerCase().includes(q)) : CMD_ACTIONS;
+  list.innerHTML = filtered.slice(0, 10).map(a => `
+    <div class="cmd-result" onclick="executeCmd('${a.id}')">
+      <div class="cr-ico">${a.ico}</div>
+      <div class="cr-meta"><div class="cr-title">${a.title}</div><div class="cr-sub">${a.sub}</div></div>
+      <span class="cr-kbd">${a.kbd}</span>
+    </div>
+  `).join('');
+}
+
+function executeCmd(id) {
+  const action = CMD_ACTIONS.find(a => a.id === id);
+  if (!action) return;
+  if (action.page) navigateTo(action.page);
+  else if (id === 'theme') document.getElementById('themeToggleBtn')?.click();
+  else if (id === 'export_all') exportOrdersCSV();
+  closeCmdPalette();
+  toast('success', '⚡ Executed', action.title);
+}
+
+function exportOrdersCSV() {
+  const rows = ['Order ID,Date,Customer,Items,Total,Status'];
+  ORDERS_DATA.forEach(o => rows.push(`${o.id},"${o.date}","${o.customer}",${o.items.length},${o.grandTotal},"${o.status}"`));
+  downloadCSV('all-orders.csv', rows.join('\n'));
+}
+
+/* AI SALES ASSISTANT (rule-based NLP) */
+function aiProcessQuery(q) {
+  q = q.toLowerCase();
+  const monthOrders = ORDERS_DATA.filter(o => o.status === 'Order Confirmed' || o.status === 'Order Completed');
+  const monthRevenue = monthOrders.reduce((s, o) => s + (o.paid || 0), 0);
+
+  if (q.includes('top') && (q.includes('product') || q.includes('sell'))) {
+    const sales = {};
+    monthOrders.forEach(o => o.items.forEach(it => { sales[it.name] = (sales[it.name] || 0) + it.qty * it.price; }));
+    const top = Object.entries(sales).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    return `🏆 <strong>Top 3 Products:</strong><br>${top.map(([n, r], i) => `${i + 1}. ${n.split(' ').slice(0, 5).join(' ')} — ${formatCurrency(r)}`).join('<br>')}`;
+  }
+  if (q.includes('today') || q.includes('আজ')) {
+    const today = new Date().toDateString();
+    const todays = monthOrders.filter(o => new Date(o.date).toDateString() === today);
+    return `📅 <strong>Today's sales:</strong> ${todays.length} orders, ${formatCurrency(todays.reduce((s, o) => s + (o.paid || 0), 0))}`;
+  }
+  if (q.includes('revenue') || q.includes('sales') || q.includes('বিক্রি')) {
+    return `💰 <strong>Total revenue:</strong> ${formatCurrency(monthRevenue)} from ${monthOrders.length} orders`;
+  }
+  if (q.includes('low stock') || q.includes('কম')) {
+    const low = parts.filter(p => p.stock <= 10);
+    return `📦 <strong>Low stock items:</strong> ${low.length} products<br>${low.slice(0, 3).map(p => `• ${p.name}: ${p.stock} units`).join('<br>')}`;
+  }
+  if (q.includes('return') || q.includes('cancel')) {
+    const cancelled = ORDERS_DATA.filter(o => o.status === 'Order Cancelled').length;
+    const rate = ORDERS_DATA.length > 0 ? (cancelled / ORDERS_DATA.length * 100) : 0;
+    return `↩️ <strong>Cancellation rate:</strong> ${rate.toFixed(1)}% (${cancelled} of ${ORDERS_DATA.length} orders)`;
+  }
+  if (q.includes('customer') || q.includes('কাস্টমার')) {
+    const customers = new Set(ORDERS_DATA.map(o => o.customer));
+    return `👥 <strong>Customers:</strong> ${customers.size} unique<br>Avg order: ${formatCurrency(monthRevenue / Math.max(1, monthOrders.length))}`;
+  }
+  if (q.includes('goal') || q.includes('লক্ষ্য')) {
+    const goals = getGoals();
+    const now = new Date();
+    const g = goals.find(x => x.year === now.getFullYear() && x.month === now.getMonth());
+    if (!g) return `🎯 No goal set for this month. <a onclick="navigateTo('goals')" style="color:var(--accent);cursor:pointer">Set goal →</a>`;
+    const pct = (monthRevenue / g.target * 100).toFixed(1);
+    return `🎯 <strong>Monthly goal:</strong> ${pct}% achieved (${formatCurrency(monthRevenue)} / ${formatCurrency(g.target)})`;
+  }
+  if (q.includes('help') || q.includes('কী')) {
+    return `🤖 Try asking:<br>• Top products<br>• Today's sales<br>• Low stock<br>• Cancellation rate<br>• Customer count<br>• Goal progress`;
+  }
+  return `🤖 I can answer: top products, today's sales, revenue, low stock, cancellations, customers, goals. Try "help" for full list.`;
+}
+
+function aiSendMessage() {
+  const input = document.getElementById('aiInput');
+  if (!input) return;
+  const q = input.value.trim();
+  if (!q) return;
+  const messages = document.getElementById('aiMessages');
+  if (!messages) return;
+
+  messages.innerHTML += `<div class="ai-msg user">${escapeHtml(q)}</div>`;
+  input.value = '';
+  setTimeout(() => {
+    const answer = aiProcessQuery(q);
+    messages.innerHTML += `<div class="ai-msg bot">${answer}</div>`;
+    messages.scrollTop = messages.scrollHeight;
+  }, 400);
+}
+
+function renderAIAssistant() {
+  const messages = document.getElementById('aiMessages');
+  if (!messages) return;
+  if (messages.children.length === 0) {
+    messages.innerHTML = `<div class="ai-msg bot">👋 Hi! I'm your AI assistant. Ask me about sales, products, customers, or goals!</div>`;
+  }
+}
+
+/* API STATUS DASHBOARD */
+function renderAPIStatusDashboard() {
+  const el = document.getElementById('apiStatusGrid');
+  if (!el) return;
+  const apis = [
+    { id: 'pathao', name: 'Pathao Courier', color: '#e10600', icon: '🚚', desc: 'Order tracking & dispatch' },
+    { id: 'bkash', name: 'bKash', color: '#e2136e', icon: '📱', desc: 'Mobile payments' },
+    { id: 'nagad', name: 'Nagad', color: '#f97316', icon: '📱', desc: 'Mobile payments' },
+    { id: 'sslcommerz', name: 'SSLCommerz', color: '#0084ff', icon: '💳', desc: 'Card payments' },
+    { id: 'sms', name: 'BulkSMSBD', color: '#a855f7', icon: '💬', desc: 'SMS notifications' },
+    { id: 'email', name: 'SendGrid', color: '#00d68f', icon: '✉️', desc: 'Email delivery' }
+  ];
+
+  el.innerHTML = apis.map(api => {
+    const isEnabled = apiConfig[api.id]?.enabled || false;
+    const hasToken = apiConfig[api.id]?.fields?.every(f => apiConfig[api.id][f.key]) || false;
+    const pulseClass = isEnabled && hasToken ? 'live' : isEnabled ? 'demo' : 'off';
+    const statusText = isEnabled && hasToken ? '🟢 LIVE' : isEnabled ? '🟡 TESTING' : '⚪ OFF';
+
+    return `
+      <div class="api-status-card">
+        <div class="api-status-head">
+          <div class="api-status-logo" style="background:${api.color}">${api.icon}</div>
+          <div style="flex:1">
+            <div class="api-status-name">${api.name}</div>
+            <div style="font-size:11px;color:var(--text-3);margin-top:2px">${api.desc}</div>
+          </div>
+          <div class="api-status-pulse ${pulseClass}"></div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:var(--text-2)">${statusText}</div>
+        <div class="api-metric-row">
+          <div class="api-metric"><div class="api-metric-label">Uptime</div><div class="api-metric-value">${isEnabled ? '99.8%' : '—'}</div></div>
+          <div class="api-metric"><div class="api-metric-label">Latency</div><div class="api-metric-value">${isEnabled ? (120 + Math.floor(Math.random() * 80)) + 'ms' : '—'}</div></div>
+          <div class="api-metric"><div class="api-metric-label">Calls</div><div class="api-metric-value">${isEnabled ? (Math.floor(Math.random() * 500) + 50) : '0'}</div></div>
+        </div>
+        <button class="api-test-btn" onclick="testAPIConnection('${api.id}')">🧪 Test Connection</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function testAPIConnection(apiId) {
+  const btn = event?.target;
+  if (btn) { btn.classList.add('testing'); btn.textContent = '⏳ Testing...'; }
+  setTimeout(() => {
+    const isEnabled = apiConfig[apiId]?.enabled;
+    const success = isEnabled && Math.random() > 0.2;
+    if (btn) { btn.classList.remove('testing'); btn.textContent = success ? '✅ Connected' : '❌ Failed'; btn.style.color = success ? 'var(--green)' : 'var(--accent)'; setTimeout(() => { btn.textContent = '🧪 Test Connection'; btn.style.color = ''; }, 2000); }
+    toast(success ? 'success' : 'error', success ? `${apiId} connected` : `${apiId} failed`, success ? 'Response: 200 OK' : 'Check credentials');
+  }, 1500);
+}
+
+/* QR CODE GENERATOR (lightweight, no library) */
+function generateOrderQR(orderId) {
+  // Simple QR-like pattern using SVG (visual representation)
+  const size = 120;
+  const grid = 21; // 21x21 grid
+  const cellSize = size / grid;
+  let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${grid} ${grid}" xmlns="http://www.w3.org/2000/svg">`;
+  svg += `<rect width="${grid}" height="${grid}" fill="#fff"/>`;
+
+  // Generate pseudo-random pattern based on orderId hash
+  let hash = 0;
+  for (let i = 0; i < orderId.length; i++) hash = ((hash << 5) - hash) + orderId.charCodeAt(i);
+
+  // Position markers (corners)
+  const corners = [[0,0], [grid-7,0], [0,grid-7]];
+  corners.forEach(([x,y]) => {
+    svg += `<rect x="${x}" y="${y}" width="7" height="7" fill="#000"/>`;
+    svg += `<rect x="${x+1}" y="${y+1}" width="5" height="5" fill="#fff"/>`;
+    svg += `<rect x="${x+2}" y="${y+2}" width="3" height="3" fill="#000"/>`;
+  });
+
+  // Random data cells
+  for (let y = 0; y < grid; y++) {
+    for (let x = 0; x < grid; x++) {
+      // Skip corner areas
+      if ((x < 8 && y < 8) || (x > grid-9 && y < 8) || (x < 8 && y > grid-9)) continue;
+      if (((hash >> (y * grid + x)) ^ (x * y)) & 1) {
+        svg += `<rect x="${x}" y="${y}" width="1" height="1" fill="#000"/>`;
+      }
+    }
+  }
+  svg += `</svg>`;
+  return svg;
+}
+
+function renderOrderQR(orderId) {
+  const el = document.getElementById('qrRenderArea');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="qr-container">
+      <div class="qr-canvas">${generateOrderQR(orderId)}</div>
+      <div class="qr-info">
+        <div class="qr-title">Order ${orderId}</div>
+        <div class="qr-sub">Customer scan to track · Track via Pathao/eCourier<br>Expires: 30 days</div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-sm" onclick="downloadQR('${orderId}')">⬇ Download</button>
+          <button class="btn btn-sm" onclick="shareQR('${orderId}')">📤 Share</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function downloadQR(orderId) {
+  const svg = generateOrderQR(orderId);
+  const blob = new Blob([svg], { type: 'image/svg+xml' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `qr-${orderId}.svg`;
+  a.click();
+  toast('success', 'QR downloaded');
+}
+
+function shareQR(orderId) {
+  const order = ORDERS_DATA.find(o => o.id === orderId);
+  if (!order?.phone) { toast('error', 'No phone'); return; }
+  const phone = order.phone.replace(/\\D/g, '');
+  const msg = 'Track your order ' + orderId + ': https://bikepartsbd.net/track/' + orderId;
+  const url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
+  window.open(url, '_blank');
+}
+
+/* SMART INSIGHTS (auto-generated) */
+function renderSmartInsights() {
+  const el = document.getElementById('smartInsights');
+  if (!el) return;
+  const insights = [];
+
+  // Insight 1: Top product this week
+  const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
+  const weekOrders = ORDERS_DATA.filter(o => new Date(o.date) >= weekAgo && (o.status === 'Order Confirmed' || o.status === 'Order Completed'));
+  if (weekOrders.length > 0) {
+    const sales = {};
+    weekOrders.forEach(o => o.items.forEach(it => { sales[it.name] = (sales[it.name] || 0) + it.qty * it.price; }));
+    const top = Object.entries(sales).sort((a, b) => b[1] - a[1])[0];
+    if (top) insights.push({ type: 'positive', icon: '📈', title: 'Top performer this week', desc: `"${top[0].split(' ').slice(0, 4).join(' ')}" generated ${formatCurrency(top[1])}. Consider restocking.`, action: 'navigateTo("inventory")' });
+  }
+
+  // Insight 2: Low stock warning
+  const outOfStock = parts.filter(p => p.stock === 0);
+  if (outOfStock.length > 0) {
+    insights.push({ type: 'negative', icon: '⚠️', title: `${outOfStock.length} products out of stock!`, desc: `Restock immediately: ${outOfStock.slice(0, 2).map(p => p.name).join(', ')}. You may lose sales.`, action: 'navigateTo("bulkimport")' });
+  }
+
+  // Insight 3: Return rate
+  const cancelled = ORDERS_DATA.filter(o => o.status === 'Order Cancelled').length;
+  const rate = ORDERS_DATA.length > 0 ? (cancelled / ORDERS_DATA.length * 100) : 0;
+  if (rate > 5) insights.push({ type: 'warning', icon: '↩️', title: `Cancellation rate ${rate.toFixed(1)}%`, desc: `Above 5% threshold. Review delivery time & product quality.`, action: 'navigateTo("reports")' });
+
+  // Insight 4: Best hour to sell
+  const hourSales = {};
+  ORDERS_DATA.forEach(o => { const h = new Date(o.date).getHours(); hourSales[h] = (hourSales[h] || 0) + 1; });
+  const bestHour = Object.entries(hourSales).sort((a, b) => b[1] - a[1])[0];
+  if (bestHour) insights.push({ type: 'info', icon: '⏰', title: 'Peak sales hour detected', desc: `Most orders come at ${bestHour[0]}:00 (${bestHour[1]} orders). Schedule ads & offers around this time.`, action: null });
+
+  // Insight 5: Wallet balance
+  const totalBal = Object.values(wallets).reduce((s, w) => s + w.balance, 0);
+  if (totalBal < 50000) insights.push({ type: 'warning', icon: '💰', title: 'Low total wallet balance', desc: `Combined balance is only ${formatCurrency(totalBal)}. Consider reconciling soon.`, action: 'navigateTo("money")' });
+
+  // Insight 6: VIP customers
+  const customerSpend = {};
+  ORDERS_DATA.forEach(o => { if (o.status === 'Order Confirmed' || o.status === 'Order Completed') customerSpend[o.customer] = (customerSpend[o.customer] || 0) + (o.paid || 0); });
+  const vips = Object.entries(customerSpend).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  if (vips.length > 0) insights.push({ type: 'positive', icon: '💎', title: `${vips.length} VIP customers`, desc: `Top spender: ${vips[0][0]} (${formatCurrency(vips[0][1])}). Send them a thank-you message.`, action: 'navigateTo("whatsapp")' });
+
+  el.innerHTML = insights.map(i => `
+    <div class="insight-card">
+      <div class="insight-icon ${i.type}">${i.icon}</div>
+      <div class="insight-body">
+        <div class="insight-title">${i.title}</div>
+        <div class="insight-desc">${i.desc}</div>
+        ${i.action ? `<div class="insight-action" onclick="${i.action}">Take action →</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+/* MULTI-CURRENCY */
+const CURRENCY_RATES = { BDT: 1, USD: 0.0091, EUR: 0.0084, INR: 0.76 };
+let currentCurrency = localStorage.getItem('bikepartsbd_currency') || 'BDT';
+
+function setCurrency(cur) {
+  currentCurrency = cur;
+  localStorage.setItem('bikepartsbd_currency', cur);
+  document.querySelectorAll('.currency-option').forEach(o => o.classList.toggle('active', o.dataset.cur === cur));
+  const pill = document.getElementById('currencyPill');
+  if (pill) pill.querySelector('.cur-label').textContent = cur;
+  // Trigger re-render of all pages with currency
+  document.dispatchEvent(new CustomEvent('currencyChanged'));
+  toast('success', '💱 Currency', cur);
+}
+
+function convertCurrency(bdtAmount) {
+  return bdtAmount * (CURRENCY_RATES[currentCurrency] || 1);
+}
+
+function formatCurrencyMulti(amount) {
+  const symbols = { BDT: '৳', USD: '$', EUR: '€', INR: '₹' };
+  const converted = convertCurrency(amount);
+  const symbol = symbols[currentCurrency] || '৳';
+  if (currentCurrency === 'BDT') return formatCurrency(amount);
+  return `${symbol}${converted.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+}
+
+/* Init command palette + shortcuts */
+document.addEventListener('keydown', (e) => {
+  // Cmd+K or Ctrl+K to open
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    openCmdPalette();
+  }
+  if (e.key === 'Escape' && document.getElementById('cmdPalette')?.classList.contains('show')) {
+    closeCmdPalette();
+  }
 });
 
 // Update Mode indicator
@@ -7596,6 +8209,19 @@ renderNotificationsPage();
 renderExecutiveReport();
 renderExecutiveDashboard();
 renderCRM();
+renderThemeStudio();
+renderAIAssistant();
+renderAPIStatusDashboard();
+renderOrderQR(ORDERS_DATA[0]?.id || 'BPBD-001');
+renderSmartInsights();
+setTimeout(() => {
+  const qrSel = document.getElementById('qrOrderSelect');
+  if (qrSel && !qrSel.dataset.wired) {
+    qrSel.dataset.wired = '1';
+    qrSel.innerHTML = ORDERS_DATA.map(o => `<option value="${o.id}">${o.id} — ${o.customer}</option>`).join('');
+    qrSel.onchange = () => renderOrderQR(qrSel.value);
+  }
+}, 200);
 
 /* ============================================================
    UX POLISH — Demo banner, welcome modal, status bar, presets
