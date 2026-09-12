@@ -1306,6 +1306,75 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* ============================================================
+     DASHBOARD LAYOUT THEMES
+     ============================================================ */
+
+  /* === CLASSIC (default) === */
+  body.dash-classic .sidebar { display: block; }
+  body.dash-classic .top-header { left: 240px; }
+  body.dash-classic .page { padding-left: 0; padding-top: 56px; }
+
+  /* === MINIMALIST (no sidebar, hamburger only) === */
+  body.dash-minimal .sidebar { display: none; }
+  body.dash-minimal .top-header { left: 0; }
+  body.dash-minimal .page { padding-left: 0; padding-top: 56px; max-width: 1100px; margin: 0 auto; }
+  body.dash-minimal .top-nav { display: none; }
+  body.dash-minimal .header-search { display: none; }
+  body.dash-minimal .bottom-nav { display: flex !important; position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--line); padding: 8px; justify-content: space-around; z-index: 50; }
+  body.dash-minimal .bottom-nav-item { background: transparent; border: none; color: var(--text-3); font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 10px; border-radius: 8px; font-family: inherit; }
+  body.dash-minimal .bottom-nav-item .bni-ico { font-size: 18px; }
+  body.dash-minimal .bottom-nav-item.active { color: var(--accent); }
+  body.dash-minimal .page { padding-bottom: 80px; }
+
+  /* === COMMAND CENTER (top nav, no sidebar, grid dashboard) === */
+  body.dash-command .sidebar { display: none; }
+  body.dash-command .top-header { left: 0; }
+  body.dash-command .page { padding-left: 0; padding-top: 100px; max-width: 1400px; margin: 0 auto; }
+  body.dash-command .top-nav { gap: 0; background: var(--bg-2); padding: 6px; border-radius: 8px; }
+  body.dash-command .top-nav-link { padding: 10px 18px; font-size: 14px; font-weight: 700; }
+  body.dash-command .top-nav-link.active { background: var(--accent); color: #fff; }
+  body.dash-command .page-view#page-execdash { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+
+  /* === BENTO (single scrollable overview page) === */
+  body.dash-bento .sidebar { display: none; }
+  body.dash-bento .top-header { left: 0; }
+  body.dash-bento .page { padding-left: 0; padding-top: 56px; max-width: 100%; }
+  body.dash-bento .top-nav { display: none; }
+  body.dash-bento .page-view { display: block !important; padding: 14px 24px; }
+  body.dash-bento .page-view:not(#page-execdash) { display: none !important; }
+  body.dash-bento .page-view#page-execdash { display: grid !important; grid-template-columns: repeat(12, 1fr); gap: 14px; grid-auto-rows: minmax(80px, auto); }
+  body.dash-bento .page-view#page-execdash .kpi-grid { grid-column: span 12; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  body.dash-bento .page-view#page-execdash .reports-grid { grid-column: span 12; display: grid; grid-template-columns: 7fr 5fr; gap: 14px; }
+  body.dash-bento .page-view#page-execdash .chart-card { padding: 18px; }
+
+  /* Dashboard theme preview cards */
+  .dash-theme-preview { padding: 16px; border: 2px solid transparent; border-radius: 10px; cursor: pointer; transition: all .2s; background: var(--surface); }
+  .dash-theme-preview:hover { transform: translateY(-2px); }
+  .dash-theme-preview.active { border-color: var(--accent); background: var(--accent-soft); }
+  .dash-theme-preview .dtp-mock { background: var(--bg-2); border-radius: 6px; padding: 8px; margin-bottom: 10px; height: 80px; position: relative; overflow: hidden; }
+  .dash-theme-preview .dtp-name { font-weight: 800; font-size: 13px; }
+  .dash-theme-preview .dtp-desc { font-size: 11px; color: var(--text-3); margin-top: 4px; line-height: 1.4; }
+  .dash-theme-preview .dtp-tag { display: inline-block; padding: 2px 6px; background: var(--bg-3); border-radius: 4px; font-size: 9px; font-weight: 700; color: var(--text-3); margin-top: 6px; }
+
+  /* Mock layouts inside preview */
+  .mock-classic { display: flex; height: 100%; }
+  .mock-classic::before { content: ''; width: 16px; background: var(--accent); border-radius: 3px 0 0 3px; }
+  .mock-classic .mock-content { flex: 1; padding: 6px; display: flex; flex-direction: column; gap: 4px; }
+  .mock-classic .mock-bar { height: 6px; background: var(--bg-3); border-radius: 3px; }
+  .mock-minimal { display: flex; flex-direction: column; height: 100%; }
+  .mock-minimal::before { content: ''; height: 6px; background: var(--accent); border-radius: 3px; margin-bottom: 6px; }
+  .mock-minimal .mock-content { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .mock-minimal .mock-block { background: var(--bg-3); border-radius: 3px; }
+  .mock-command { display: flex; flex-direction: column; height: 100%; }
+  .mock-command::before { content: ''; height: 8px; background: var(--accent); border-radius: 3px; margin-bottom: 4px; }
+  .mock-command::after { content: ''; height: 5px; background: var(--bg-3); border-radius: 3px; margin-top: 4px; }
+  .mock-command .mock-content { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap: 3px; }
+  .mock-command .mock-block { background: var(--bg-3); border-radius: 3px; }
+  .mock-bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 3px; height: 100%; }
+  .mock-bento .mock-block { background: var(--bg-3); border-radius: 3px; }
+  .mock-bento .mock-block:first-child { grid-column: span 2; grid-row: span 2; background: var(--accent); }
+
   @media (max-width: 900px) {
     .top-header { left: 0; padding: 0 12px; }
     .top-nav, .header-org, .header-divider { display: none; }
@@ -2596,6 +2665,16 @@
     </table>
   </div>
 </div>
+
+<!-- DASHBOARD THEME SELECTOR -->
+<div class="page-head" style="margin-top:32px">
+  <div>
+    <h1>🎨 Dashboard Layout <span style="font-size:14px;color:var(--text-3);font-weight:500;margin-left:8px">ড্যাশবোর্ড লেআউট</span></h1>
+    <p>Same features, different layouts. Pick one that fits your workflow.</p>
+  </div>
+</div>
+
+<div id="dashboardThemeGrid" class="theme-studio" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))"></div>
 
 <!-- API SETTINGS / PLUG & PLAY -->
 <div class="page-head" style="margin-top:32px">
@@ -6357,6 +6436,69 @@ function formatCurrencyMulti(amount) {
   return `${symbol}${converted.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 }
 
+/* DASHBOARD LAYOUT THEMES */
+const DASHBOARD_THEMES = {
+  classic: {
+    name: 'Classic',
+    desc: 'Sidebar + top header. Traditional SaaS layout.',
+    tag: 'DEFAULT',
+    mock: 'classic'
+  },
+  minimal: {
+    name: 'Minimalist',
+    desc: 'No sidebar. Hamburger + bottom nav. Focus on content.',
+    tag: 'FOCUS',
+    mock: 'minimal'
+  },
+  command: {
+    name: 'Command Center',
+    desc: 'Top nav. Dense grid dashboard. Power user style.',
+    tag: 'POWER',
+    mock: 'command'
+  },
+  bento: {
+    name: 'Bento Grid',
+    desc: 'Apple-style. All metrics as cards on one scrollable page.',
+    tag: 'PREVIEW',
+    mock: 'bento'
+  }
+};
+
+let currentDashboard = localStorage.getItem('bikepartsbd_dash_theme') || 'classic';
+
+function applyDashboardTheme(key) {
+  if (!DASHBOARD_THEMES[key]) return;
+  currentDashboard = key;
+  document.body.className = document.body.className.replace(/dash-\w+/g, '').trim();
+  document.body.classList.add('dash-' + key);
+  localStorage.setItem('bikepartsbd_dash_theme', key);
+  // Re-render theme grid if visible
+  renderDashboardThemes();
+  toast('success', '🎨 Layout', DASHBOARD_THEMES[key].name);
+}
+
+function renderDashboardThemes() {
+  const el = document.getElementById('dashboardThemeGrid');
+  if (!el) return;
+  el.innerHTML = Object.entries(DASHBOARD_THEMES).map(([key, t]) => `
+    <div class="dash-theme-preview ${currentDashboard === key ? 'active' : ''}" onclick="applyDashboardTheme('${key}')">
+      <div class="dtp-mock">
+        <div class="mock-${t.mock}">
+          <div class="mock-content">
+            ${Array(6).fill('<div class="mock-block"></div>').join('')}
+          </div>
+        </div>
+      </div>
+      <div class="dtp-name">${t.name}</div>
+      <div class="dtp-desc">${t.desc}</div>
+      <span class="dtp-tag">${t.tag}</span>
+    </div>
+  `).join('');
+}
+
+// Apply on load
+document.body.classList.add('dash-' + currentDashboard);
+
 /* Init command palette + shortcuts */
 document.addEventListener('keydown', (e) => {
   // Cmd+K or Ctrl+K to open
@@ -8240,6 +8382,7 @@ renderAIAssistant();
 renderAPIStatusDashboard();
 renderOrderQR(ORDERS_DATA[0]?.id || 'BPBD-001');
 renderSmartInsights();
+renderDashboardThemes();
 setTimeout(() => {
   const qrSel = document.getElementById('qrOrderSelect');
   if (qrSel && !qrSel.dataset.wired) {
